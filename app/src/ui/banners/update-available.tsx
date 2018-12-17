@@ -7,12 +7,11 @@ import { PopupType } from '../../models/popup'
 import { shell } from '../../lib/app-shell'
 
 import { ReleaseSummary } from '../../models/release-notes'
-import { enableInAppReleaseNotes } from '../../lib/feature-flag'
+import { Banner } from './banner'
 
 interface IUpdateAvailableProps {
   readonly dispatcher: Dispatcher
   readonly newRelease: ReleaseSummary | null
-  readonly releaseNotesLink: string
   readonly onDismissed: () => void
 }
 
@@ -26,30 +25,22 @@ export class UpdateAvailable extends React.Component<
 > {
   public render() {
     return (
-      <div id="update-available" className="active" onSubmit={this.updateNow}>
-        <Octicon className="icon" symbol={OcticonSymbol.desktopDownload} />
+      <Banner id="update-available" onDismissed={this.props.onDismissed}>
+        <Octicon
+          className="download-icon"
+          symbol={OcticonSymbol.desktopDownload}
+        />
 
-        <span>
+        <span onSubmit={this.updateNow}>
           An updated version of GitHub Desktop is available and will be
           installed at the next launch. See{' '}
-          {enableInAppReleaseNotes() ? (
-            <LinkButton onClick={this.showReleaseNotes}>what's new</LinkButton>
-          ) : (
-            <LinkButton uri={this.props.releaseNotesLink}>
-              what's new
-            </LinkButton>
-          )}{' '}
-          or{' '}
+          <LinkButton onClick={this.showReleaseNotes}>what's new</LinkButton> or{' '}
           <LinkButton onClick={this.updateNow}>
             restart GitHub Desktop
           </LinkButton>
           .
         </span>
-
-        <a className="close" onClick={this.dismiss}>
-          <Octicon symbol={OcticonSymbol.x} />
-        </a>
-      </div>
+      </Banner>
     )
   }
 
@@ -69,9 +60,5 @@ export class UpdateAvailable extends React.Component<
 
   private updateNow = () => {
     updateStore.quitAndInstallUpdate()
-  }
-
-  private dismiss = () => {
-    this.props.onDismissed()
   }
 }
