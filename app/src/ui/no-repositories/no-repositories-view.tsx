@@ -15,7 +15,7 @@ import { assertNever } from '../../lib/fatal-error'
 import { ClickSource } from '../lib/list'
 import { enableTutorial } from '../../lib/feature-flag'
 
-interface IBlankSlateProps {
+interface INoRepositoriesProps {
   /** A function to call when the user chooses to create a repository. */
   readonly onCreate: () => void
 
@@ -27,6 +27,12 @@ interface IBlankSlateProps {
 
   /** Called when the user chooses to create a tutorial repository */
   readonly onCreateTutorialRepository: () => void
+
+  /** Called when the user chooses to resume a tutorial repository */
+  readonly onResumeTutorialRepository: () => void
+
+  /** true if tutorial is in paused state. */
+  readonly tutorialPaused: boolean
 
   /** The logged in account for GitHub.com. */
   readonly dotComAccount: Account | null
@@ -66,7 +72,7 @@ enum AccountTab {
   enterprise,
 }
 
-interface IBlankSlateState {
+interface INoRepositoriesState {
   /**
    * The selected account, or rather the preferred selection.
    * Has no effect when the user isn't signed in to any account.
@@ -101,14 +107,14 @@ interface IBlankSlateState {
 }
 
 /**
- * The blank slate view. This is shown when the user hasn't added any
+ * The "No Repositories" view. This is shown when the user hasn't added any
  * repositories to the app.
  */
-export class BlankSlateView extends React.Component<
-  IBlankSlateProps,
-  IBlankSlateState
+export class NoRepositoriesView extends React.Component<
+  INoRepositoriesProps,
+  INoRepositoriesState
 > {
-  public constructor(props: IBlankSlateProps) {
+  public constructor(props: INoRepositoriesProps) {
     super(props)
 
     this.state = {
@@ -122,20 +128,23 @@ export class BlankSlateView extends React.Component<
 
   public render() {
     return (
-      <UiView id="blank-slate">
+      <UiView id="no-repositories">
         <header>
           <h1>Let's get started!</h1>
           <p>Add a repository to GitHub Desktop to start collaborating</p>
         </header>
 
         <div className="content">
-          {this.renderLeftPanel()}
-          {this.renderRightPanel()}
+          {this.renderGetStartedActions()}
+          {this.renderRepositoryList()}
         </div>
 
-        <img className="blankslate-graphic-top" src={WelcomeLeftTopImageUri} />
         <img
-          className="blankslate-graphic-bottom"
+          className="no-repositories-graphic-top"
+          src={WelcomeLeftTopImageUri}
+        />
+        <img
+          className="no-repositories-graphic-bottom"
           src={WelcomeLeftBottomImageUri}
         />
       </UiView>
@@ -147,8 +156,8 @@ export class BlankSlateView extends React.Component<
   }
 
   public componentDidUpdate(
-    prevProps: IBlankSlateProps,
-    prevState: IBlankSlateState
+    prevProps: INoRepositoriesProps,
+    prevState: INoRepositoriesState
   ) {
     if (
       prevProps.dotComAccount !== this.props.dotComAccount ||
@@ -180,7 +189,7 @@ export class BlankSlateView extends React.Component<
     }
   }
 
-  private renderLeftPanel() {
+  private renderRepositoryList() {
     const account = this.getSelectedAccount()
 
     if (account === null) {
@@ -191,9 +200,9 @@ export class BlankSlateView extends React.Component<
     const accountState = this.props.apiRepositories.get(account)
 
     return (
-      <div className="content-pane left">
+      <div className="content-pane repository-list">
         {this.renderAccountsTabBar()}
-        {this.renderAccountTab(account, accountState)}
+        {this.renderAccountRepositoryList(account, accountState)}
       </div>
     )
   }
@@ -204,7 +213,7 @@ export class BlankSlateView extends React.Component<
       : this.state.selectedEnterpriseRepository
   }
 
-  private renderAccountTab(
+  private renderAccountRepositoryList(
     account: Account,
     accountState: IAccountRepositories | undefined
   ) {
@@ -325,6 +334,12 @@ export class BlankSlateView extends React.Component<
     }
   }
 
+  // Note: this wrapper is necessary in order to ensure
+  // `onClone` does not get passed a click event
+  // and accidentally interpret that as a url
+  // See https://github.com/desktop/desktop/issues/8394
+  private onShowClone = () => this.props.onClone()
+
   private renderButtonGroupButton(
     symbol: OcticonSymbol,
     title: string,
@@ -341,7 +356,7 @@ export class BlankSlateView extends React.Component<
     )
   }
 
-  private renderCreateTutorialRepositoryButton() {
+  private renderTutorialRepositoryButton() {
     if (!enableTutorial()) {
       return null
     }
@@ -354,14 +369,25 @@ export class BlankSlateView extends React.Component<
       return null
     }
 
-    return this.renderButtonGroupButton(
-      OcticonSymbol.mortarBoard,
-      __DARWIN__
-        ? 'Create a Tutorial Repository…'
-        : 'Create a tutorial repository…',
-      this.props.onCreateTutorialRepository,
-      'submit'
-    )
+    if (this.props.tutorialPaused) {
+      return this.renderButtonGroupButton(
+        OcticonSymbol.mortarBoard,
+        __DARWIN__
+          ? 'Return to In Progress Tutorial'
+          : 'Return to in progress tutorial',
+        this.props.onResumeTutorialRepository,
+        'submit'
+      )
+    } else {
+      return this.renderButtonGroupButton(
+        OcticonSymbol.mortarBoard,
+        __DARWIN__
+          ? 'Create a Tutorial Repository…'
+          : 'Create a tutorial repository…',
+        this.props.onCreateTutorialRepository,
+        'submit'
+      )
+    }
   }
 
   private renderCloneButton() {
@@ -370,7 +396,7 @@ export class BlankSlateView extends React.Component<
       __DARWIN__
         ? 'Clone a Repository from the Internet…'
         : 'Clone a repository from the Internet…',
-      this.props.onClone
+      this.onShowClone
     )
   }
 
@@ -394,11 +420,11 @@ export class BlankSlateView extends React.Component<
     )
   }
 
-  private renderRightPanel() {
+  private renderGetStartedActions() {
     return (
-      <div className="content-pane right">
+      <div className="content-pane">
         <ul className="button-group">
-          {this.renderCreateTutorialRepositoryButton()}
+          {this.renderTutorialRepositoryButton()}
           {this.renderCloneButton()}
           {this.renderCreateRepositoryButton()}
           {this.renderAddExistingRepositoryButton()}

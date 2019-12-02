@@ -1,4 +1,4 @@
-.blankslate-action {
+.suggested-action {
   border: var(--base-border);
   border-bottom: 0;
   padding: var(--spacing-double);
@@ -18,8 +18,8 @@
   }
 
   &.primary {
-    background: var(--primary-blankslate-action-background);
-    border-color: var(--primary-blankslate-action-border-color);
+    background: var(--primary-suggested-action-background);
+    border-color: var(--primary-suggested-action-border-color);
   }
 
   .text-wrapper {
@@ -27,6 +27,21 @@
     flex-direction: column;
     flex-grow: 1;
     margin-right: var(--spacing-double);
+  }
+
+  .image-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    margin-right: var(--spacing-double);
+    flex-shrink: 0;
+    .octicon {
+      height: 100%;
+      width: 100%;
+      color: var(--suggested-action-icon-color);
+    }
   }
 
   h2 {
