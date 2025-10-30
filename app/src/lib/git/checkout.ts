@@ -20,7 +20,19 @@ import { IRemote } from '../../models/remote'
 
 export type ProgressCallback = (progress: ICheckoutProgress) => void
 
-const SubmoduleUpdateStepWeight = 0.1
+const CheckoutStepWeight = 0.9
+
+function clampProgress(
+  minimum: number,
+  maximum: number,
+  progressCallback: ProgressCallback
+): ProgressCallback {
+  return (progress: ICheckoutProgress) =>
+    progressCallback({
+      ...progress,
+      value: minimum + progress.value * (maximum - minimum),
+    })
+}
 
 function getCheckoutArgs(progressCallback?: ProgressCallback) {
   return ['checkout', ...(progressCallback ? ['--progress'] : [])]
@@ -207,11 +219,7 @@ export async function checkoutBranch(
     branch.name,
     currentRemote,
     progressCallback
-      ? progress =>
-          progressCallback({
-            ...progress,
-            value: progress.value * (1 - SubmoduleUpdateStepWeight),
-          })
+      ? clampProgress(0, CheckoutStepWeight, progressCallback)
       : undefined,
     `Switching to ${__DARWIN__ ? 'Branch' : 'branch'}`
   )
@@ -228,14 +236,7 @@ export async function checkoutBranch(
     branch.name,
     currentRemote,
     progressCallback
-      ? progress =>
-          progressCallback({
-            ...progress,
-            value:
-              1 -
-              SubmoduleUpdateStepWeight +
-              progress.value * SubmoduleUpdateStepWeight,
-          })
+      ? clampProgress(CheckoutStepWeight, 1, progressCallback)
       : undefined,
     allowFileProtocol
   )
@@ -275,11 +276,7 @@ export async function checkoutCommit(
     target,
     currentRemote,
     progressCallback
-      ? progress =>
-          progressCallback({
-            ...progress,
-            value: progress.value * (1 - SubmoduleUpdateStepWeight),
-          })
+      ? clampProgress(0, CheckoutStepWeight, progressCallback)
       : undefined
   )
 
@@ -295,14 +292,7 @@ export async function checkoutCommit(
     target,
     currentRemote,
     progressCallback
-      ? progress =>
-          progressCallback({
-            ...progress,
-            value:
-              1 -
-              SubmoduleUpdateStepWeight +
-              progress.value * SubmoduleUpdateStepWeight,
-          })
+      ? clampProgress(CheckoutStepWeight, 1, progressCallback)
       : undefined,
     allowFileProtocol
   )
