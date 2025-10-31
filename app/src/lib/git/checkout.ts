@@ -8,7 +8,6 @@ import {
   IGitOutput,
 } from '../progress'
 import { AuthenticationErrors } from './authentication'
-import { enableRecurseSubmodulesFlag } from '../feature-flag'
 import {
   envForRemoteOperation,
   getFallbackUrlForProxyResolve,
@@ -117,10 +116,6 @@ async function updateSubmodulesAfterCheckout(
   progressCallback: ProgressCallback | undefined,
   allowFileProtocol: boolean
 ): Promise<void> {
-  if (!enableRecurseSubmodulesFlag()) {
-    return
-  }
-
   const opts: IGitStringExecutionOptions = {
     env: await envForRemoteOperation(
       getFallbackUrlForProxyResolve(repository, currentRemote)
