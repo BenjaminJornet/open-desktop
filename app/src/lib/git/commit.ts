@@ -37,7 +37,14 @@ export async function createCommit(
     'createCommit',
     {
       stdin: message,
-      interceptHooks: true,
+      // https://git-scm.com/docs/githooks/2.46.1
+      interceptHooks: [
+        'pre-commit',
+        'prepare-commit-msg',
+        'commit-msg',
+        'post-commit',
+        'post-rewrite',
+      ],
     }
   )
   return parseCommitSHA(result)

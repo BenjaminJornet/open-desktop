@@ -13,11 +13,18 @@ export async function withHooksEnv<T>(
   path: string,
   options: IGitExecutionOptions | undefined
 ): Promise<T> {
-  if (options?.interceptHooks !== true || !enableHooksEnvironment()) {
+  const interceptHooks = options?.interceptHooks ?? false
+
+  if (!interceptHooks || !enableHooksEnvironment()) {
     return fn(options?.env)
   }
 
-  const repoHooks = await Array.fromAsync(getRepoHooks(path))
+  const repoHooks = await Array.fromAsync(
+    getRepoHooks(
+      path,
+      typeof interceptHooks === 'object' ? interceptHooks : undefined
+    )
+  )
 
   if (repoHooks.length === 0) {
     return fn(options?.env)

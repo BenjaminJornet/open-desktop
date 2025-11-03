@@ -65,7 +65,7 @@ export interface IGitExecutionOptions extends DugiteExecutionOptions {
    */
   readonly isBackgroundTask?: boolean
 
-  readonly interceptHooks?: boolean
+  readonly interceptHooks?: boolean | string[]
 }
 
 /**
