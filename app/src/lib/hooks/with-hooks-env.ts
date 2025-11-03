@@ -7,10 +7,45 @@ import { createProxyProcessServer, ProcessProxyConnection } from 'process-proxy'
 import { AddressInfo } from 'net'
 import { spawn } from 'child_process'
 import { Readable, Writable } from 'stream'
+import { Shescape } from 'shescape'
+import memoizeOne from 'memoize-one'
 
 const debug = (message: string, error?: Error) => {
   log.debug(`hooks: ${message}`, error)
 }
+
+const getShell = () => {
+  // TODO: Windows:
+  if (__WIN32__) {
+    throw new Error('Not implemented')
+  }
+
+  if (process.env.SHELL) {
+    try {
+      return {
+        shell: process.env.SHELL,
+        args: ['-ilc'],
+        ...getQuoteFn(process.env.SHELL),
+      }
+    } catch (err) {
+      debug('Failed resolving shell', err)
+    }
+  }
+
+  return {
+    shell: '/bin/sh',
+    args: ['-ilc'],
+    ...getQuoteFn('/bin/sh'),
+  }
+}
+
+const getQuoteFn = memoizeOne((shell: string) => {
+  const shescape = new Shescape({ shell, flagProtection: false })
+  return {
+    escape: shescape.escape.bind(shescape),
+    quote: shescape.quote.bind(shescape),
+  }
+})
 
 const waitForWritableFinished = (stream: Writable) => {
   return new Promise<void>(resolve => {
@@ -64,13 +99,13 @@ export async function withHooksEnv<T>(
   const server = createProxyProcessServer(
     async connection => {
       const abortController = new AbortController()
-      const args = await connection.getArgs()
-      const env = await connection.getEnv()
-      const cwd = await connection.getCwd()
+      const proxyArgs = await connection.getArgs()
+      const proxyEnv = await connection.getEnv()
+      const proxyCwd = await connection.getCwd()
 
       const hookName = __WIN32__
-        ? basename(args[0]).replace(/\.exe$/i, '')
-        : basename(args[0])
+        ? basename(proxyArgs[0]).replace(/\.exe$/i, '')
+        : basename(proxyArgs[0])
 
       const excludedEnvVars = new Set([
         // Dugite sets this to point to a custom git config file which
@@ -85,7 +120,7 @@ export async function withHooksEnv<T>(
       ])
 
       const safeEnv = Object.fromEntries(
-        Object.entries(env).filter(
+        Object.entries(proxyEnv).filter(
           ([k]) => k.startsWith('GIT_') && excludedEnvVars.has(k)
         )
       )
@@ -105,10 +140,13 @@ export async function withHooksEnv<T>(
         return
       }
 
-      // TODO!!! Escape args properly!!!
-      const cmd = `"${hooksExecutable}" ${args.join(' ')}`
-      const child = spawn(process.env.SHELL ?? '/bin/bash', ['-ilc', cmd], {
-        cwd,
+      const { shell, args: shellArgs, quote } = getShell()
+
+      const cmdArgs = [hooksExecutable, ...proxyArgs.slice(1)]
+      const cmd = cmdArgs.map(quote).join(' ')
+
+      const child = spawn(shell, [...shellArgs, cmd], {
+        cwd: proxyCwd,
         env: safeEnv,
         signal: abortController.signal,
       })
