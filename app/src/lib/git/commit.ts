@@ -37,6 +37,7 @@ export async function createCommit(
     'createCommit',
     {
       stdin: message,
+      interceptHooks: true,
     }
   )
   return parseCommitSHA(result)

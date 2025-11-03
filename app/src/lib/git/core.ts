@@ -64,6 +64,8 @@ export interface IGitExecutionOptions extends DugiteExecutionOptions {
    * This affects error handling and UI such as credential prompts.
    */
   readonly isBackgroundTask?: boolean
+
+  readonly interceptHooks?: boolean
 }
 
 /**
@@ -346,8 +348,7 @@ export async function git(
         hooksEnv
       ),
     path,
-    options?.isBackgroundTask,
-    options?.env
+    options
   )
 }
 
