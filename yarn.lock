@@ -5629,6 +5629,11 @@ pretty-error@^4.0.0:
     lodash "^4.17.20"
     renderkid "^3.0.0"
 
+process-proxy@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/process-proxy/-/process-proxy-0.3.0.tgz#5bdb0cf430214868d395b3a9a5b74f12f519afbb"
+  integrity sha512-DNyLMjWYgf8K2zT54XQkTCcoyQfOcWihRRamofYdlV8vOxSik+KcXYwwogrT+DQsJRfEJWFx7/s8te2BsHfmQw==
+
 progress@^2.0.3:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/progress/-/progress-2.0.3.tgz#7e8cf8d8f5b8f239c1bc68beb4eb78567d572ef8"

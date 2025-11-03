@@ -7,6 +7,7 @@ import * as os from 'os'
 import packager, { OfficialArch, OsxNotarizeOptions } from 'electron-packager'
 import frontMatter from 'front-matter'
 import { externals } from '../app/webpack.common'
+import { getProxyCommandPath } from 'process-proxy'
 
 interface IChooseALicense {
   readonly title: string
@@ -364,6 +365,15 @@ function copyDependencies() {
       appPathMain
     )
   }
+
+  console.log('  Copying process-proxy binary')
+  copySync(
+    getProxyCommandPath(),
+    path.resolve(
+      outRoot,
+      process.platform === 'win32' ? 'process-proxy.exe' : 'process-proxy'
+    )
+  )
 }
 
 function generateLicenseMetadata(outRoot: string) {
