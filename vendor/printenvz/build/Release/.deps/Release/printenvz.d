@@ -1,0 +1,1 @@
+cmd_Release/printenvz := c++ -stdlib=libc++ -Wl,-search_paths_first -mmacosx-version-min=10.7 -arch arm64 -L./Release -stdlib=libc++  -o "Release/printenvz" ./Release/obj.target/printenvz/src/printenvz.o 
