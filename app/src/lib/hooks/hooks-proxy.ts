@@ -78,6 +78,7 @@ const exitWithError = (
 
 export const createHooksProxy = (repoHooks: string[], tmpDir: string) => {
   return async (connection: ProcessProxyConnection) => {
+    const startTime = Date.now()
     const proxyArgs = await connection.getArgs()
     const proxyEnv = await connection.getEnv()
     const proxyCwd = await connection.getCwd()
@@ -160,26 +161,22 @@ export const createHooksProxy = (repoHooks: string[], tmpDir: string) => {
         env: safeEnv,
         signal: abortController.signal,
       })
-        .on('spawn', () => {
-          // TODO: Do hooks ever write to stdout? Probably not?
-          // https://github.com/git/git/blob/4cf919bd7b946477798af5414a371b23fd68bf93/hook.c#L73C6-L73C22
-          child.stdout.pipe(connection.stdout).on('error', reject)
-          child.stderr.pipe(connection.stderr).on('error', reject)
-          child.on('close', (code, signal) => resolve({ code, signal }))
-        })
         .on('error', reject)
+        .on('close', (code, signal) => resolve({ code, signal }))
+
+      // Git hooks only write to stderr
+      // https://github.com/git/git/blob/4cf919bd7b946477798af5414a371b23fd68bf93/hook.c#L73C6-L73C22
+      child.stderr.pipe(connection.stderr).on('error', reject)
     })
 
-    await Promise.all([
-      waitForWritableFinished(connection.stdout),
-      waitForWritableFinished(connection.stderr),
-    ]).catch(e => {
-      debug(`waiting for writable to finish failed`, e)
+    await waitForWritableFinished(connection.stderr).catch(e => {
+      debug(`waiting for stderr to finish failed`, e)
     })
 
-    if (code !== 0) {
-      debug(`exiting proxy with code ${code}`)
-    }
+    const elapsedSeconds = (Date.now() - startTime) / 1000
+    debug(
+      `executed ${hookName}: exited with code ${code} in ${elapsedSeconds}s`
+    )
     await connection
       .exit(code ?? 0)
       .catch(err => debug(`failed to exit proxy:`, err))
