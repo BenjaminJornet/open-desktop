@@ -11,6 +11,7 @@ export const getShellEnv = async (): Promise<
   const { shell, args, quote } = getShell()
   const { stdout } = await execFile(shell, [...args, quote(printenvzPath)], {
     env: {},
+    maxBuffer: Infinity,
   })
 
   const matches = stdout.matchAll(/([^=]+)=([^\0]*)\0/g)
