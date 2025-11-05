@@ -123,18 +123,11 @@ export const createHooksProxy = (repoHooks: string[], tmpDir: string) => {
 
     // We don't have to clean this up since it's in the tmpdir created by the
     // hooks env.
-    const stdinFilePath = join(
-      tmpDir,
-      `${hookName}-stdin-${randomBytes(8).toString('hex')}`
-    )
-
+    const stdinFilePath = join(tmpDir, `in-${randomBytes(8).toString('hex')}`)
     const hasStdin = hooksUsingStdin.includes(hookName)
 
     if (hasStdin) {
-      await pipeline(
-        connection.stdin,
-        createWriteStream(stdinFilePath, { mode: 0o600 })
-      )
+      await pipeline(connection.stdin, createWriteStream(stdinFilePath))
     }
 
     const { shell, args: shellArgs, quote } = getShell()
