@@ -246,12 +246,15 @@ export async function git(
   // this property is to provide "terminal-like" output to the user when a Git
   // command fails.
   let terminalOutput = ''
+  const terminalChunks: string[] = []
 
   // Keep at most 256kb of combined stderr and stdout output. This is used
   // to provide more context in error messages.
   opts.processCallback = process => {
     if (options?.onTerminalOutputAvailable) {
       options.onTerminalOutputAvailable(function (cb) {
+        terminalChunks.forEach(chunk => cb(chunk))
+
         process.stdout?.on('data', cb)
         process.stderr?.on('data', cb)
 
@@ -274,6 +277,10 @@ export async function git(
 
     process.stdout?.pipe(terminalStream, { end: false })
     process.stderr?.pipe(terminalStream, { end: false })
+
+    process.stdout?.on('data', chunk => terminalChunks.push(chunk))
+    process.stderr?.on('data', chunk => terminalChunks.push(chunk))
+
     process.on('close', () => terminalStream.end())
     options?.processCallback?.(process)
   }

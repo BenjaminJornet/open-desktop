@@ -3,29 +3,18 @@ import * as React from 'react'
 import { Dialog, DialogContent, DialogFooter } from '../dialog'
 import { OkCancelButtonGroup } from '../dialog/ok-cancel-button-group'
 import { TerminalOutputListener } from '../../lib/git'
+import { Terminal } from '@xterm/xterm'
 
 interface ICommitProgressProps {
   readonly subscribeToCommitOutput: TerminalOutputListener
   readonly onDismissed: () => void
 }
 
-interface ICommitProgressState {
-  readonly output: ReadonlyArray<string>
-}
-
 /** A component to confirm and then discard changes. */
-export class CommitProgress extends React.Component<
-  ICommitProgressProps,
-  ICommitProgressState
-> {
+export class CommitProgress extends React.Component<ICommitProgressProps> {
   private unsubscribe?: () => void | null
-
-  public constructor(props: ICommitProgressProps) {
-    super(props)
-    this.state = {
-      output: [],
-    }
-  }
+  private terminalRef = React.createRef<HTMLDivElement>()
+  private terminal: Terminal | null = null
 
   private onDismissed = () => {
     this.unsubscribe?.()
@@ -34,11 +23,24 @@ export class CommitProgress extends React.Component<
   }
 
   public componentDidMount() {
+    if (this.terminalRef.current) {
+      this.terminal = new Terminal({
+        disableStdin: true,
+        convertEol: true,
+        rows: 20,
+        cols: 80,
+        fontSize: 12,
+        fontFamily:
+          "SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace, 'Apple Color Emoji', 'Segoe UI', 'Segoe UI Emoji', 'Segoe UI Symbol'",
+      })
+
+      this.terminal.open(this.terminalRef.current)
+    }
+
     const { unsubscribe } = this.props.subscribeToCommitOutput(chunk => {
-      this.setState(prevState => ({
-        output: [...prevState.output, chunk.toString()],
-      }))
+      this.terminal?.write(chunk)
     })
+
     this.unsubscribe = unsubscribe
   }
 
@@ -50,21 +52,13 @@ export class CommitProgress extends React.Component<
   public render() {
     return (
       <Dialog
-        id="hook-failure"
+        id="commit-progress-dialog"
         title={`Committing changes`}
         onDismissed={this.onDismissed}
         onSubmit={this.onDismissed}
       >
         <DialogContent>
-          <pre
-            style={{
-              maxHeight: '400px',
-              overflowY: 'auto',
-              whiteSpace: 'pre-wrap',
-            }}
-          >
-            {this.state.output.join('')}
-          </pre>
+          <div className="terminal-container" ref={this.terminalRef}></div>
         </DialogContent>
 
         <DialogFooter>
