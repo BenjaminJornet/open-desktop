@@ -13,8 +13,6 @@ import * as GitPerf from '../../ui/lib/git-perf'
 import * as Path from 'path'
 import { isErrnoException } from '../errno-exception'
 import { withTrampolineEnv } from '../trampoline/trampoline-environment'
-import { createTailStream } from './create-tail-stream'
-import { createTerminalStream } from '../create-terminal-stream'
 import { kStringMaxLength } from 'buffer'
 import { withHooksEnv } from '../hooks/with-hooks-env'
 
@@ -248,8 +246,8 @@ export async function git(
   // Note: The output is capped at a maximum of 256kb and the sole intent of
   // this property is to provide "terminal-like" output to the user when a Git
   // command fails.
-  let terminalOutput = ''
   const terminalChunks: string[] = []
+  let terminalOutputLength = 0
 
   // Keep at most 256kb of combined stderr and stdout output. This is used
   // to provide more context in error messages.
@@ -270,21 +268,28 @@ export async function git(
       })
     }
 
-    const terminalStream = createTerminalStream()
-    const tailStream = createTailStream(256 * 1024, { encoding: 'utf8' })
+    const capacity = 256 * 1024
+    const push = (chunk: Buffer | string) => {
+      terminalChunks.push(coerceToString(chunk))
+      terminalOutputLength += chunk.length
 
-    terminalStream
-      .pipe(tailStream)
-      .on('data', (data: string) => (terminalOutput = data))
-      .on('error', e => log.error(`Terminal output error`, e))
+      while (terminalOutputLength > capacity) {
+        const firstChunk = terminalChunks[0]
+        const overrun = terminalOutputLength - capacity
 
-    process.stdout?.pipe(terminalStream, { end: false })
-    process.stderr?.pipe(terminalStream, { end: false })
+        if (overrun >= firstChunk.length) {
+          terminalChunks.shift()
+          terminalOutputLength -= firstChunk.length
+        } else {
+          terminalChunks[0] = firstChunk.substring(overrun)
+          terminalOutputLength -= overrun
+        }
+      }
+    }
 
-    process.stdout?.on('data', chunk => terminalChunks.push(chunk))
-    process.stderr?.on('data', chunk => terminalChunks.push(chunk))
+    process.stdout?.on('data', push)
+    process.stderr?.on('data', push)
 
-    process.on('close', () => terminalStream.end())
     options?.processCallback?.(process)
   }
 
@@ -374,6 +379,8 @@ export async function git(
               ' '
             )}\` exited with an unexpected code: ${exitCode}.`
           )
+
+          const terminalOutput = terminalChunks.join('')
 
           if (terminalOutput.length > 0) {
             // Leave even less of the combined output in the log
