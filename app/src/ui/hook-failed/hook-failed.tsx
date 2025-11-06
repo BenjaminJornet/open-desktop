@@ -35,7 +35,7 @@ export class HookFailed extends React.Component<IHookFailedProps> {
       this.terminal = new Terminal({
         disableStdin: true,
         convertEol: true,
-        rows: 10,
+        rows: 12,
         cols: 80,
         fontSize: 12,
         fontFamily:
