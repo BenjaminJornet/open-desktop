@@ -1554,14 +1554,6 @@ export class CommitMessage extends React.Component<
     const { isCommitting, hookProgress } = this.props
     if (!isCommitting || !hookProgress) {
       return null
-      // return (
-      //   <div className="commit-progress">
-      //     <div className="description">Optimizing repository...</div>
-      //     <Button>
-      //       <Octicon symbol={octicons.terminal} />
-      //     </Button>
-      //   </div>
-      // )
     }
 
     const { status, hookName } = hookProgress
