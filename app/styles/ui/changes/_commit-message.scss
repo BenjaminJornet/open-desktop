@@ -42,6 +42,7 @@
       padding: 0 var(--spacing-half);
       > svg.octicon {
         height: 12px;
+        pointer-events: none;
       }
 
       &:hover {
