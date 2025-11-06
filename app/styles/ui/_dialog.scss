@@ -356,7 +356,11 @@ dialog {
     // Use wider dialogs for raw git errors, to make sure we can display lines
     // up to 80 characters long without wrapping them.
     &.raw-git-error {
-      max-width: 700px;
+      max-width: 750px;
+
+      .static-terminal .xterm {
+        padding: var(--spacing);
+      }
     }
 
     .dialog-content {
