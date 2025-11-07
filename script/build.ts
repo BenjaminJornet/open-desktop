@@ -376,15 +376,6 @@ function copyDependencies() {
     )
   )
 
-  console.log('  Copying process-proxy binary')
-  copySync(
-    getProxyCommandPath(),
-    path.resolve(
-      outRoot,
-      process.platform === 'win32' ? 'process-proxy.exe' : 'process-proxy'
-    )
-  )
-
   console.log('  Copying printenvz binary')
   copySync(
     getPrintenvzPath(),
