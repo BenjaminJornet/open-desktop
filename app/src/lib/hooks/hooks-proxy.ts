@@ -21,6 +21,23 @@ const ignoredOnFailureHooks = [
   'pre-auto-gc',
 ]
 
+const excludedEnvVars: ReadonlySet<string> = new Set([
+  // Dugite sets these, we don't want to leak them into the hook environment
+  'GIT_SYSTEM_CONFIG',
+  'GIT_EXEC_PATH',
+  'GIT_TEMPLATE_DIR',
+  // We set this to point to a custom hooks path which we don't want
+  // leaking into the hook's environment. Initially I thought we would have
+  // to sanitize this to strip out the custom config we set and leave any
+  // user-configured but since we're executing the hook in a separate
+  // shell with login it would just get re-initialized there anyway.
+  'GIT_CONFIG_PARAMETERS',
+
+  'GIT_ASKPASS',
+  'GIT_SSH_COMMAND',
+  'GIT_USER_AGENT',
+])
+
 const debug = (message: string, error?: Error) => {
   log.debug(`hooks: ${message}`, error)
 }
@@ -70,31 +87,10 @@ export const createHooksProxy = (
       : basename(proxyArgs[0])
 
     const abortController = new AbortController()
+    const abort = () => abortController.abort()
 
     conn.stderr.write(`Running ${hookName} hook...\n`)
-
-    onHookProgress?.({
-      hookName,
-      status: 'started',
-      abort: () => abortController.abort(),
-    })
-
-    const excludedEnvVars = new Set([
-      // Dugite sets these, we don't want to leak them into the hook environment
-      'GIT_SYSTEM_CONFIG',
-      'GIT_EXEC_PATH',
-      'GIT_TEMPLATE_DIR',
-      // We set this to point to a custom hooks path which we don't want
-      // leaking into the hook's environment. Initially I thought we would have
-      // to sanitize this to strip out the custom config we set and leave any
-      // user-configured but since we're executing the hook in a separate
-      // shell with login it would just get re-initialized there anyway.
-      'GIT_CONFIG_PARAMETERS',
-
-      'GIT_ASKPASS',
-      'GIT_SSH_COMMAND',
-      'GIT_USER_AGENT',
-    ])
+    onHookProgress?.({ hookName, status: 'started', abort })
 
     const safeEnv = Object.fromEntries(
       Object.entries(proxyEnv).filter(
