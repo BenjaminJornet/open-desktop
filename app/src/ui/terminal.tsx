@@ -31,6 +31,10 @@ export class Terminal extends React.Component<TerminalProps> {
     this.terminal?.write(data)
   }
 
+  public componentWillUnmount(): void {
+    this.terminal?.dispose()
+  }
+
   public componentDidMount() {
     const { terminalOutput, hideCursor, ...initOpts } = this.props
     this.terminal = new XTermTerminal({
