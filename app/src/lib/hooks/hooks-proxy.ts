@@ -52,7 +52,7 @@ const exitWithError = (
 export const createHooksProxy = (
   repoHooks: string[],
   tmpDir: string,
-  shellEnv: Record<string, string | undefined>,
+  getShellEnv: () => Promise<Record<string, string | undefined>>,
   onHookProgress?: (progress: HookProgress) => void,
   onHookFailure?: (
     hookName: string,
@@ -152,6 +152,7 @@ export const createHooksProxy = (
 
     const terminalOutput: Buffer[] = []
     const gitPath = resolveGitBinary(resolve(__dirname, 'git'))
+    const shellEnv = await getShellEnv()
 
     const { code, signal } = await new Promise<{
       code: number | null

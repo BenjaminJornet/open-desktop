@@ -8,6 +8,7 @@ import type { IGitExecutionOptions } from '../git/core'
 import { getRepoHooks } from './get-repo-hooks'
 import { createHooksProxy } from './hooks-proxy'
 import { getShellEnv } from './get-shell-env'
+import memoizeOne from 'memoize-one'
 
 export async function withHooksEnv<T>(
   fn: (env: Record<string, string | undefined> | undefined) => Promise<T>,
@@ -31,11 +32,14 @@ export async function withHooksEnv<T>(
     return fn(options?.env)
   }
 
-  const shellEnvStartTime = Date.now()
-  const shellEnv = await getShellEnv()
-  log.debug(
-    `hooks: loaded shell environment in ${Date.now() - shellEnvStartTime}ms`
-  )
+  const memoizedGetShellEnv = memoizeOne(async () => {
+    const shellEnvStartTime = Date.now()
+    const shellEnv = await getShellEnv()
+    log.debug(
+      `hooks: loaded shell environment in ${Date.now() - shellEnvStartTime}ms`
+    )
+    return shellEnv
+  })
 
   const ext = __WIN32__ ? '.exe' : ''
   const processProxyPath = join(__dirname, `process-proxy${ext}`)
@@ -45,7 +49,7 @@ export async function withHooksEnv<T>(
   const hooksProxy = createHooksProxy(
     repoHooks,
     tmpHooksDir,
-    shellEnv,
+    memoizedGetShellEnv,
     options?.onHookProgress,
     options?.onHookFailure
   )
