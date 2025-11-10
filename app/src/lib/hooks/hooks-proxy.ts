@@ -109,6 +109,16 @@ export const createHooksProxy = (
         : undefined)
 
     if (!hooksExecutable) {
+      if (hookName === 'pre-auto-gc') {
+        debug(`no pre-auto-gc hook found, auto-approving garbage collection`)
+        await exitWithMessage(
+          conn,
+          `No pre-auto-gc hook found in repository, auto-approving garbage collection.`,
+          0
+        )
+        return
+      }
+
       debug(`hook executable not found for ${hookName}`)
       await exitWithError(
         conn,
