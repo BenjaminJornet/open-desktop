@@ -26,10 +26,10 @@ export const findGitBash = async () => {
   return (await pathExists(bashPath)) ? bashPath : null
 }
 
-// // https://github.com/git-for-windows/git/blob/bd2ecbae58213046a468256b95fc4864de25bdf5/compat/mingw.c#L1690-L1718
-// const quoteArgMsys2 = (arg: string) => {
-//   return /[\s\\"'{?*~]/.test(arg) ? `"${arg.replace(/(["\\])/g, '\\$1')}"` : arg
-// }
+// https://github.com/git-for-windows/git/blob/bd2ecbae58213046a468256b95fc4864de25bdf5/compat/mingw.c#L1690-L1718
+const quoteArgMsys2 = (arg: string) => {
+  return /[\s\\"'{?*~]/.test(arg) ? `"${arg.replace(/(["\\])/g, '\\$1')}"` : arg
+}
 
 const findWindowsShell = async (): Promise<Shell> => {
   const gitBashPath = await findGitBash()
@@ -39,7 +39,7 @@ const findWindowsShell = async (): Promise<Shell> => {
     return {
       shell: gitBashPath,
       args,
-      quoteCommand: (cmd, ...args) => `"${quoteCommand(cmd, ...args)}"`,
+      quoteCommand: (cmd, ...args) => quoteArgMsys2(quoteCommand(cmd, ...args)),
       // MSYS2 doesn't use the argv it's given, instead it re-parses the
       // commandline from GetCommandLineW and it doesn't comform to the
       // usual Windows quoting rules. So we need to opt out of Node.js's
