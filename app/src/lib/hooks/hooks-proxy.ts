@@ -67,7 +67,6 @@ const exitWithError = (
 ) => exitWithMessage(connection, message, exitCode)
 
 export const createHooksProxy = (
-  repoHooks: string[],
   tmpDir: string,
   getShellEnv: () => Promise<Record<string, string | undefined>>,
   onHookProgress?: (progress: HookProgress) => void,
