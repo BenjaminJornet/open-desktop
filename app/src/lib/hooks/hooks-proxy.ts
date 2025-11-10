@@ -143,10 +143,7 @@ export const createHooksProxy = (
         signal: abortController.signal,
       })
         .on('close', (code, signal) => resolve({ code, signal }))
-        .on('error', err => {
-          debug(`failed to spawn hook process:`, err)
-          reject(err)
-        })
+        .on('error', err => reject(err))
 
       // hooks never write to stdout
       // https://github.com/git/git/blob/4cf919bd7b946477798af5414a371b23fd68bf93/hook.c#L73C6-L73C22
