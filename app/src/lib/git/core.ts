@@ -86,7 +86,7 @@ export interface IGitExecutionOptions extends DugiteExecutionOptions {
   readonly onHookProgress?: (progress: HookProgress) => void
   readonly onHookFailure?: (
     hookName: string,
-    terminalOutput: ReadonlyArray<Buffer>
+    terminalOutput: string | Buffer | ReadonlyArray<Buffer>
   ) => Promise<'abort' | 'ignore'>
 
   readonly onTerminalOutputAvailable?: TerminalOutputCallback
