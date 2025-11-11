@@ -1,7 +1,7 @@
 import { cp, mkdtemp, rm } from 'fs/promises'
 import { AddressInfo } from 'net'
 import { tmpdir } from 'os'
-import { basename, join } from 'path'
+import { join } from 'path'
 import { createProxyProcessServer } from 'process-proxy'
 import { enableHooksEnvironment } from '../feature-flag'
 import type { IGitExecutionOptions } from '../git/core'
@@ -13,23 +13,16 @@ import memoizeOne from 'memoize-one'
 export async function withHooksEnv<T>(
   fn: (env: Record<string, string | undefined> | undefined) => Promise<T>,
   path: string,
-  options: IGitExecutionOptions | undefined
+  opts: IGitExecutionOptions | undefined
 ): Promise<T> {
-  const interceptHooks = options?.interceptHooks ?? false
-
-  if (!interceptHooks || !enableHooksEnvironment()) {
-    return fn(options?.env)
+  if (!opts?.interceptHooks || !enableHooksEnvironment()) {
+    return fn(opts?.env)
   }
 
-  const repoHooks = await Array.fromAsync(
-    getRepoHooks(
-      path,
-      typeof interceptHooks === 'object' ? interceptHooks : undefined
-    )
-  )
+  const hooks = await Array.fromAsync(getRepoHooks(path, opts.interceptHooks))
 
-  if (repoHooks.length === 0) {
-    return fn(options?.env)
+  if (hooks.length === 0) {
+    return fn(opts?.env)
   }
 
   const memoizedGetShellEnv = memoizeOne(async () => {
@@ -49,8 +42,8 @@ export async function withHooksEnv<T>(
   const hooksProxy = createHooksProxy(
     tmpHooksDir,
     memoizedGetShellEnv,
-    options?.onHookProgress,
-    options?.onHookFailure
+    opts?.onHookProgress,
+    opts?.onHookFailure
   )
 
   const server = createProxyProcessServer(
@@ -61,22 +54,18 @@ export async function withHooksEnv<T>(
       }),
     { validateConnection: async receivedToken => receivedToken === token }
   )
-  const port = await new Promise<number>((resolve, reject) => {
-    server.listen(0, '127.0.0.1', () => {
+  const port = await new Promise<number>(resolve => {
+    server.listen(0, '127.0.0.1', () =>
       resolve((server.address() as AddressInfo).port)
-    })
+    )
   })
   try {
-    for (const hook of repoHooks) {
-      const cleanHooksName = __WIN32__
-        ? basename(hook).replace(/\.exe$/i, '')
-        : basename(hook)
-
-      await cp(processProxyPath, join(tmpHooksDir, `${cleanHooksName}${ext}`))
+    for (const hook of hooks) {
+      await cp(processProxyPath, join(tmpHooksDir, `${hook}${ext}`))
     }
 
     const existingGitEnvConfig =
-      options?.env?.['GIT_CONFIG_PARAMETERS'] ??
+      opts?.env?.['GIT_CONFIG_PARAMETERS'] ??
       process.env['GIT_CONFIG_PARAMETERS'] ??
       ''
 

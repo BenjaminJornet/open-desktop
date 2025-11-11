@@ -84,7 +84,7 @@ export interface IGitExecutionOptions extends DugiteExecutionOptions {
    */
   readonly isBackgroundTask?: boolean
 
-  readonly interceptHooks?: boolean | string[]
+  readonly interceptHooks?: string[]
   readonly onHookProgress?: (progress: HookProgress) => void
   readonly onHookFailure?: (
     hookName: string,

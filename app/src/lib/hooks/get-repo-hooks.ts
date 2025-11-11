@@ -1,6 +1,6 @@
 import { exec } from 'dugite'
 import { access, constants, readdir } from 'fs/promises'
-import { join, resolve } from 'path'
+import { basename, join, resolve } from 'path'
 
 const isExecutable = (path: string) =>
   access(path, constants.X_OK)
@@ -38,6 +38,14 @@ const knownHooks = [
   'post-index-change',
 ]
 
+/**
+ * Returns the names of executable Git hooks found in the given repository.
+ *
+ * @param path   The file system path to the Git repository (root of working
+ *               directory).
+ * @param filter An optional array of hook names to filter the results.
+ *               Including '*' will return all hooks.
+ */
 export async function* getRepoHooks(path: string, filter?: string[]) {
   const { exitCode, stdout } = await exec(
     ['config', '-z', '--get', 'core.hooksPath'],
@@ -53,12 +61,12 @@ export async function* getRepoHooks(path: string, filter?: string[]) {
     .then(entries => entries.filter(x => x.isFile()))
     .catch(() => [])
 
-  for (const hook of files) {
-    const hookName = hook.name.endsWith('.exe')
-      ? hook.name.slice(0, -4)
-      : hook.name
+  const matchAll = filter?.includes('*')
 
-    if (filter && !filter.includes(hookName)) {
+  for (const file of files) {
+    const hookName = basename(file.name, '.exe')
+
+    if (matchAll || filter?.includes(hookName) === false) {
       continue
     }
 
@@ -66,21 +74,13 @@ export async function* getRepoHooks(path: string, filter?: string[]) {
       continue
     }
 
-    if (hookName.endsWith('.sample')) {
-      continue
-    }
-
-    const hookPath = join(hook.parentPath, hook.name)
-
     if (__WIN32__) {
       // On Windows we have to assume that any valid hook name is executable
       // because the executable bit is not used there. Git looks for a shebang
       // but that seems expensive to check here :shrug:
-      yield hookPath
-    } else {
-      if (await isExecutable(hookPath)) {
-        yield hookPath
-      }
+      yield hookName
+    } else if (await isExecutable(join(file.parentPath, file.name))) {
+      yield hookName
     }
   }
 }
