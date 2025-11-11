@@ -22,9 +22,7 @@ export class CommitProgress extends React.Component<ICommitProgressProps> {
 
   public componentDidMount() {
     const { unsubscribe } = this.props.subscribeToCommitOutput(chunk =>
-      Array.isArray(chunk)
-        ? chunk.forEach(c => this.terminalRef.current?.write(c))
-        : this.terminalRef.current?.write(chunk)
+      this.terminalRef.current?.write(chunk)
     )
 
     this.unsubscribe = unsubscribe
