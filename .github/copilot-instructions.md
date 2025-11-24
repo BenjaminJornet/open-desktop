@@ -6,16 +6,19 @@ This repository contains GitHub Desktop, an open-source Electron-based GitHub ap
 
 - **Language**: TypeScript (strict mode enabled)
 - **UI Framework**: React 16.x
-- **Runtime**: Electron 38.x
+- **Runtime**: Electron > 38.x (see `.npmrc` for specific version)
 - **Build Tool**: Webpack with parallel builds
-- **Package Manager**: Yarn (>= 1.9)
-- **Node Version**: >= 10 (see `.node-version` for specific version)
-- **Testing**: Node.js built-in test runner
+- **Package Manager**: Yarn (>= 1.21.1)
+- **Node Version**: >= 22 (see `.nvmrc` for specific version)
+- **Testing**: Node.js built-in test runner (run using `yarn test`, optionally providing one or more test files e.g `yarn test app/test/unit/repository-list-test.ts`)
 
 ## Code Style & Conventions
 
+GitHub Desktop has been developed for many years through many iterations of technologies and coding styles, there may be conflicting styles in different parts of the codebase. When contributing new code or refactoring existing code, please follow the conventions outlined below.
+
 ### TypeScript Style
 
+- Avoid creating new classes unless necessary; prefer functions and interfaces/types, sticking to more idiomatic TypeScript/JavaScript patterns.
 - **Use strict TypeScript** with all strict mode checks enabled
 - **Naming conventions**:
   - PascalCase for classes
@@ -23,8 +26,9 @@ This repository contains GitHub Desktop, an open-source Electron-based GitHub ap
   - Interfaces MUST start with `I` prefix (e.g., `IRepository`, `ICommit`)
   - Avoid reserved keywords as variable names (`any`, `Number`, `String`, `Boolean`, `Undefined`, etc.)
 - **Type safety**:
-  - Prefer `as` for type assertions
-  - Use the `assertNever` helper for exhaustiveness checks in switch statements
+  - Avoid using `as` for type assertions, prefer proper type narrowing and guards.
+  - Use the `assertNever` helper (from `app/src/lib/fatal-error.ts`) for exhaustiveness checks in switch statements or conditional logic
+  - Avoid non-null assertions (`!`) unless absolutely necessary
   - Write custom type definitions when none exist
   - Avoid `any` unless absolutely necessary
 - **Member ordering in classes**:
@@ -55,8 +59,8 @@ This repository contains GitHub Desktop, an open-source Electron-based GitHub ap
 
 ### Import Restrictions
 
-- **Never import `ipcRenderer` directly** from `electron` or `electron/renderer` - use `import * as ipcRenderer from 'ipc-renderer'` for strongly typed IPC methods
-- **Never import `ipcMain` directly** from `electron` or `electron/main` - use `import * as ipcMain from 'ipc-main'` for strongly typed IPC methods
+- **Never import `ipcRenderer` directly** from `electron` or `electron/renderer` - use `import * as ipcRenderer from 'ipc-renderer'` (app/src/lib/ipc-renderer.ts) for strongly typed IPC methods
+- **Never import `ipcMain` directly** from `electron` or `electron/main` - use `import * as ipcMain from 'ipc-main'` (app/src/lib/ipc-main.ts) for strongly typed IPC methods
 
 ### Code Quality
 
@@ -65,7 +69,6 @@ This repository contains GitHub Desktop, an open-source Electron-based GitHub ap
 - **No `eval`**: Never use `eval()`
 - **No `var`**: Use `const` or `let`
 - **Async operations**: Use async/await, avoid synchronous Node.js APIs in application code (use `Sync` suffix when necessary)
-- **For scripts**: Synchronous APIs are preferred for readability
 
 ### Documentation
 
@@ -116,9 +119,6 @@ yarn test <file>
 # Run tests in directory
 yarn test <directory>
 
-# Run tests matching pattern
-yarn test --test-name-pattern <pattern>
-
 # Run script tests
 yarn test:script
 
@@ -130,7 +130,7 @@ yarn test:eslint
 - Use Node.js built-in test runner (not Jest or Mocha)
 - Test files should be in `app/test/unit/` directory
 - Use `.ts` or `.tsx` extensions
-- Synchronous methods are acceptable in tests for readability
+- Avoid synchronous tests; use async/await.
 
 ### Linting
 
@@ -160,13 +160,11 @@ yarn prettier --write
 
 - **Never commit secrets, passwords, or sensitive data**
 - **Validate and sanitize user input**
-- **Use secure cookie settings**: Set `httpOnly`, `secure`, and `sameSite: strict` for cookies
 - **Follow secure coding practices**: Review code for XSS, injection, and other vulnerabilities
 - **Report security issues**: Use private vulnerability reporting, not public issues
 
 ### Git Practices
 
-- **No force push**: Repository does not support `git reset` or `git rebase` with force push
 - **Follow commit message conventions**: Clear, descriptive commit messages
 - **Reference issues**: Include issue numbers in commits when applicable
 
@@ -221,4 +219,3 @@ This project adheres to the Contributor Covenant Code of Conduct. All interactio
 4. **Update documentation**: Update docs if changes affect documented behavior
 5. **Follow existing patterns**: Match the style and patterns already in the codebase
 6. **Don't remove working code**: Only modify what's necessary for the task
-7. **Verify in the running app**: Build and run the application to manually verify changes work as expected
