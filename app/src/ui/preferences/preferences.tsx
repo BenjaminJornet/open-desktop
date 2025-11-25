@@ -134,6 +134,8 @@ interface IPreferencesState {
   readonly underlineLinks: boolean
 
   readonly showDiffCheckMarks: boolean
+
+  readonly selectedGitTabIndex?: number
 }
 
 /**
@@ -387,6 +389,10 @@ export class Preferences extends React.Component<
     }
   }
 
+  private onSelectedGitTabIndexChanged = (index: number) => {
+    this.setState({ selectedGitTabIndex: index })
+  }
+
   private renderActiveTab() {
     const index = this.state.selectedIndex
     let View
@@ -448,6 +454,8 @@ export class Preferences extends React.Component<
               onDefaultBranchChanged={this.onDefaultBranchChanged}
               isLoadingGitConfig={this.state.isLoadingGitConfig}
               onEditGlobalGitConfig={this.props.onEditGlobalGitConfig}
+              selectedTabIndex={this.state.selectedGitTabIndex}
+              onSelectedTabIndexChanged={this.onSelectedGitTabIndexChanged}
             />
           </>
         )
