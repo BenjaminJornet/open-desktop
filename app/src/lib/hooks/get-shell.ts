@@ -1,7 +1,9 @@
 import { pathExists } from 'fs-extra'
 import { join } from 'path'
 import which from 'which'
-import { bash, cmd } from './shell-escape'
+import { bash, cmd, powershell } from './shell-escape'
+import { SupportedHooksEnvShell } from './config'
+import { assertNever } from '../fatal-error'
 
 type Shell = {
   shell: string
@@ -31,33 +33,36 @@ const quoteArgMsys2 = (arg: string) => {
   return /[\s\\"'{?*~]/.test(arg) ? `"${arg.replace(/(["\\])/g, '\\$1')}"` : arg
 }
 
-const findWindowsShell = async (): Promise<Shell> => {
+const findGitBashShell = async (): Promise<Shell | undefined> => {
   const gitBashPath = await findGitBash()
 
-  if (gitBashPath) {
-    const { args, quoteCommand } = bash
-    return {
-      shell: gitBashPath,
-      args,
-      quoteCommand: (cmd, ...args) => quoteArgMsys2(quoteCommand(cmd, ...args)),
-      // MSYS2 doesn't use the argv it's given, instead it re-parses the
-      // commandline from GetCommandLineW and it doesn't comform to the
-      // usual Windows quoting rules. So we need to opt out of Node.js's
-      // quoting behavior and do it ourselves.
-      //
-      // See https://github.com/git-for-windows/git/commit/9e9da23c27650
-      windowsVerbatimArguments: true,
-      // With windowsVerbatimArguments set to true the filename passed to
-      // spawn won't get quoted by Node.js so he msys2 custom argument parser
-      // will blow up so we'll just hardcode argv[0] as bash.exe which is
-      // what it would be set to if a user ran bash.exe in a terminal and it
-      // was on PATH. The technically correct way would be to set quote it
-      // as msys2 expects it to be quoted but I'm too deep into Dantes nine
-      // circles of quoting already.
-      argv0: 'bash.exe',
-    }
+  if (!gitBashPath) {
+    return undefined
   }
+  const { args, quoteCommand } = bash
+  return {
+    shell: gitBashPath,
+    args,
+    quoteCommand: (cmd, ...args) => quoteArgMsys2(quoteCommand(cmd, ...args)),
+    // MSYS2 doesn't use the argv it's given, instead it re-parses the
+    // commandline from GetCommandLineW and it doesn't comform to the
+    // usual Windows quoting rules. So we need to opt out of Node.js's
+    // quoting behavior and do it ourselves.
+    //
+    // See https://github.com/git-for-windows/git/commit/9e9da23c27650
+    windowsVerbatimArguments: true,
+    // With windowsVerbatimArguments set to true the filename passed to
+    // spawn won't get quoted by Node.js so he msys2 custom argument parser
+    // will blow up so we'll just hardcode argv[0] as bash.exe which is
+    // what it would be set to if a user ran bash.exe in a terminal and it
+    // was on PATH. The technically correct way would be to set quote it
+    // as msys2 expects it to be quoted but I'm too deep into Dantes nine
+    // circles of quoting already.
+    argv0: 'bash.exe',
+  }
+}
 
+const findCmdShell = async (): Promise<Shell> => {
   const { COMSPEC } = process.env
   // https://github.com/nodejs/node/blob/5f77aebdfb3ea4d60cda79045d29afb244d6bcb1/lib/child_process.js#L660C31-L660C58
   const shell =
@@ -66,9 +71,38 @@ const findWindowsShell = async (): Promise<Shell> => {
   return { shell, args, quoteCommand }
 }
 
-export const getShell = async (): Promise<Shell> => {
+const findPowerShellShell = async (
+  shellKind: Extract<SupportedHooksEnvShell, 'powershell' | 'pwsh'>
+): Promise<Shell | undefined> => {
+  const pwshPath = await which(`${shellKind}.exe`, { nothrow: true })
+  if (!pwshPath) {
+    return undefined
+  }
+  const { args, quoteCommand } = powershell
+  return { shell: pwshPath, args, quoteCommand }
+}
+
+const findWindowsShell = async (
+  shellKind: SupportedHooksEnvShell = 'cmd'
+): Promise<Shell | undefined> => {
+  switch (shellKind) {
+    case 'g4w-bash':
+      return findGitBashShell()
+    case 'powershell':
+    case 'pwsh':
+      return findPowerShellShell(shellKind)
+    case 'cmd':
+      return findCmdShell()
+    default:
+      return assertNever(shellKind, `Unsupported shell kind: ${shellKind}`)
+  }
+}
+
+export const getShell = async (
+  shellKind?: SupportedHooksEnvShell
+): Promise<Shell | undefined> => {
   if (__WIN32__) {
-    return findWindowsShell()
+    return findWindowsShell(shellKind)
   }
 
   // For our purposes quoting using bash rules should be sufficient,

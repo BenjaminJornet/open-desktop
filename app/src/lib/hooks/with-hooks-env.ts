@@ -3,19 +3,19 @@ import { AddressInfo } from 'net'
 import { tmpdir } from 'os'
 import { join } from 'path'
 import { createProxyProcessServer } from 'process-proxy'
-import { enableHooksEnvironment } from '../feature-flag'
 import type { IGitExecutionOptions } from '../git/core'
 import { getRepoHooks } from './get-repo-hooks'
 import { createHooksProxy } from './hooks-proxy'
 import { getShellEnv } from './get-shell-env'
 import memoizeOne from 'memoize-one'
+import { getHooksEnvEnabled } from './config'
 
 export async function withHooksEnv<T>(
   fn: (env: Record<string, string | undefined> | undefined) => Promise<T>,
   path: string,
   opts: IGitExecutionOptions | undefined
 ): Promise<T> {
-  if (!opts?.interceptHooks || !enableHooksEnvironment()) {
+  if (!opts?.interceptHooks || !getHooksEnvEnabled()) {
     return fn(opts?.env)
   }
 

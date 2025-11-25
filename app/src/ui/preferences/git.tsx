@@ -26,10 +26,11 @@ interface IGitProps {
 
   readonly selectedTabIndex?: number
   readonly onSelectedTabIndexChanged: (index: number) => void
-}
 
-interface IGitState {
-  readonly selectedTabIndex: number
+  readonly onEnableGitHookEnvChanged: (enableGitHookEnv: boolean) => void
+  readonly onCacheGitHookEnvChanged: (cacheGitHookEnv: boolean) => void
+  readonly onSelectedShellChanged: (selectedShell: string) => void
+
   readonly enableGitHookEnv: boolean
   readonly cacheGitHookEnv: boolean
   readonly selectedShell: string
@@ -54,39 +55,31 @@ const windowsShells: ReadonlyArray<ISegmentedItem<string>> = [
   },
 ]
 
-export class Git extends React.Component<IGitProps, IGitState> {
-  public constructor(props: IGitProps) {
-    super(props)
-
-    this.state = {
-      selectedTabIndex: this.props.selectedTabIndex ?? 0,
-      enableGitHookEnv: false, // TODO: load from props
-      cacheGitHookEnv: false, // TODO: load from props
-      selectedShell: windowsShells[0].key, // TODO: load from props
-    }
+export class Git extends React.Component<IGitProps> {
+  private get selectedTabIndex() {
+    return this.props.selectedTabIndex ?? 0
   }
 
   private onTabClicked = (index: number) => {
-    this.setState({ selectedTabIndex: index })
     this.props.onSelectedTabIndexChanged?.(index)
   }
 
   private onEnableGitHookEnvChanged = (
     event: React.FormEvent<HTMLInputElement>
   ) => {
-    this.setState({ enableGitHookEnv: event.currentTarget.checked })
+    this.props.onEnableGitHookEnvChanged(event.currentTarget.checked)
   }
 
   private onCacheGitHookEnvChanged = (
     event: React.FormEvent<HTMLInputElement>
   ) => {
-    this.setState({ cacheGitHookEnv: event.currentTarget.checked })
+    this.props.onCacheGitHookEnvChanged(event.currentTarget.checked)
   }
 
   private onSelectedShellChanged = (
     event: React.FormEvent<HTMLSelectElement>
   ) => {
-    this.setState({ selectedShell: event.currentTarget.value })
+    this.props.onSelectedShellChanged(event.currentTarget.value)
   }
 
   private renderHooksSettings() {
@@ -96,7 +89,7 @@ export class Git extends React.Component<IGitProps, IGitState> {
           label="Load Git hook environment variables from shell"
           ariaDescribedBy="git-hooks-env-description"
           value={
-            this.state.enableGitHookEnv ? CheckboxValue.On : CheckboxValue.Off
+            this.props.enableGitHookEnv ? CheckboxValue.On : CheckboxValue.Off
           }
           onChange={this.onEnableGitHookEnvChanged}
         />
@@ -108,12 +101,12 @@ export class Git extends React.Component<IGitProps, IGitState> {
           nvm, rbenv, asdf, etc.
         </p>
 
-        {this.state.enableGitHookEnv && __WIN32__ && (
+        {this.props.enableGitHookEnv && __WIN32__ && (
           <>
             <Select
               className="git-hook-shell-select"
               label={'Shell to use when loading environment'}
-              value={this.state.selectedShell}
+              value={this.props.selectedShell}
               onChange={this.onSelectedShellChanged}
             >
               {windowsShells.map(s => (
@@ -125,14 +118,14 @@ export class Git extends React.Component<IGitProps, IGitState> {
           </>
         )}
 
-        {this.state.enableGitHookEnv && (
+        {this.props.enableGitHookEnv && (
           <>
             <Checkbox
               label="Cache Git hook environment variables"
               ariaDescribedBy="git-hooks-cache-description"
               onChange={this.onCacheGitHookEnvChanged}
               value={
-                this.state.cacheGitHookEnv
+                this.props.cacheGitHookEnv
                   ? CheckboxValue.On
                   : CheckboxValue.Off
               }
@@ -152,7 +145,7 @@ export class Git extends React.Component<IGitProps, IGitState> {
     return (
       <DialogContent className="git-preferences">
         <TabBar
-          selectedIndex={this.state.selectedTabIndex}
+          selectedIndex={this.selectedTabIndex}
           onTabClicked={this.onTabClicked}
         >
           <span>Author</span>
@@ -165,11 +158,11 @@ export class Git extends React.Component<IGitProps, IGitState> {
   }
 
   private renderCurrentTab() {
-    if (this.state.selectedTabIndex === 0) {
+    if (this.selectedTabIndex === 0) {
       return this.renderGitConfigAuthorInfo()
-    } else if (this.state.selectedTabIndex === 1) {
+    } else if (this.selectedTabIndex === 1) {
       return this.renderDefaultBranchSetting()
-    } else if (this.state.selectedTabIndex === 2) {
+    } else if (this.selectedTabIndex === 2) {
       return this.renderHooksSettings()
     }
 
