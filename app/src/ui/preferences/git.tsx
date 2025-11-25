@@ -46,7 +46,7 @@ const windowsShells: ReadonlyArray<ISegmentedItem<string>> = [
   },
   {
     key: 'powershell',
-    title: 'PowerShell',
+    title: 'PowerShell Desktop',
   },
   {
     key: 'cmd',
