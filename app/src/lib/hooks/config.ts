@@ -21,8 +21,19 @@ export const setCacheHooksEnv = (enabled: boolean): void =>
   setBoolean('git-cache-hooks-env', enabled)
 
 export const defaultGitHookEnvShell: SupportedHooksEnvShell = 'cmd'
-export const getGitHookEnvShell = () =>
-  localStorage.getItem('git-hook-env-shell') ?? defaultGitHookEnvShell
+export const getGitHookEnvShell = (): SupportedHooksEnvShell => {
+  const shell = localStorage.getItem('git-hook-env-shell')
+  if (
+    shell === 'g4w-bash' ||
+    shell === 'pwsh' ||
+    shell === 'powershell' ||
+    shell === 'cmd'
+  ) {
+    return shell
+  }
+  return defaultGitHookEnvShell
+}
+
 export const setGitHookEnvShell = (shell: string) =>
   localStorage.setItem('git-hook-env-shell', shell)
 

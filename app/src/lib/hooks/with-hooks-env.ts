@@ -8,7 +8,7 @@ import { getRepoHooks } from './get-repo-hooks'
 import { createHooksProxy } from './hooks-proxy'
 import { getShellEnv } from './get-shell-env'
 import memoizeOne from 'memoize-one'
-import { getHooksEnvEnabled } from './config'
+import { getGitHookEnvShell, getHooksEnvEnabled } from './config'
 
 export async function withHooksEnv<T>(
   fn: (env: Record<string, string | undefined> | undefined) => Promise<T>,
@@ -27,7 +27,7 @@ export async function withHooksEnv<T>(
 
   const memoizedGetShellEnv = memoizeOne(async () => {
     const shellEnvStartTime = Date.now()
-    const shellEnv = await getShellEnv()
+    const shellEnv = await getShellEnv(getGitHookEnvShell())
     log.debug(
       `hooks: loaded shell environment in ${Date.now() - shellEnvStartTime}ms`
     )

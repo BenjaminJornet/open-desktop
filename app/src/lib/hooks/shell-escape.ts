@@ -64,7 +64,7 @@ const powershellEscape = (arg: string) => {
 }
 
 export const powershell: Shell = {
-  args: ['-NonInteractive', '-Command'],
+  args: ['-Command'],
   quoteCommand: (cmd, ...args) =>
-    `& {${[cmd, ...args].map(a => `'${powershellEscape(a)}'`).join(' ')}}`,
+    `& ${[cmd, ...args].map(a => `'${powershellEscape(a)}'`).join(' ')}`,
 }
