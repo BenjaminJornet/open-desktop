@@ -4,6 +4,7 @@ import which from 'which'
 import { bash, cmd, powershell } from './shell-escape'
 import { SupportedHooksEnvShell } from './config'
 import { assertNever } from '../fatal-error'
+import { findGitBash as findGitBashInRegistry } from '../shells/win32'
 
 type Shell = {
   shell: string
@@ -34,7 +35,7 @@ const quoteArgMsys2 = (arg: string) => {
 }
 
 const findGitBashShell = async (): Promise<Shell | undefined> => {
-  const gitBashPath = await findGitBash()
+  const gitBashPath = (await findGitBash()) ?? (await findGitBashInRegistry())
 
   if (!gitBashPath) {
     return undefined
