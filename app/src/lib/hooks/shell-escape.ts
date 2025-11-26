@@ -64,7 +64,12 @@ const powershellEscape = (arg: string) => {
 }
 
 export const powershell: Shell = {
-  args: ['-Command'],
+  args: ['-NonInteractive', '-Command'],
   quoteCommand: (cmd, ...args) =>
-    `& ${[cmd, ...args].map(a => `'${powershellEscape(a)}'`).join(' ')}`,
+    `Start-Process -NoNewWindow -Wait -FilePath '${powershellEscape(cmd)}'${
+      args.length > 0
+        ? '-ArgumentList ' +
+          args.map(a => `'${powershellEscape(a)}'`).join(', ')
+        : ''
+    }`,
 }
