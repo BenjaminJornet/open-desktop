@@ -168,8 +168,11 @@
 
   .co-authors-toggle,
   .commit-options-button {
-    color: var(--text-secondary-color);
+    color: var(--text-color);
 
+    &.default-options {
+      color: var(--text-secondary-color);
+    }
     &:hover {
       color: var(--text-color);
     }

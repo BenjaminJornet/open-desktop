@@ -1015,7 +1015,9 @@ export class CommitMessage extends React.Component<
           <div className="separator" />
         )}
         <Button
-          className="commit-options-button"
+          className={classNames('commit-options-button', {
+            'default-options': !this.props.skipCommitHooks,
+          })}
           onClick={this.onCommitOptionsButtonClick}
           ariaLabel={ariaLabel}
           tooltip={ariaLabel}
