@@ -148,7 +148,7 @@ export const createHooksProxy = (
 
       const child = spawn(gitPath, args, {
         cwd: proxyCwd,
-        env: { ...shellEnv.env, ...safeEnv },
+        env: { ...shellEnv.env, ...safeEnv, GITHUB_DESKTOP: '1' },
         signal: abortController.signal,
       })
         .on('close', (code, signal) => resolve({ code, signal }))
