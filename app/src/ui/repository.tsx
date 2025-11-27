@@ -114,6 +114,13 @@ interface IRepositoryViewProps {
 
   /** Whether or not to show the changes filter */
   readonly showChangesFilter: boolean
+
+  readonly hasCommitHooks: boolean
+  readonly skipCommitHooks: boolean
+  readonly onSkipCommitHooksChanged: (
+    repository: Repository,
+    skipCommitHooks: boolean
+  ) => void
 }
 
 interface IRepositoryViewState {
@@ -293,6 +300,9 @@ export class RepositoryView extends React.Component<
         commitSpellcheckEnabled={this.props.commitSpellcheckEnabled}
         showCommitLengthWarning={this.props.showCommitLengthWarning}
         showChangesFilter={this.props.showChangesFilter}
+        hasCommitHooks={this.props.hasCommitHooks}
+        skipCommitHooks={this.props.skipCommitHooks}
+        onSkipCommitHooksChanged={this.props.onSkipCommitHooksChanged}
       />
     )
   }

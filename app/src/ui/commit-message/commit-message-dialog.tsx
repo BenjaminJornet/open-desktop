@@ -95,6 +95,13 @@ interface ICommitMessageDialogProps {
 
   readonly repositoryAccount: Account | null
   readonly accounts: ReadonlyArray<Account>
+
+  readonly hasCommitHooks: boolean
+  readonly skipCommitHooks: boolean
+  readonly onSkipCommitHooksChanged: (
+    repository: Repository,
+    skipCommitHooks: boolean
+  ) => void
 }
 
 interface ICommitMessageDialogState {
@@ -167,6 +174,9 @@ export class CommitMessageDialog extends React.Component<
             isCommitting={false}
             hookProgress={null}
             onShowCommitProgress={undefined}
+            hasCommitHooks={this.props.hasCommitHooks}
+            skipCommitHooks={this.props.skipCommitHooks}
+            onSkipCommitHooksChanged={this.props.onSkipCommitHooksChanged}
           />
         </DialogContent>
       </Dialog>

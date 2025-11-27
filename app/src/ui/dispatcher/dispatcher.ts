@@ -221,6 +221,13 @@ export class Dispatcher {
     return this.appStore._updateRepositoryMissing(repository, missing)
   }
 
+  public updateSkipCommitHooks(
+    repository: Repository,
+    skipCommitHooks: boolean
+  ) {
+    this.appStore._updateSkipCommitHooks(repository, skipCommitHooks)
+  }
+
   /** Load the next batch of history for the repository. */
   public loadNextCommitBatch(repository: Repository): Promise<void> {
     return this.appStore._loadNextCommitBatch(repository)

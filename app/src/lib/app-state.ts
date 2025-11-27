@@ -589,6 +589,14 @@ export interface IRepositoryState {
   /** State associated with a multi commit operation such as rebase,
    * cherry-pick, squash, reorder... */
   readonly multiCommitOperationState: IMultiCommitOperationState | null
+
+  /**
+   * Whether there are any hooks in the repository that could be
+   * skipped during commit with the --no-verify flag
+   */
+  readonly hasCommitHooks: boolean
+
+  readonly skipCommitHooks: boolean
 }
 
 export interface IBranchesState {

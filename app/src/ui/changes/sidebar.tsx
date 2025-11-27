@@ -96,6 +96,13 @@ interface IChangesSidebarProps {
 
   /** Whether or not to show the changes filter */
   readonly showChangesFilter: boolean
+
+  readonly hasCommitHooks: boolean
+  readonly skipCommitHooks: boolean
+  readonly onSkipCommitHooksChanged: (
+    repository: Repository,
+    skipCommitHooks: boolean
+  ) => void
 }
 
 export class ChangesSidebar extends React.Component<IChangesSidebarProps, {}> {
@@ -466,6 +473,9 @@ export class ChangesSidebar extends React.Component<IChangesSidebarProps, {}> {
           accounts={this.props.accounts}
           fileListFilter={this.props.changes.fileListFilter}
           showChangesFilter={this.props.showChangesFilter}
+          hasCommitHooks={this.props.hasCommitHooks}
+          skipCommitHooks={this.props.skipCommitHooks}
+          onSkipCommitHooksChanged={this.props.onSkipCommitHooksChanged}
         />
         {this.renderUndoCommit(rebaseConflictState)}
       </div>

@@ -62,7 +62,10 @@ import { formatCommitMessage } from '../../lib/format-commit-message'
 import { useRepoRulesLogic } from '../../lib/helpers/repo-rules'
 import { isDotCom } from '../../lib/endpoint-capabilities'
 import { WorkingDirectoryFileChange } from '../../models/status'
-import { enableCommitMessageGeneration } from '../../lib/feature-flag'
+import {
+  enableCommitMessageGeneration,
+  enableHooksEnvironment,
+} from '../../lib/feature-flag'
 import { AriaLiveContainer } from '../accessibility/aria-live-container'
 import { HookProgress } from '../../lib/git'
 import { assertNever } from '../../lib/fatal-error'
@@ -198,6 +201,13 @@ interface ICommitMessageProps {
   /** Optional to add an id to a message that should be provided as an aria
    * description of the submit button */
   readonly submitButtonAriaDescribedBy?: string
+
+  readonly hasCommitHooks: boolean
+  readonly skipCommitHooks: boolean
+  readonly onSkipCommitHooksChanged: (
+    repository: Repository,
+    skipCommitHooks: boolean
+  ) => void
 }
 
 interface ICommitMessageState {
@@ -992,6 +1002,51 @@ export class CommitMessage extends React.Component<
     )
   }
 
+  private renderCommitOptionsButton() {
+    if (!this.isCommitOptionsButtonEnabled) {
+      return null
+    }
+
+    const ariaLabel = 'Configure commit options'
+
+    return (
+      <>
+        {(this.isCoAuthorInputEnabled || this.isCopilotButtonEnabled) && (
+          <div className="separator" />
+        )}
+        <Button
+          className="commit-options-button"
+          onClick={this.onCommitOptionsButtonClick}
+          ariaLabel={ariaLabel}
+          tooltip={ariaLabel}
+        >
+          <Octicon symbol={octicons.gear} />
+        </Button>
+      </>
+    )
+  }
+
+  private onCommitOptionsButtonClick = (
+    e: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    e.preventDefault()
+    showContextualMenu([
+      {
+        type: 'checkbox',
+        checked: this.props.skipCommitHooks,
+        label: __DARWIN__
+          ? 'Bypass Hooks (--no-verify)'
+          : 'Bypass hooks (--no-verify)',
+        action: () => {
+          this.props.onSkipCommitHooksChanged(
+            this.props.repository,
+            !this.props.skipCommitHooks
+          )
+        },
+      },
+    ])
+  }
+
   private renderCoAuthorToggleButton() {
     if (this.props.repository.gitHubRepository === null) {
       return null
@@ -1080,11 +1135,19 @@ export class CommitMessage extends React.Component<
     )
   }
 
+  private get isCommitOptionsButtonEnabled() {
+    return enableHooksEnvironment() && this.props.hasCommitHooks
+  }
+
   /**
    * Whether or not there's anything to render in the action bar
    */
   private get isActionBarEnabled() {
-    return this.isCoAuthorInputEnabled || this.isCopilotButtonEnabled
+    return (
+      this.isCoAuthorInputEnabled ||
+      this.isCopilotButtonEnabled ||
+      this.isCommitOptionsButtonEnabled
+    )
   }
 
   private renderActionBar() {
@@ -1102,6 +1165,7 @@ export class CommitMessage extends React.Component<
       <div className={className}>
         {this.renderCoAuthorToggleButton()}
         {this.renderCopilotButton()}
+        {this.renderCommitOptionsButton()}
       </div>
     )
   }

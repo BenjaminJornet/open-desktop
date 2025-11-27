@@ -2178,6 +2178,9 @@ export class App extends React.Component<IAppProps, IAppState> {
             onSubmitCommitMessage={popup.onSubmitCommitMessage}
             repositoryAccount={repositoryAccount}
             accounts={this.state.accounts}
+            hasCommitHooks={repositoryState.hasCommitHooks}
+            skipCommitHooks={repositoryState.skipCommitHooks}
+            onSkipCommitHooksChanged={this.onSkipCommitHooksChanged}
           />
         )
       case PopupType.MultiCommitOperation: {
@@ -2600,6 +2603,13 @@ export class App extends React.Component<IAppProps, IAppState> {
       default:
         return assertNever(popup, `Unknown popup type: ${popup}`)
     }
+  }
+
+  private onSkipCommitHooksChanged = (
+    repository: Repository,
+    skipCommitHooks: boolean
+  ) => {
+    this.props.dispatcher.updateSkipCommitHooks(repository, skipCommitHooks)
   }
 
   private onSecretDelegatedBypassLinkClick = () => {
@@ -3453,6 +3463,9 @@ export class App extends React.Component<IAppProps, IAppState> {
           shouldShowGenerateCommitMessageCallOut={
             !this.state.commitMessageGenerationButtonClicked
           }
+          hasCommitHooks={selectedState.state.hasCommitHooks}
+          skipCommitHooks={selectedState.state.skipCommitHooks}
+          onSkipCommitHooksChanged={this.onSkipCommitHooksChanged}
         />
       )
     } else if (selectedState.type === SelectionType.CloningRepository) {

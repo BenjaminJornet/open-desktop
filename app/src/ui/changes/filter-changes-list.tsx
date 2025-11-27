@@ -222,6 +222,13 @@ interface IFilterChangesListProps {
 
   /** Whether or not to show the changes filter */
   readonly showChangesFilter: boolean
+
+  readonly hasCommitHooks: boolean
+  readonly skipCommitHooks: boolean
+  readonly onSkipCommitHooksChanged: (
+    repository: Repository,
+    skipCommitHooks: boolean
+  ) => void
 }
 
 interface IFilterChangesListState {
@@ -985,6 +992,9 @@ export class FilterChangesList extends React.Component<
         accounts={this.props.accounts}
         onSuccessfulCommitCreated={this.onSuccessfulCommitCreated}
         submitButtonAriaDescribedBy={'hidden-changes-warning'}
+        hasCommitHooks={this.props.hasCommitHooks}
+        skipCommitHooks={this.props.skipCommitHooks}
+        onSkipCommitHooksChanged={this.props.onSkipCommitHooksChanged}
       />
     )
   }

@@ -233,6 +233,13 @@ interface IChangesListProps {
   readonly showCommitLengthWarning: boolean
 
   readonly accounts: ReadonlyArray<Account>
+
+  readonly hasCommitHooks: boolean
+  readonly skipCommitHooks: boolean
+  readonly onSkipCommitHooksChanged: (
+    repository: Repository,
+    skipCommitHooks: boolean
+  ) => void
 }
 
 interface IChangesState {
@@ -880,6 +887,9 @@ export class ChangesList extends React.Component<
         onStopAmending={this.onStopAmending}
         onShowCreateForkDialog={this.onShowCreateForkDialog}
         accounts={this.props.accounts}
+        hasCommitHooks={this.props.hasCommitHooks}
+        skipCommitHooks={this.props.skipCommitHooks}
+        onSkipCommitHooksChanged={this.props.onSkipCommitHooksChanged}
       />
     )
   }

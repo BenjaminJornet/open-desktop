@@ -30,6 +30,7 @@ export async function createCommit(
       terminalOutput: TerminalOutput
     ) => Promise<'abort' | 'ignore'>
     onTerminalOutputAvailable?: TerminalOutputCallback
+    skipCommitHooks?: boolean
   }
 ): Promise<string> {
   // Clear the staging area, our diffs reflect the difference between the
@@ -43,6 +44,10 @@ export async function createCommit(
 
   if (options?.amend) {
     args.push('--amend')
+  }
+
+  if (options?.skipCommitHooks) {
+    args.push('--no-verify')
   }
 
   const result = await git(

@@ -166,19 +166,8 @@
     width: auto !important;
   }
 
-  .call-to-action-bubble {
-    font-weight: var(--font-weight-semibold);
-    display: inline-block;
-    font-size: var(--font-size-xs);
-    border: 1px solid var(--call-to-action-bubble-border-color);
-    color: var(--call-to-action-bubble-color);
-    padding: 1px 5px;
-    border-radius: var(--border-radius);
-    margin-left: var(--spacing-third);
-    cursor: pointer;
-  }
-
-  .co-authors-toggle {
+  .co-authors-toggle,
+  .commit-options-button {
     color: var(--text-secondary-color);
 
     &:hover {
@@ -290,7 +279,8 @@
     }
 
     .co-authors-toggle,
-    .copilot-button {
+    .copilot-button,
+    .commit-options-button {
       // button reset styles
       border: none;
       border-radius: 0px;
