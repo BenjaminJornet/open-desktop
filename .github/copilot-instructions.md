@@ -97,15 +97,6 @@ yarn
 
 # Development build
 yarn build:dev
-
-# Start the application (changes compile in background, reload with Ctrl/Cmd+Alt+R)
-yarn start
-
-# Production build
-yarn build:prod
-
-# Clean rebuild
-yarn clean-slate && yarn build:dev
 ```
 
 ### Testing
@@ -189,9 +180,6 @@ yarn prettier --write
 - **Use the Dispatcher**: Route state-changing interactions through the `Dispatcher` to the `AppStore`
 - **Avoid direct AppStore manipulation**: Methods in AppStore should be called via Dispatcher
 - **Leverage TypeScript**: Use type system for compile-time verification of exhaustiveness and correctness
-- **React Dev Tools**: Automatically available in development mode
-- **Debugging**: Use Chrome Dev Tools (View → Toggle Developer Tools)
-- **Hot reload**: Press Ctrl/Cmd+Alt+R to reload the app after changes
 
 ## Contributing
 
@@ -203,7 +191,7 @@ yarn prettier --write
 
 ## Code of Conduct
 
-This project adheres to the Contributor Covenant Code of Conduct. All interactions must be respectful and professional.
+This project adheres to the Contributor Covenant [Code of Conduct](../CODE_OF_CONDUCT.md). All interactions must be respectful and professional.
 
 ## Resources
 
