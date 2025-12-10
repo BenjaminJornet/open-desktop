@@ -97,16 +97,11 @@ export class SandboxedMarkdown extends React.PureComponent<
     }
 
     const newHeight =
-      this.frameRef.contentDocument?.body?.firstElementChild?.clientHeight ??
-      400
+      this.frameRef.contentDocument?.firstElementChild?.clientHeight ?? 400
 
     if (newHeight !== this.lastContainerHeight) {
       this.lastContainerHeight = newHeight
-      // Not sure why the content height != body height exactly. But we need to
-      // set the height explicitly to prevent scrollbar/content cut off.
-      // HACK: Add 1 to the new height to avoid UI glitches like the one shown
-      // in https://github.com/desktop/desktop/pull/18596
-      this.frameContainingDivRef.current.style.height = `${newHeight + 1}px`
+      this.frameContainingDivRef.current.style.height = `${newHeight}px`
     }
   }
 
