@@ -123,7 +123,7 @@ export async function applyNodeFilters(
     if (markdownEmitter.disposed) {
       break
     }
-    markdownEmitter.emit(mdDoc.documentElement.innerHTML)
+    markdownEmitter.emit(mdDoc.body.innerHTML)
   }
 }
 
