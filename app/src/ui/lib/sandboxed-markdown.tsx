@@ -64,7 +64,7 @@ export class SandboxedMarkdown extends React.PureComponent<
 > {
   private frameRef: HTMLIFrameElement | null = null
   private currentDocument: Document | null = null
-  private frameContainingDivRef: HTMLDivElement | null = null
+  private frameContainingDivRef = React.createRef<HTMLDivElement>()
   private markdownEmitter?: MarkdownEmitter
 
   private onDocumentScroll = debounce(() => {
@@ -104,7 +104,7 @@ export class SandboxedMarkdown extends React.PureComponent<
    * achieve a inline feel.
    */
   private refreshHeight = () => {
-    if (this.frameRef === null || this.frameContainingDivRef === null) {
+    if (this.frameRef === null || this.frameContainingDivRef.current === null) {
       return
     }
 
@@ -118,7 +118,7 @@ export class SandboxedMarkdown extends React.PureComponent<
       // set the height explicitly to prevent scrollbar/content cut off.
       // HACK: Add 1 to the new height to avoid UI glitches like the one shown
       // in https://github.com/desktop/desktop/pull/18596
-      this.frameContainingDivRef.style.height = `${newHeight + 1}px`
+      this.frameContainingDivRef.current.style.height = `${newHeight + 1}px`
     }
   }
 
@@ -131,12 +131,6 @@ export class SandboxedMarkdown extends React.PureComponent<
       e.preventDefault()
       e.stopPropagation()
     })
-  }
-
-  private onFrameContainingDivRef = (
-    frameContainingDivRef: HTMLIFrameElement | null
-  ) => {
-    this.frameContainingDivRef = frameContainingDivRef
   }
 
   private initializeMarkdownEmitter = () => {
@@ -374,7 +368,7 @@ export class SandboxedMarkdown extends React.PureComponent<
     return (
       <div
         className="sandboxed-markdown-iframe-container"
-        ref={this.onFrameContainingDivRef}
+        ref={this.frameContainingDivRef}
       >
         <iframe
           title="sandboxed-markdown-component"
