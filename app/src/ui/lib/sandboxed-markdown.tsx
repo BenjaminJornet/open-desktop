@@ -1,21 +1,22 @@
 import * as React from 'react'
 import * as Path from 'path'
-import { MarkdownContext } from '../../lib/markdown-filters/node-filter'
+import {
+  buildCustomMarkDownNodeFilterPipe,
+  MarkdownContext,
+} from '../../lib/markdown-filters/node-filter'
 import { GitHubRepository } from '../../models/github-repository'
 import { readFile } from 'fs/promises'
 import { Tooltip } from './tooltip'
 import { createObservableRef } from './observable-ref'
 import { getObjectId } from './object-id'
 import debounce from 'lodash/debounce'
-import {
-  MarkdownEmitter,
-  parseMarkdown,
-} from '../../lib/markdown-filters/markdown-filter'
 import { Emoji } from '../../lib/emoji'
+import { marked } from 'marked'
+import DOMPurify from 'dompurify'
 
 interface ISandboxedMarkdownProps {
   /** A string of unparsed markdown to display */
-  readonly markdown: string | MarkdownEmitter
+  readonly markdown: string
 
   /** The baseHref of the markdown content for when the markdown has relative links */
   readonly baseHref?: string
@@ -65,7 +66,6 @@ export class SandboxedMarkdown extends React.PureComponent<
   private frameRef: HTMLIFrameElement | null = null
   private currentDocument: Document | null = null
   private frameContainingDivRef = React.createRef<HTMLDivElement>()
-  private markdownEmitter?: MarkdownEmitter
 
   private onDocumentScroll = debounce(() => {
     if (this.frameRef == null) {
@@ -121,27 +121,8 @@ export class SandboxedMarkdown extends React.PureComponent<
     })
   }
 
-  private initializeMarkdownEmitter = () => {
-    if (this.markdownEmitter !== undefined) {
-      this.markdownEmitter.dispose()
-    }
-    const { emoji, repository, markdownContext } = this.props
-    this.markdownEmitter =
-      typeof this.props.markdown !== 'string'
-        ? this.props.markdown
-        : parseMarkdown(this.props.markdown, {
-            emoji,
-            repository,
-            markdownContext,
-          })
-
-    this.markdownEmitter.onMarkdownUpdated((markdown: string) => {
-      this.mountIframeContents(markdown)
-    })
-  }
-
   public async componentDidMount() {
-    this.initializeMarkdownEmitter()
+    this.renderMarkdown()
 
     this.frameRef?.addEventListener('load', this.refreshHeight, { once: true })
 
@@ -150,15 +131,91 @@ export class SandboxedMarkdown extends React.PureComponent<
     })
   }
 
+  public renderMarkdown = async () => {
+    const { markdown } = this.props
+
+    const body = DOMPurify.sanitize(
+      marked(markdown, {
+        // https://marked.js.org/using_advanced  If true, use approved GitHub
+        // Flavored Markdown (GFM) specification.
+        gfm: true,
+        // https://marked.js.org/using_advanced, If true, add <br> on a single
+        // line break (copies GitHub behavior on comments, but not on rendered
+        // markdown files). Requires gfm be true.
+        breaks: true,
+      })
+    )
+
+    const styleSheet = await this.getInlineStyleSheet()
+
+    // If component got unmounted while we were loading the style sheet
+    // frameref will be null.
+    if (this.frameRef === null) {
+      return
+    }
+
+    const src = `
+      <html>
+        <head>
+          ${this.getBaseTag(this.props.baseHref)}
+          ${styleSheet}
+        </head>
+        <body class="markdown-body">
+          <div id="content">
+          ${body}
+          </div>
+        </body>
+      </html>
+    `
+
+    // We used this `Buffer.toString('base64')` approach because `btoa` could not
+    // convert non-latin strings that existed in the markedjs.
+    const b64src = Buffer.from(src, 'utf8').toString('base64')
+
+    // We are using `src` and data uri as opposed to an html string in the
+    // `srcdoc` property because the `srcdoc` property renders the html in the
+    // parent dom and we want all rendering to be isolated to our sandboxed iframe.
+    // -- https://csplite.com/csp/test188/
+    const oldDocument = this.frameRef.contentDocument
+    this.currentDocument = null
+    this.frameRef.src = `data:text/html;charset=utf-8;base64,${b64src}`
+
+    const waitForNewDocument = () => {
+      if (!this.frameRef) {
+        return
+      }
+      const doc = this.frameRef.contentDocument
+      if (doc === oldDocument) {
+        requestAnimationFrame(waitForNewDocument)
+      } else if (doc !== null) {
+        this.currentDocument = doc
+        if (doc.readyState === 'loading') {
+          doc.addEventListener('DOMContentLoaded', () =>
+            this.onDocumentDOMContentLoaded(doc)
+          )
+        } else {
+          this.onDocumentDOMContentLoaded(doc)
+        }
+        return
+      }
+    }
+
+    requestAnimationFrame(waitForNewDocument)
+  }
+
   public async componentDidUpdate(prevProps: ISandboxedMarkdownProps) {
     // rerender iframe contents if provided markdown changes
-    if (prevProps.markdown !== this.props.markdown) {
-      this.initializeMarkdownEmitter()
+    if (
+      prevProps.markdown !== this.props.markdown ||
+      this.props.emoji !== prevProps.emoji ||
+      this.props.repository?.hash !== prevProps.repository?.hash ||
+      this.props.markdownContext !== prevProps.markdownContext
+    ) {
+      this.renderMarkdown()
     }
   }
 
   public componentWillUnmount() {
-    this.markdownEmitter?.dispose()
     document.removeEventListener('scroll', this.onDocumentScroll)
   }
 
@@ -265,70 +322,6 @@ export class SandboxedMarkdown extends React.PureComponent<
     return base.outerHTML
   }
 
-  /**
-   * Populates the mounted iframe with HTML generated from the provided markdown
-   */
-  private async mountIframeContents(markdown: string) {
-    if (this.frameRef === null) {
-      return
-    }
-
-    const styleSheet = await this.getInlineStyleSheet()
-
-    const src = `
-      <html>
-        <head>
-          ${this.getBaseTag(this.props.baseHref)}
-          ${styleSheet}
-        </head>
-        <body class="markdown-body">
-          <div id="content">
-          ${markdown}
-          </div>
-        </body>
-      </html>
-    `
-
-    // We used this `Buffer.toString('base64')` approach because `btoa` could not
-    // convert non-latin strings that existed in the markedjs.
-    const b64src = Buffer.from(src, 'utf8').toString('base64')
-
-    if (this.frameRef === null) {
-      // If frame is destroyed before markdown parsing completes, frameref will be null.
-      return
-    }
-
-    // We are using `src` and data uri as opposed to an html string in the
-    // `srcdoc` property because the `srcdoc` property renders the html in the
-    // parent dom and we want all rendering to be isolated to our sandboxed iframe.
-    // -- https://csplite.com/csp/test188/
-    const oldDocument = this.frameRef.contentDocument
-    this.currentDocument = null
-    this.frameRef.src = `data:text/html;charset=utf-8;base64,${b64src}`
-
-    const waitForNewDocument = () => {
-      if (!this.frameRef) {
-        return
-      }
-      const doc = this.frameRef.contentDocument
-      if (doc === oldDocument) {
-        requestAnimationFrame(waitForNewDocument)
-      } else if (doc !== null) {
-        this.currentDocument = doc
-        if (doc.readyState === 'loading') {
-          doc.addEventListener('DOMContentLoaded', () =>
-            this.onDocumentDOMContentLoaded(doc)
-          )
-        } else {
-          this.onDocumentDOMContentLoaded(doc)
-        }
-        return
-      }
-    }
-
-    requestAnimationFrame(waitForNewDocument)
-  }
-
   private onDocumentDOMContentLoaded = (doc: Document) => {
     if (this.currentDocument !== doc) {
       return
@@ -344,10 +337,53 @@ export class SandboxedMarkdown extends React.PureComponent<
       detail.addEventListener('toggle', this.refreshHeight)
     )
 
+    this.applyFilters(doc)
     this.setupLinkInterceptor(doc)
     this.setupTooltips(doc)
 
     this.props.onMarkdownParsed?.()
+  }
+
+  private async applyFilters(doc: Document) {
+    const { emoji, repository, markdownContext } = this.props
+    const filters = buildCustomMarkDownNodeFilterPipe({
+      emoji,
+      repository,
+      markdownContext,
+    })
+
+    for (const nodeFilter of filters) {
+      let docMutated = false
+      const walker = nodeFilter.createFilterTreeWalker(doc)
+
+      let node = walker.nextNode()
+      while (node !== null) {
+        const replacementNodes = await nodeFilter.filter(node)
+
+        if (this.currentDocument !== doc) {
+          // Abort, the document has changed
+          return
+        }
+
+        const currentNode = node
+        node = walker.nextNode()
+
+        if (replacementNodes === null) {
+          continue
+        }
+
+        docMutated = true
+
+        for (const replacementNode of replacementNodes) {
+          currentNode.parentNode?.insertBefore(replacementNode, currentNode)
+        }
+        currentNode.parentNode?.removeChild(currentNode)
+      }
+
+      if (docMutated) {
+        this.refreshHeight()
+      }
+    }
   }
 
   public render() {
