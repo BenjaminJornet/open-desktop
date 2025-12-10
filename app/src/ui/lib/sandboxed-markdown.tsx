@@ -54,10 +54,6 @@ interface ISandboxedMarkdownState {
   readonly tooltipOffset?: DOMRect
 }
 
-function once<T extends Node>(node: T, event: string, fn: (e: Event) => void) {
-  node.addEventListener(event, fn, { once: true })
-}
-
 /**
  * Parses and sanitizes markdown into html and outputs it inside a sandboxed
  * iframe.
@@ -67,6 +63,7 @@ export class SandboxedMarkdown extends React.PureComponent<
   ISandboxedMarkdownState
 > {
   private frameRef: HTMLIFrameElement | null = null
+  private currentDocument: Document | null = null
   private frameContainingDivRef: HTMLDivElement | null = null
   private markdownEmitter?: MarkdownEmitter
 
@@ -164,9 +161,7 @@ export class SandboxedMarkdown extends React.PureComponent<
   public async componentDidMount() {
     this.initializeMarkdownEmitter()
 
-    if (this.frameRef !== null) {
-      this.setupFrameLoadListeners(this.frameRef)
-    }
+    this.frameRef?.addEventListener('load', this.refreshHeight, { once: true })
 
     document.addEventListener('scroll', this.onDocumentScroll, {
       capture: true,
@@ -239,46 +234,12 @@ export class SandboxedMarkdown extends React.PureComponent<
     </style>`
   }
 
-  /**
-   * We still want to be able to navigate to links provided in the markdown.
-   * However, we want to intercept them an verify they are valid links first.
-   */
-  private setupFrameLoadListeners(frameRef: HTMLIFrameElement): void {
-    const doc = frameRef.contentDocument
-    if (doc) {
-      once(doc, 'DOMContentLoaded', () => {
-        this.refreshHeight()
-
-        Array.from(doc.querySelectorAll('img')).forEach(img =>
-          once(img, 'load', this.refreshHeight)
-        )
-
-        Array.from(doc.querySelectorAll('details')).forEach(detail =>
-          detail.addEventListener('toggle', this.refreshHeight)
-        )
-
-        this.setupLinkInterceptor(frameRef)
-        this.setupTooltips(frameRef)
-
-        this.props.onMarkdownParsed?.()
-      })
-    }
-
-    frameRef.addEventListener('load', () => {
-      this.refreshHeight()
-    })
-  }
-
-  private setupTooltips(frameRef: HTMLIFrameElement) {
-    if (frameRef.contentDocument === null) {
-      return
-    }
-
+  private setupTooltips(doc: Document) {
     const tooltipElements = new Array<HTMLElement>()
 
-    for (const e of frameRef.contentDocument.querySelectorAll('[aria-label]')) {
-      if (frameRef.contentWindow?.HTMLElement) {
-        if (e instanceof frameRef.contentWindow.HTMLElement) {
+    for (const e of doc.querySelectorAll('[aria-label]')) {
+      if (doc.defaultView?.HTMLElement) {
+        if (e instanceof doc.defaultView.HTMLElement) {
           tooltipElements.push(e)
         }
       }
@@ -286,7 +247,7 @@ export class SandboxedMarkdown extends React.PureComponent<
 
     this.setState({
       tooltipElements,
-      tooltipOffset: frameRef.getBoundingClientRect(),
+      tooltipOffset: this.frameRef?.getBoundingClientRect(),
     })
   }
 
@@ -294,11 +255,9 @@ export class SandboxedMarkdown extends React.PureComponent<
    * We still want to be able to navigate to links provided in the markdown.
    * However, we want to intercept them an verify they are valid links first.
    */
-  private setupLinkInterceptor(frameRef: HTMLIFrameElement): void {
-    frameRef.contentDocument?.addEventListener('click', ev => {
-      const { contentWindow } = frameRef
-
-      if (contentWindow && ev.target instanceof contentWindow.Element) {
+  private setupLinkInterceptor(doc: Document): void {
+    doc.addEventListener('click', ev => {
+      if (doc.defaultView && ev.target instanceof doc.defaultView.Element) {
         const a = ev.target.closest('a')
         if (a !== null) {
           ev.preventDefault()
@@ -362,20 +321,51 @@ export class SandboxedMarkdown extends React.PureComponent<
     // parent dom and we want all rendering to be isolated to our sandboxed iframe.
     // -- https://csplite.com/csp/test188/
     const oldDocument = this.frameRef.contentDocument
+    this.currentDocument = null
     this.frameRef.src = `data:text/html;charset=utf-8;base64,${b64src}`
 
     const waitForNewDocument = () => {
       if (!this.frameRef) {
         return
       }
-      if (this.frameRef.contentDocument === oldDocument) {
+      const doc = this.frameRef.contentDocument
+      if (doc === oldDocument) {
         requestAnimationFrame(waitForNewDocument)
-      } else {
-        this.refreshHeight()
+      } else if (doc !== null) {
+        this.currentDocument = doc
+        if (doc.readyState === 'loading') {
+          doc.addEventListener('DOMContentLoaded', () =>
+            this.onDocumentDOMContentLoaded(doc)
+          )
+        } else {
+          this.onDocumentDOMContentLoaded(doc)
+        }
+        return
       }
     }
 
     requestAnimationFrame(waitForNewDocument)
+  }
+
+  private onDocumentDOMContentLoaded = (doc: Document) => {
+    if (this.currentDocument !== doc) {
+      return
+    }
+
+    this.refreshHeight()
+
+    Array.from(doc.querySelectorAll('img')).forEach(img =>
+      img.addEventListener('load', this.refreshHeight)
+    )
+
+    Array.from(doc.querySelectorAll('details')).forEach(detail =>
+      detail.addEventListener('toggle', this.refreshHeight)
+    )
+
+    this.setupLinkInterceptor(doc)
+    this.setupTooltips(doc)
+
+    this.props.onMarkdownParsed?.()
   }
 
   public render() {
