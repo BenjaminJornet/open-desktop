@@ -4,7 +4,7 @@ A minimal Node.js native module that provides a compiled executable to output al
 
 ## Features
 
-- **Native Executable**: Compiled C++ binary using node-gyp
+- **Native Executable**: Compiled C binary using node-gyp
 - **Environment Variable Output**: Prints all environment variables separated by null bytes
 - **JavaScript Interface**: Simple function to get the path to the compiled binary
 - **TypeScript Support**: Includes TypeScript declaration file
@@ -69,7 +69,7 @@ Returns the absolute path to the compiled native `printenvz` executable.
 
 ## Files
 
-- `src/printenvz.cc` - C++ source code for the native executable
+- `src/printenvz.c` - C source code for the native executable
 - `binding.gyp` - node-gyp build configuration
 - `index.js` - JavaScript module with `getPrintenvzPath` function
 - `index.d.ts` - TypeScript declaration file
@@ -77,7 +77,7 @@ Returns the absolute path to the compiled native `printenvz` executable.
 
 ## How it Works
 
-1. The C++ source (`src/printenvz.cc`) iterates through the global `environ` variable
+1. The C source (`src/printenvz.c`) iterates through the global `environ` variable
 2. Each environment variable is printed to stdout followed by a null byte (`\0`)
 3. node-gyp compiles this into a native executable during `npm install`
 4. The JavaScript module provides a helper function to locate the executable path

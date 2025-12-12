@@ -4,16 +4,14 @@
       "target_name": "printenvz",
       "type": "executable",
       "sources": [
-        "src/printenvz.cc"
+        "src/printenvz.c"
       ],
       "include_dirs": [],
-      "cflags": ["-std=c++11"],
-      "cflags_cc": ["-std=c++11"],
+      "cflags": ["-std=c99"],
       "conditions": [
         ["OS=='mac'", {
           "xcode_settings": {
-            "OTHER_CPLUSPLUSFLAGS": ["-std=c++11", "-stdlib=libc++"],
-            "OTHER_LDFLAGS": ["-stdlib=libc++"],
+            "OTHER_CFLAGS": ["-std=c99"],
             "MACOSX_DEPLOYMENT_TARGET": "10.7"
           }
         }]
