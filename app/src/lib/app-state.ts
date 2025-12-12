@@ -596,6 +596,10 @@ export interface IRepositoryState {
    */
   readonly hasCommitHooks: boolean
 
+  /**
+   * Whether or not to skip blocking commit hooks when creating commits
+   * by means of passing the `--no-verify` flag to git commit
+   */
   readonly skipCommitHooks: boolean
 }
 

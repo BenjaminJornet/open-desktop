@@ -148,6 +148,8 @@ export const createHooksProxy = (
 
       const child = spawn(gitPath, args, {
         cwd: proxyCwd,
+        // GITHUB_DESKTOP lets hooks know they're run from GitHub Desktop.
+        // See https://github.com/desktop/desktop/issues/19001
         env: { ...shellEnv.env, ...safeEnv, GITHUB_DESKTOP: '1' },
         signal: abortController.signal,
       })

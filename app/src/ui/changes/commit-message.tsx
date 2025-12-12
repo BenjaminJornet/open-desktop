@@ -202,8 +202,19 @@ interface ICommitMessageProps {
    * description of the submit button */
   readonly submitButtonAriaDescribedBy?: string
 
+  /**
+   * Whether there are any hooks in the repository that could be
+   * skipped during commit with the --no-verify flag
+   */
   readonly hasCommitHooks: boolean
+
+  /**
+   * Whether or not to skip blocking commit hooks when creating commits
+   * by means of passing the `--no-verify` flag to git commit
+   */
   readonly skipCommitHooks: boolean
+
+  /** Callback to set commit options for the given repository */
   readonly onUpdateCommitOptions: (
     repository: Repository,
     options: CommitOptions
