@@ -44,7 +44,25 @@ export const getShellEnv = async (
       .on('data', chunk => chunks.push(chunk))
       .on('end', () => {
         const stdout = Buffer.concat(chunks).toString('utf8')
-        const matches = stdout.matchAll(/([^=]+)=([^\0]*)\0/g)
+        // It's possible that the user writes to stdout in their shell init
+        // script which would get picked up here so we've added a marker to the
+        // output of printenvz so we can be sure we're only parsing its output
+        const startMarker = '--printenvz--begin\n'
+        const endMarker = '--printenvz--end\n'
+
+        const start = stdout.indexOf(startMarker) + startMarker.length
+        const end = stdout.indexOf(endMarker)
+
+        if (start === -1 || end === -1 || start >= end) {
+          return reject(
+            new Error('could not find environment variables in shell output')
+          )
+        }
+
+        const matches = stdout
+          .substring(start, end)
+          .matchAll(/([^=]+)=([^\0]*)\0/g)
+
         resolve({
           kind: 'success',
           env: Object.fromEntries(Array.from(matches, m => [m[1], m[2]])),
