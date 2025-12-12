@@ -48,9 +48,9 @@ export const getShellEnv = async (
         // script which would get picked up here so we've added a marker to the
         // output of printenvz so we can be sure we're only parsing its output
         const startMarker = '--printenvz--begin\n'
-        const endMarker = '--printenvz--end\n'
+        const endMarker = '\n--printenvz--end\n'
 
-        const start = stdout.indexOf(startMarker) + startMarker.length
+        const start = stdout.indexOf(startMarker)
         const end = stdout.indexOf(endMarker)
 
         if (start === -1 || end === -1 || start >= end) {
@@ -60,7 +60,7 @@ export const getShellEnv = async (
         }
 
         const matches = stdout
-          .substring(start, end)
+          .substring(start + startMarker.length, end)
           .matchAll(/([^=]+)=([^\0]*)\0/g)
 
         resolve({
