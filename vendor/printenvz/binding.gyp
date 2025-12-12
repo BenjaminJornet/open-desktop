@@ -17,6 +17,10 @@
           '-Werror=format-security',
           '-fno-exceptions'
         ],
+      'ldflags': [
+        '-z relro',
+        '-z now'
+      ]
       "conditions": [
         ["OS=='mac'", {
           "xcode_settings": {
