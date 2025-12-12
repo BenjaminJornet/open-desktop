@@ -17,7 +17,7 @@
             '-fstack-protector-strong'
           ]
         },
-        'cflags!': [
+        'cflags': [
           '-Wall',
           '-Werror',
           '-fPIC',
@@ -27,8 +27,8 @@
           '-Werror=format-security',
           '-fno-exceptions'
         ],
-        'cflags_cc!': [ '-fno-exceptions' ],
-        'ldflags!': [
+        'cflags_cc': [ '-fno-exceptions' ],
+        'ldflags': [
           '-z relro',
           '-z now'
         ],
