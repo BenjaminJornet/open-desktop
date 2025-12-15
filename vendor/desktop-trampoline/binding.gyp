@@ -25,9 +25,9 @@
           '-D_FORTIFY_SOURCE=1',
           '-fstack-protector-strong',
           '-Werror=format-security',
-          '-fno-exceptions'
         ],
-        'cflags_cc': [ '-fno-exceptions' ],
+        'cflags!': [ '-fno-exceptions' ],
+        'cflags_cc!': [ '-fno-exceptions' ],
         'ldflags': [
           '-z relro',
           '-z now'

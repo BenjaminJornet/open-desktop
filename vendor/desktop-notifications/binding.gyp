@@ -2,8 +2,8 @@
   'targets': [
     {
       'target_name': 'desktop-notifications',
-      'cflags': [ '-fno-exceptions' ],
-      'cflags_cc': [ '-fno-exceptions' ],
+      'cflags!': [ '-fno-exceptions' ],
+      'cflags_cc!': [ '-fno-exceptions' ],
       'msvs_settings': {
         'VCCLCompilerTool': { 'ExceptionHandling': 1 },
       },
