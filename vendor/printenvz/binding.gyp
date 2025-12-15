@@ -15,7 +15,6 @@
           '-D_FORTIFY_SOURCE=1',
           '-fstack-protector-strong',
           '-Werror=format-security',
-          '-fno-exceptions'
         ],
       'ldflags': [
         '-z relro',
