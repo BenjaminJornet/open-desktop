@@ -47,7 +47,8 @@ export class OpenWithExternalEditor extends React.Component<
   public async componentDidMount() {
     const editors = await getAvailableEditors()
     const availableEditors = editors.map(e => e.editor)
-    const selectedEditor = availableEditors.length > 0 ? availableEditors[0] : null
+    const selectedEditor =
+      availableEditors.length > 0 ? availableEditors[0] : null
     const allowCustomIntegration = enableCustomIntegration()
 
     this.setState({
