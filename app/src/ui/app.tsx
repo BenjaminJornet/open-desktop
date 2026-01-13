@@ -1604,7 +1604,6 @@ export class App extends React.Component<IAppProps, IAppState> {
             customShell={this.state.customShell}
             repositoryIndicatorsEnabled={this.state.repositoryIndicatorsEnabled}
             onEditGlobalGitConfig={this.editGlobalGitConfig}
-            onOpenWithExternalEditor={this.showOpenWithExternalEditor}
             underlineLinks={this.state.underlineLinks}
             showDiffCheckMarks={this.state.showDiffCheckMarks}
           />
