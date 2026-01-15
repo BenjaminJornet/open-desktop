@@ -12,7 +12,7 @@ const hooksUsingStdin = [
   'post-receive',
   'reference-transaction',
   'pre-push',
-  'proc-receive', // TODO: Investigate whether this needs to be two-way or if --stdin is enough
+  'proc-receive',
 ]
 const ignoredOnFailureHooks = [
   'post-applypatch',
