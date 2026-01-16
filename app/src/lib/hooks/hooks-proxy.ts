@@ -17,6 +17,7 @@ const ignoredOnFailureHooks = [
   // Again, the exit code here does affect Git in so far that it won't run
   // git-gc but it's not something we should alert the user about.
   'pre-auto-gc',
+  'post-rewrite',
 ]
 
 const excludedEnvVars: ReadonlySet<string> = new Set([
