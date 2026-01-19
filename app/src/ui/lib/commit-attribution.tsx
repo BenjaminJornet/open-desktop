@@ -1,9 +1,7 @@
 import { Commit } from '../../models/commit'
 import * as React from 'react'
-import { CommitIdentity } from '../../models/commit-identity'
-import { GitAuthor } from '../../models/git-author'
 import { GitHubRepository } from '../../models/github-repository'
-import { isWebFlowCommitter } from '../../lib/web-flow-committer'
+import { getAvatarUsersForCommit, IAvatarUser } from '../../models/avatar'
 
 interface ICommitAttributionProps {
   /**
@@ -30,11 +28,11 @@ export class CommitAttribution extends React.Component<
   ICommitAttributionProps,
   {}
 > {
-  private renderAuthorInline(author: CommitIdentity | GitAuthor) {
+  private renderAuthorInline(author: IAvatarUser) {
     return <span className="author">{author.name}</span>
   }
 
-  private renderAuthors(authors: ReadonlyArray<CommitIdentity | GitAuthor>) {
+  private renderAuthors(authors: ReadonlyArray<IAvatarUser>) {
     if (authors.length === 1) {
       return (
         <span className="authors">{this.renderAuthorInline(authors[0])}</span>
@@ -53,34 +51,18 @@ export class CommitAttribution extends React.Component<
   }
 
   public render() {
-    const { commits } = this.props
+    const { commits, gitHubRepository } = this.props
 
-    const allAuthors = new Map<string, CommitIdentity | GitAuthor>()
-    for (const commit of commits) {
-      const { author, committer, coAuthors } = commit
-
-      // do we need to attribute the committer separately from the author?
-      const committerAttribution =
-        !commit.authoredByCommitter &&
-        !(
-          this.props.gitHubRepository !== null &&
-          isWebFlowCommitter(commit, this.props.gitHubRepository)
-        )
-
-      const authors: Array<CommitIdentity | GitAuthor> = committerAttribution
-        ? [author, committer, ...coAuthors]
-        : [author, ...coAuthors]
-
-      for (const a of authors) {
-        if (!allAuthors.has(a.toString())) {
-          allAuthors.set(a.toString(), a)
-        }
-      }
-    }
+    const allAuthors = commits.flatMap(x =>
+      getAvatarUsersForCommit(gitHubRepository, x)
+    )
+    const uniqueAuthors = new Map<string, IAvatarUser>(
+      allAuthors.map(a => [a.name + a.email, a])
+    )
 
     return (
       <span className="commit-attribution-component">
-        {this.renderAuthors(Array.from(allAuthors.values()))}
+        {this.renderAuthors(Array.from(uniqueAuthors.values()))}
       </span>
     )
   }
