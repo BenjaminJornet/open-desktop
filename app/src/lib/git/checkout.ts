@@ -7,7 +7,6 @@ import {
   executionOptionsWithProgress,
 } from '../progress'
 import { AuthenticationErrors } from './authentication'
-import { enableRecurseSubmodulesFlag } from '../feature-flag'
 import {
   envForRemoteOperation,
   getFallbackUrlForProxyResolve,
