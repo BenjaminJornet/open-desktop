@@ -5,8 +5,8 @@ import { makeCommit, switchTo } from './repository-scaffolding'
 import { glob, writeFile } from 'fs/promises'
 import { DefaultGitDescription, git } from '../../src/lib/git'
 import { TestContext } from 'node:test'
-import { cp, mkdir, readdir, rename } from 'fs/promises'
-import { basename, dirname, join } from 'path'
+import { cp, mkdir, rename } from 'fs/promises'
+import { dirname, join } from 'path'
 
 /**
  * Set up the named fixture repository to be used in a test.
