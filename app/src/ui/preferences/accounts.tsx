@@ -82,8 +82,7 @@ export class Accounts extends React.Component<IAccountsProps, {}> {
         <div className="user-info-container">
           <Avatar accounts={this.props.accounts} user={avatarUser} />
           <div className="user-info">
-            {enableMultipleEnterpriseAccounts() &&
-            isEnterpriseAccount(account) ? (
+            {isEnterpriseAccount(account) ? (
               <>
                 <div className="account-title">
                   {account.name === account.login
