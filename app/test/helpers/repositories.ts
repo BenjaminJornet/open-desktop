@@ -2,11 +2,11 @@ import { createTempDirectory } from './temp'
 import { Repository } from '../../src/models/repository'
 import { exec } from 'dugite'
 import { makeCommit, switchTo } from './repository-scaffolding'
-import { writeFile } from 'fs/promises'
+import { glob, writeFile } from 'fs/promises'
 import { DefaultGitDescription, git } from '../../src/lib/git'
 import { TestContext } from 'node:test'
 import { cp, mkdir, readdir, rename } from 'fs/promises'
-import { join } from 'path'
+import { basename, dirname, join } from 'path'
 
 /**
  * Set up the named fixture repository to be used in a test.
@@ -21,26 +21,8 @@ export async function setupFixtureRepository(
   const testRepoPath = await createTempDirectory(t)
   await cp(fixturePath, testRepoPath, { recursive: true })
 
-  const gitFolders = []
-  const listDirectories = (path: string) =>
-    readdir(path, { withFileTypes: true }).then(x =>
-      x.filter(e => e.isDirectory())
-    )
-  const stack = await listDirectories(testRepoPath)
-  let cur
-  while ((cur = stack.pop())) {
-    if (cur.name === '_git') {
-      gitFolders.push(cur)
-    } else if (!cur.name.startsWith('.')) {
-      // ^ Only search through non-hidden folders
-      for (const dir of await listDirectories(join(cur.parentPath, cur.name))) {
-        stack.push(dir)
-      }
-    }
-  }
-
-  for (const { parentPath } of gitFolders) {
-    await rename(join(parentPath, '_git'), join(parentPath, '.git'))
+  for await (const e of glob('**/_git', { cwd: testRepoPath })) {
+    await rename(join(testRepoPath, e), join(testRepoPath, dirname(e), '.git'))
   }
 
   return testRepoPath
