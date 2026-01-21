@@ -1,5 +1,5 @@
 import * as OS from 'os'
-import { compare } from 'compare-versions'
+import * as semver from 'semver'
 import memoizeOne from 'memoize-one'
 
 function getSystemVersionSafe() {
@@ -18,12 +18,12 @@ function getSystemVersionSafe() {
 
 function systemVersionGreaterThanOrEqualTo(version: string) {
   const sysver = getSystemVersionSafe()
-  return sysver === undefined ? false : compare(sysver, version, '>=')
+  return sysver === undefined ? false : semver.gte(sysver, version)
 }
 
 function systemVersionLessThan(version: string) {
   const sysver = getSystemVersionSafe()
-  return sysver === undefined ? false : compare(sysver, version, '<')
+  return sysver === undefined ? false : semver.lt(sysver, version)
 }
 
 /** Get the OS we're currently running on. */
