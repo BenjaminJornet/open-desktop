@@ -69,16 +69,6 @@ export function enableUpdateFromEmulatedX64ToARM64(): boolean {
   return enableBetaFeatures()
 }
 
-/** Should we allow resetting to a previous commit? */
-export function enableResetToCommit(): boolean {
-  return true
-}
-
-/** Should we allow checking out a single commit? */
-export function enableCheckoutCommit(): boolean {
-  return true
-}
-
 /** Should we show previous tags as suggestions? */
 export function enablePreviousTagSuggestions(): boolean {
   return enableBetaFeatures()
@@ -98,9 +88,6 @@ export const enableCustomIntegration = () => true
 
 export const enableResizingToolbarButtons = () => true
 
-export const enableFilteredChangesList = () => true
-export const enableMultipleEnterpriseAccounts = () => true
-
 export const enableCommitMessageGeneration = (account: Account) => {
   return (
     (account.features ?? []).includes(
@@ -115,3 +102,5 @@ export const enableCommitMessageGeneration = (account: Account) => {
 export function enableAccessibleListToolTips(): boolean {
   return enableBetaFeatures()
 }
+
+export const enableHooksEnvironment = enableBetaFeatures

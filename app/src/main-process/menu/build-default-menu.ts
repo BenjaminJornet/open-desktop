@@ -8,7 +8,6 @@ import { MenuLabelsEvent } from '../../models/menu-labels'
 import * as ipcWebContents from '../ipc-webcontents'
 import { mkdir } from 'fs/promises'
 import { buildTestMenu } from './build-test-menu'
-import { enableFilteredChangesList } from '../../lib/feature-flag'
 
 const createPullRequestLabel = __DARWIN__
   ? 'Create Pull Request'
@@ -214,20 +213,16 @@ export function buildDefaultMenu({
           ? emit('hide-stashed-changes')
           : emit('show-stashed-changes'),
       },
-      ...(enableFilteredChangesList()
-        ? [
-            {
-              label: __DARWIN__
-                ? `${isChangesFilterVisible ? 'Hide' : 'Show'} Changes Filter`
-                : `${
-                    isChangesFilterVisible ? 'Hide' : 'Show'
-                  } Toggle Chan&ges Filter`,
-              id: 'toggle-changes-filter',
-              accelerator: 'CmdOrCtrl+L',
-              click: emit('toggle-changes-filter'),
-            },
-          ]
-        : []),
+      {
+        label: __DARWIN__
+          ? `${isChangesFilterVisible ? 'Hide' : 'Show'} Changes Filter`
+          : `${
+              isChangesFilterVisible ? 'Hide' : 'Show'
+            } Toggle Chan&ges Filter`,
+        id: 'toggle-changes-filter',
+        accelerator: 'CmdOrCtrl+L',
+        click: emit('toggle-changes-filter'),
+      },
       {
         label: __DARWIN__ ? 'Toggle Full Screen' : 'Toggle &full screen',
         role: 'togglefullscreen',
@@ -364,6 +359,12 @@ export function buildDefaultMenu({
         id: 'open-external-editor',
         accelerator: 'CmdOrCtrl+Shift+A',
         click: emit('open-external-editor'),
+      },
+      {
+        label: __DARWIN__ ? 'Open With…' : 'Open &with…',
+        id: 'open-with-external-editor',
+        accelerator: 'CmdOrCtrl+Shift+Alt+A',
+        click: emit('open-with-external-editor'),
       },
       separator,
       {
