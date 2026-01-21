@@ -1,15 +1,11 @@
 import { spawn } from 'child_process'
-import { randomBytes } from 'crypto'
-import { createWriteStream } from 'fs'
-import { basename, join, resolve } from 'path'
+import { basename, resolve } from 'path'
 import { ProcessProxyConnection as Connection } from 'process-proxy'
-import { pipeline } from 'stream/promises'
 import type { HookProgress, TerminalOutput } from '../git'
 import { resolveGitBinary } from 'dugite'
 import { ShellEnvResult } from './get-shell-env'
 import { shellFriendlyNames } from './config'
 
-const hooksUsingStdin = ['post-rewrite']
 const ignoredOnFailureHooks = [
   'post-applypatch',
   'post-commit',
@@ -21,6 +17,7 @@ const ignoredOnFailureHooks = [
   // Again, the exit code here does affect Git in so far that it won't run
   // git-gc but it's not something we should alert the user about.
   'pre-auto-gc',
+  'post-rewrite',
 ]
 
 const excludedEnvVars: ReadonlySet<string> = new Set([
@@ -63,7 +60,6 @@ const exitWithError = (conn: Connection, msg: string, exitCode = 1) =>
   exitWithMessage(conn, msg, exitCode)
 
 export const createHooksProxy = (
-  tmpDir: string,
   getShellEnv: (cwd: string) => Promise<ShellEnvResult>,
   onHookProgress?: (progress: HookProgress) => void,
   onHookFailure?: (
@@ -76,6 +72,7 @@ export const createHooksProxy = (
     const proxyArgs = await conn.getArgs()
     const proxyEnv = await conn.getEnv()
     const proxyCwd = await conn.getCwd()
+    const hasStdin = await conn.isStdinConnected()
 
     const hookName = basename(proxyArgs[0], __WIN32__ ? '.exe' : undefined)
 
@@ -91,14 +88,6 @@ export const createHooksProxy = (
       )
     )
 
-    // tmpdir is deleted when the Git call completes, so we can leave the file
-    const stdinFilePath = join(tmpDir, `in-${randomBytes(8).toString('hex')}`)
-    const hasStdin = hooksUsingStdin.includes(hookName)
-
-    if (hasStdin) {
-      await pipeline(conn.stdin, createWriteStream(stdinFilePath))
-    }
-
     if (abortController.signal.aborted) {
       debug(`${hookName}: aborted before execution`)
       await exitWithError(conn, `hook ${hookName} aborted`)
@@ -113,7 +102,7 @@ export const createHooksProxy = (
       // pre-auto-gc hook configured themselves, so we tell Git to ignore
       // missing hooks here.
       ...(hookName === 'pre-auto-gc' ? ['--ignore-missing'] : []),
-      ...(hasStdin ? ['--to-stdin', stdinFilePath] : []),
+      ...(hasStdin ? ['--to-stdin=/dev/stdin'] : []),
       '--',
       ...proxyArgs.slice(1),
     ]
@@ -160,6 +149,7 @@ export const createHooksProxy = (
       // https://github.com/git/git/blob/4cf919bd7b946477798af5414a371b23fd68bf93/hook.c#L73C6-L73C22
       child.stderr.pipe(conn.stderr, { end: false }).on('error', reject)
       child.stderr.on('data', data => terminalOutput.push(data))
+      conn.stdin.pipe(child.stdin).on('error', reject)
     })
 
     const elapsedSeconds = (Date.now() - startTime) / 1000
