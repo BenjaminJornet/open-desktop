@@ -1,7 +1,6 @@
 import { describe, it, TestContext } from 'node:test'
 import assert from 'node:assert'
 import * as Path from 'path'
-import * as FSE from 'fs-extra'
 import { setupEmptyRepository } from '../../../helpers/repositories'
 import { pull } from '../../../../src/lib/git'
 import { IRemote } from '../../../../src/models/remote'
@@ -11,6 +10,8 @@ import {
   cloneRepository,
   makeCommit,
 } from '../../../helpers/repository-scaffolding'
+import { rm } from 'fs/promises'
+import { pathExists } from '../../../../src/ui/lib/path-exists'
 
 async function setupRepositoryWithSubmodule(
   t: TestContext
@@ -78,7 +79,7 @@ describe('git/pull', () => {
       await exec(['submodule', 'deinit', '-f', 'test-submodule'], cloned.path)
 
       // Remove the submodule directory
-      await FSE.remove(submodulePath)
+      await rm(submodulePath, { recursive: true, force: true })
 
       // Verify the submodule is not initialized
       const submoduleStatus = await exec(['submodule', 'status'], cloned.path)
@@ -94,7 +95,7 @@ describe('git/pull', () => {
       const submoduleGitPath = Path.join(submodulePath, '.git')
 
       // Check that submodule .git exists (either as file or directory)
-      const submoduleGitExists = await FSE.pathExists(submoduleGitPath)
+      const submoduleGitExists = await pathExists(submoduleGitPath)
       assert.equal(
         submoduleGitExists,
         true,

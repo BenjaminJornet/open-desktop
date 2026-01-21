@@ -2,10 +2,9 @@ import { createTempDirectory } from './temp'
 import { Repository } from '../../src/models/repository'
 import { exec } from 'dugite'
 import { makeCommit, switchTo } from './repository-scaffolding'
-import { glob, writeFile } from 'fs/promises'
+import { glob, writeFile, cp, mkdir, rename, rm } from 'fs/promises'
 import { DefaultGitDescription, git } from '../../src/lib/git'
 import { TestContext } from 'node:test'
-import { cp, mkdir, rename } from 'fs/promises'
 import { dirname, join } from 'path'
 
 /**
@@ -314,9 +313,9 @@ export async function setupRepositoryWithUninitializedSubmodule(
   await exec(['checkout', 'master'], repo.path)
 
   // Remove the .git/modules directory for the submodule to make it uninitialized
-  const modulesPath = Path.join(repo.path, '.git', 'modules', 'test-submodule')
-  await FSE.remove(modulesPath)
-  await FSE.remove(Path.join(repo.path, 'test-submodule'))
+  const modulesPath = join(repo.path, '.git', 'modules', 'test-submodule')
+  await rm(modulesPath, { recursive: true, force: true })
+  await rm(join(repo.path, 'test-submodule'), { recursive: true, force: true })
 
   return repo
 }

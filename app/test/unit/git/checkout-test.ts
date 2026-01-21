@@ -1,7 +1,6 @@
 import { describe, it } from 'node:test'
 import assert from 'node:assert'
 import * as Path from 'path'
-import * as FSE from 'fs-extra'
 import { shell } from '../../helpers/test-app-shell'
 import {
   setupEmptyRepository,
@@ -17,6 +16,7 @@ import { Branch, BranchType } from '../../../src/models/branch'
 import { getStatusOrThrow } from '../../helpers/status'
 import { exec } from 'dugite'
 import { TestStatsStore } from '../../helpers/test-stats-store'
+import { pathExists } from '../../../src/ui/lib/path-exists'
 
 describe('git/checkout', () => {
   it('throws when invalid characters are used for branch name', async t => {
@@ -176,7 +176,7 @@ describe('git/checkout', () => {
       const submoduleGitPath = Path.join(submodulePath, '.git')
 
       // Check that submodule .git exists (either as file or directory)
-      const submoduleGitExists = await FSE.pathExists(submoduleGitPath)
+      const submoduleGitExists = await pathExists(submoduleGitPath)
       assert.equal(
         submoduleGitExists,
         true,
