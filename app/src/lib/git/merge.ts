@@ -1,6 +1,6 @@
 import * as Path from 'path'
 
-import { git } from './core'
+import { git, HookCallbackOptions } from './core'
 import { GitError } from 'dugite'
 import { Repository } from '../../models/repository'
 import { pathExists } from '../../ui/lib/path-exists'
@@ -19,33 +19,60 @@ export enum MergeResult {
   Failed,
 }
 
+export type MergeOptions = {
+  /** Whether to perform a squash merge */
+  readonly squash?: boolean
+  /** Whether to bypass pre-merge and post-merge hooks */
+  readonly noVerify?: boolean
+} & HookCallbackOptions
+
 /** Merge the named branch into the current branch. */
 export async function merge(
   repository: Repository,
   branch: string,
-  isSquash: boolean = false
+  options?: MergeOptions
 ): Promise<MergeResult> {
   const args = ['merge']
 
-  if (isSquash) {
+  if (options?.squash) {
     args.push('--squash')
+  }
+
+  if (options?.noVerify) {
+    args.push('--no-verify')
   }
 
   args.push(branch)
 
   const { exitCode, stdout } = await git(args, repository.path, 'merge', {
     expectedErrors: new Set([GitError.MergeConflicts]),
+    interceptHooks: ['pre-merge-commit', 'post-merge', 'commit-msg'],
+    onHookProgress: options?.onHookProgress,
+    onHookFailure: options?.onHookFailure,
+    onTerminalOutputAvailable: options?.onTerminalOutputAvailable,
   })
 
   if (exitCode !== 0) {
     return MergeResult.Failed
   }
 
-  if (isSquash) {
+  if (options?.squash) {
     const { exitCode } = await git(
       ['commit', '--no-edit'],
       repository.path,
-      'createSquashMergeCommit'
+      'createSquashMergeCommit',
+      {
+        interceptHooks: [
+          'pre-commit',
+          'prepare-commit-msg',
+          'commit-msg',
+          'post-commit',
+          'pre-auto-gc',
+        ],
+        onHookProgress: options?.onHookProgress,
+        onHookFailure: options?.onHookFailure,
+        onTerminalOutputAvailable: options?.onTerminalOutputAvailable,
+      }
     )
     if (exitCode !== 0) {
       return MergeResult.Failed
