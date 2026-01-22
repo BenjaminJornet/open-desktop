@@ -4,6 +4,7 @@ import { git, HookCallbackOptions } from './core'
 import { GitError } from 'dugite'
 import { Repository } from '../../models/repository'
 import { pathExists } from '../../ui/lib/path-exists'
+import { createMultiOperationTerminalOutputCallback } from './multi-operation-terminal-output'
 
 export enum MergeResult {
   /** The merge completed successfully */
@@ -32,6 +33,12 @@ export async function merge(
   branch: string,
   options?: MergeOptions
 ): Promise<MergeResult> {
+  const onTerminalOutputAvailable = options?.onTerminalOutputAvailable
+    ? createMultiOperationTerminalOutputCallback(
+        options?.onTerminalOutputAvailable
+      )
+    : undefined
+
   const args = ['merge']
 
   if (options?.squash) {
@@ -49,7 +56,7 @@ export async function merge(
     interceptHooks: ['pre-merge-commit', 'post-merge', 'commit-msg'],
     onHookProgress: options?.onHookProgress,
     onHookFailure: options?.onHookFailure,
-    onTerminalOutputAvailable: options?.onTerminalOutputAvailable,
+    onTerminalOutputAvailable,
   })
 
   if (exitCode !== 0) {
@@ -71,7 +78,7 @@ export async function merge(
         ],
         onHookProgress: options?.onHookProgress,
         onHookFailure: options?.onHookFailure,
-        onTerminalOutputAvailable: options?.onTerminalOutputAvailable,
+        onTerminalOutputAvailable,
       }
     )
     if (exitCode !== 0) {
