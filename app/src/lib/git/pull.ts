@@ -1,16 +1,10 @@
 import { git, gitRebaseArguments, IGitStringExecutionOptions } from './core'
 import { Repository } from '../../models/repository'
-import { clampProgress, IPullProgress } from '../../models/progress'
+import { IPullProgress } from '../../models/progress'
 import { PullProgressParser, executionOptionsWithProgress } from '../progress'
 import { IRemote } from '../../models/remote'
-import {
-  envForRemoteOperation,
-  getFallbackUrlForProxyResolve,
-} from './environment'
+import { envForRemoteOperation } from './environment'
 import { getConfigValue } from './config'
-import { updateSubmodulesAfterOperation } from './submodule'
-
-const PullStepWeight = 0.9
 
 async function getPullArgs(
   repository: Repository,
@@ -21,6 +15,7 @@ async function getPullArgs(
     ...gitRebaseArguments(),
     'pull',
     ...(await getDefaultPullDivergentBranchArguments(repository)),
+    '--recurse-submodules',
     ...(progressCallback ? ['--progress'] : []),
     remote,
   ]
@@ -42,20 +37,15 @@ async function getPullArgs(
 export async function pull(
   repository: Repository,
   remote: IRemote,
-  progressCallback?: (progress: IPullProgress) => void,
-  allowFileProtocol: boolean = false
+  progressCallback?: (progress: IPullProgress) => void
 ): Promise<void> {
   let opts: IGitStringExecutionOptions = {
-    env: await envForRemoteOperation(
-      getFallbackUrlForProxyResolve(repository, remote)
-    ),
+    env: await envForRemoteOperation(remote.url),
   }
 
   if (progressCallback) {
     const title = `Pulling ${remote.name}`
     const kind = 'pull'
-
-    const clampedCallback = clampProgress(0, PullStepWeight, progressCallback)
 
     opts = await executionOptionsWithProgress(
       { ...opts, trackLFSProgress: true },
@@ -76,7 +66,7 @@ export async function pull(
 
         const value = progress.percent
 
-        clampedCallback({
+        progressCallback({
           kind,
           title,
           description,
@@ -87,25 +77,11 @@ export async function pull(
     )
 
     // Initial progress
-    clampedCallback({ kind, title, value: 0, remote: remote.name })
+    progressCallback({ kind, title, value: 0, remote: remote.name })
   }
 
   const args = await getPullArgs(repository, remote.name, progressCallback)
   await git(args, repository.path, 'pull', opts)
-
-  // Update submodules after pull
-  const title = `Pulling ${remote.name}`
-  await updateSubmodulesAfterOperation(
-    repository,
-    remote,
-    progressCallback
-      ? clampProgress(PullStepWeight, 1, progressCallback)
-      : undefined,
-    'pull',
-    title,
-    remote.name,
-    allowFileProtocol
-  )
 }
 
 /**

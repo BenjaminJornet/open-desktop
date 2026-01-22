@@ -10,8 +10,6 @@ import {
   cloneRepository,
   makeCommit,
 } from '../../../helpers/repository-scaffolding'
-import { rm } from 'fs/promises'
-import { pathExists } from '../../../../src/ui/lib/path-exists'
 
 async function setupRepositoryWithSubmodule(
   t: TestContext
@@ -56,61 +54,6 @@ async function setupRepositoryWithSubmodule(
 
 describe('git/pull', () => {
   describe('with submodules', () => {
-    it('initializes an uninitialized submodule when pulling from a remote with changes', async t => {
-      // Setup: Create a parent repo with a submodule, then clone it
-      const { parent } = await setupRepositoryWithSubmodule(t)
-
-      // Clone the parent repository
-      const cloned = await cloneRepository(t, parent)
-
-      // Make a change in the parent (original) repo
-      await makeCommit(parent, {
-        commitMessage: 'Update README',
-        entries: [{ path: 'README.md', contents: '# Updated Parent repo' }],
-      })
-
-      const remote: IRemote = {
-        name: 'origin',
-        url: parent.path,
-      }
-
-      // Deinitialize the submodule in the cloned repo
-      const submodulePath = Path.join(cloned.path, 'test-submodule')
-      await exec(['submodule', 'deinit', '-f', 'test-submodule'], cloned.path)
-
-      // Remove the submodule directory
-      await rm(submodulePath, { recursive: true, force: true })
-
-      // Verify the submodule is not initialized
-      const submoduleStatus = await exec(['submodule', 'status'], cloned.path)
-      assert.ok(
-        submoduleStatus.stdout.includes('-'),
-        'Submodule should be uninitialized (starts with -)'
-      )
-
-      // Now pull with allowFileProtocol=true
-      await pull(cloned, remote, undefined, true)
-
-      // Verify the submodule is initialized and has the correct commits
-      const submoduleGitPath = Path.join(submodulePath, '.git')
-
-      // Check that submodule .git exists (either as file or directory)
-      const submoduleGitExists = await pathExists(submoduleGitPath)
-      assert.equal(
-        submoduleGitExists,
-        true,
-        'Submodule .git should exist after pull'
-      )
-
-      // Verify submodule has two commits
-      const submoduleLog = await exec(['log', '--oneline'], submodulePath)
-      assert.equal(
-        submoduleLog.stdout.trim().split('\n').length,
-        2,
-        'Submodule should have two commits'
-      )
-    })
-
     it('updates submodule references after pulling changes', async t => {
       // Setup: Create parent with submodule, clone it
       const { parent, submodule } = await setupRepositoryWithSubmodule(t)
@@ -150,7 +93,7 @@ describe('git/pull', () => {
       }
 
       // Pull the changes
-      await pull(cloned, remote, undefined, true)
+      await pull(cloned, remote, undefined)
 
       // Verify submodule was updated to the new reference
       const finalLog = await exec(['log', '--oneline'], submodulePath)
@@ -189,7 +132,7 @@ describe('git/pull', () => {
       const beforeCount = beforeLog.stdout.trim().split('\n').length
 
       // Pull should succeed without errors
-      await pull(cloned, remote, undefined, true)
+      await pull(cloned, remote, undefined)
 
       // Submodule should remain unchanged
       const afterLog = await exec(['log', '--oneline'], submodulePath)
