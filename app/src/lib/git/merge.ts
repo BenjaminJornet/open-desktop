@@ -70,7 +70,7 @@ export async function merge(
       'createSquashMergeCommit',
       {
         interceptHooks: [
-          'pre-commit',
+          'pre-merge-commit',
           'prepare-commit-msg',
           'commit-msg',
           'post-commit',
