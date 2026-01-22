@@ -50,7 +50,7 @@ export async function createCommit(
         'prepare-commit-msg',
         'commit-msg',
         'post-commit',
-        'post-rewrite',
+        ...(options?.amend ? ['post-rewrite'] : []),
         'pre-auto-gc',
       ],
       onHookProgress: options?.onHookProgress,
