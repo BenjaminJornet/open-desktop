@@ -79,9 +79,15 @@ export const createHooksProxy = (
     conn.stderr.write(`Running ${hookName} hook...\n`)
     onHookProgress?.({ hookName, status: 'started', abort })
 
+    // GIT_ vars are considered safe to pass to hooks unless explicitly excluded
+    // GITHEAD_ are set by git-merge (https://github.com/git/git/blob/83a69f19359e6d9bc980563caca38b2b5729808c/builtin/merge.c#L1590)
+    const safePrefixes = ['GIT_', 'GITHEAD_']
+
     const safeEnv = Object.fromEntries(
       Object.entries(proxyEnv).filter(
-        ([k]) => k.startsWith('GIT_') && !excludedEnvVars.has(k)
+        ([k]) =>
+          safePrefixes.some(prefix => k.startsWith(prefix)) &&
+          !excludedEnvVars.has(k)
       )
     )
 
