@@ -147,9 +147,7 @@ export async function getRebaseInternalState(
  *   - when a `git pull --rebase` was run and encounters conflicts
  *
  */
-export async function getRebaseSnapshot(
-  repository: Repository
-): Promise<{
+export async function getRebaseSnapshot(repository: Repository): Promise<{
   progress: IMultiCommitOperationProgress
   commits: ReadonlyArray<CommitOneLine>
 } | null> {
@@ -441,8 +439,7 @@ export async function continueRebase(
   repository: Repository,
   files: ReadonlyArray<WorkingDirectoryFileChange>,
   manualResolutions: ReadonlyMap<string, ManualConflictResolution> = new Map(),
-  progressCallback?: (progress: IMultiCommitOperationProgress) => void,
-  gitEditor: string = ':'
+  opts?: RebaseInteractiveOptions
 ): Promise<RebaseResult> {
   const trackedFiles = files.filter(f => {
     return f.status.kind !== AppFileStatusKind.Untracked
@@ -487,13 +484,13 @@ export async function continueRebase(
       GitError.UnresolvedConflicts,
     ]),
     env: {
-      GIT_EDITOR: gitEditor,
+      GIT_EDITOR: opts?.gitEditor ?? ':',
     },
   }
 
   let options = baseOptions
 
-  if (progressCallback !== undefined) {
+  if (opts?.progressCallback) {
     const snapshot = await getRebaseSnapshot(repository)
 
     if (snapshot === null) {
@@ -505,8 +502,15 @@ export async function continueRebase(
 
     options = configureOptionsForRebase(baseOptions, {
       commits: snapshot.commits,
-      progressCallback,
+      progressCallback: opts.progressCallback,
     })
+  }
+
+  options = {
+    ...options,
+    onTerminalOutputAvailable: opts?.onTerminalOutputAvailable,
+    onHookFailure: opts?.onHookFailure,
+    onHookProgress: opts?.onHookProgress,
   }
 
   if (trackedFilesAfter.length === 0) {
@@ -515,7 +519,7 @@ export async function continueRebase(
     )
 
     const result = await git(
-      ['rebase', '--skip'],
+      ['rebase', '--skip', ...(opts?.noVerify ? ['--no-verify'] : [])],
       repository.path,
       'continueRebaseSkipCurrentCommit',
       options
@@ -525,7 +529,7 @@ export async function continueRebase(
   }
 
   const result = await git(
-    ['rebase', '--continue'],
+    ['rebase', '--continue', ...(opts?.noVerify ? ['--no-verify'] : [])],
     repository.path,
     'continueRebase',
     options
@@ -593,14 +597,11 @@ export async function rebaseInteractive(
     })
   }
 
-  const { onHookProgress, onHookFailure, onTerminalOutputAvailable } =
-    opts ?? {}
-
   options = {
     ...options,
-    onHookProgress,
-    onHookFailure,
-    onTerminalOutputAvailable,
+    onHookProgress: opts?.onHookProgress,
+    onHookFailure: opts?.onHookFailure,
+    onTerminalOutputAvailable: opts?.onTerminalOutputAvailable,
   }
 
   /* If the commit is the first commit in the branch, we cannot reference it
