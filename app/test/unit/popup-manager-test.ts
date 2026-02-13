@@ -310,7 +310,9 @@ describe('PopupManager', () => {
       const popupManager = new PopupManager()
       const popup1 = popupManager.addPopup({ type: PopupType.About })
       const popup2 = popupManager.addPopup({ type: PopupType.SignIn })
-      const popup3 = popupManager.addPopup({ type: PopupType.TermsAndConditions })
+      const popup3 = popupManager.addPopup({
+        type: PopupType.TermsAndConditions,
+      })
 
       assert.equal(popup1.id, 1)
       assert.equal(popup2.id, 2)
