@@ -83,7 +83,7 @@ const findCmdShell = async (): Promise<Shell> => {
   const shell =
     COMSPEC && /^(?:.*\\)?cmd(?:\.exe)?$/i.test(COMSPEC) ? COMSPEC : 'cmd.exe'
   const { args, quoteCommand } = cmd
-  return { shell, args, quoteCommand }
+  return { shell, args, quoteCommand, windowsVerbatimArguments: true }
 }
 
 const findPowerShellShell = async (
