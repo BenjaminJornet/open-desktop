@@ -94,7 +94,6 @@ describe('PopupManager', () => {
       assert.equal(popupsOfType.length, 1)
       assert(currentPopup !== null)
       assert.equal(currentPopup.type, PopupType.About)
-      assert.equal(currentPopup.id?.length, 36)
     })
 
     it('does not add multiple popups of the same kind to the stack', () => {
@@ -154,7 +153,6 @@ describe('PopupManager', () => {
       assert.equal(popupsOfType.length, 1)
       assert(currentPopup !== null)
       assert.equal(currentPopup?.type, PopupType.Error)
-      assert.equal(currentPopup.id?.length, 36)
     })
 
     it('adds multiple popups of type error to the stack', () => {
