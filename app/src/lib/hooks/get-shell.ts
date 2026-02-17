@@ -16,15 +16,11 @@ type Shell = {
 
 export const findGitBash = async () => {
   const gitPath = await which('git', { nothrow: true })
-
-  if (!gitPath) {
-    return null
-  }
-
   let bashPath = null
-  if (gitPath.toLowerCase().endsWith('\\cmd\\git.exe')) {
+
+  if (gitPath?.toLowerCase().endsWith('\\cmd\\git.exe')) {
     bashPath = join(gitPath, '../../usr/bin/bash.exe')
-  } else if (gitPath.toLowerCase().endsWith('\\mingw64\\bin\\git.exe')) {
+  } else if (gitPath?.toLowerCase().endsWith('\\mingw64\\bin\\git.exe')) {
     bashPath = join(gitPath, '../../../usr/bin/bash.exe')
   } else {
     const HKLM = HKEY.HKEY_LOCAL_MACHINE
