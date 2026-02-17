@@ -130,7 +130,10 @@ export class GitHubUserStore extends BaseStore {
       repository.dbID
     )
 
-    if (isDotCom(repository.endpoint)) {
+    if (
+      isDotCom(repository.endpoint) &&
+      !mentionables.some(x => x.login === 'Copilot')
+    ) {
       return mentionables.concat({
         login: 'Copilot',
         name: 'Copilot',
