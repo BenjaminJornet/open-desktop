@@ -138,6 +138,7 @@ export class UserAutocompletionProvider
           <Avatar
             accounts={this.getAccountsFromAccount(this.account)}
             user={user}
+            aria-hidden={true}
           />
           <span className="username">{item.username}</span>
           <span className="name">{item.name}</span>
