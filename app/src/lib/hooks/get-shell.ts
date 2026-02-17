@@ -16,7 +16,7 @@ type Shell = {
 
 export const findGitBash = async () => {
   const gitPath = await which('git', { nothrow: true })
-  let bashPath = null
+  let bashPath: string | null = null
 
   if (gitPath?.toLowerCase().endsWith('\\cmd\\git.exe')) {
     bashPath = join(gitPath, '../../usr/bin/bash.exe')
