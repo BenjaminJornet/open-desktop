@@ -5602,7 +5602,19 @@ export class AppStore extends TypedBaseStore<IAppState> {
     repository: Repository,
     filesSelected: ReadonlyArray<WorkingDirectoryFileChange>
   ): Promise<boolean> {
-    const account = this.getState().accounts.find(enableCommitMessageGeneration)
+    // Sort accounts by "preference", which means prefer the account that is
+    // associated to this repository.
+    const repositoryAccount = getAccountForRepository(this.accounts, repository)
+    const accounts = Array.from(this.getState().accounts).sort((a, b) => {
+      if (a === repositoryAccount) {
+        return -1
+      } else if (b === repositoryAccount) {
+        return 1
+      } else {
+        return 0
+      }
+    })
+    const account = accounts.find(enableCommitMessageGeneration)
 
     if (!account) {
       return false
