@@ -182,12 +182,13 @@ export class UserAutocompletionProvider
       login.toLowerCase() === 'copilot' &&
       this.repository.endpoint === 'https://api.github.com'
     ) {
+      const { userId, login, endpoint } = copilotSweAgentBot
       return {
         kind: 'known-user',
-        username: 'Copilot',
-        name: 'Copilot',
-        email: '198982749+Copilot@users.noreply.github.com',
-        endpoint: this.repository.endpoint,
+        username: login,
+        name: login,
+        email: getStealthEmailForUser(userId, login, endpoint),
+        endpoint,
       }
     }
 
