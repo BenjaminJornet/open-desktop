@@ -8,6 +8,9 @@ import { IMentionableUser } from '../../lib/databases/index'
 import { Avatar } from '../lib/avatar'
 import { IAvatarUser } from '../../models/avatar'
 import memoizeOne from 'memoize-one'
+import { copilotSweAgentBot } from '../../models/dot-com-bots'
+import { getStealthEmailForUser } from '../../lib/email'
+import { isDotCom } from '../../lib/endpoint-capabilities'
 
 /** An autocompletion hit for a user. */
 export type KnownUserHit = {
@@ -180,7 +183,7 @@ export class UserAutocompletionProvider
 
     if (
       login.toLowerCase() === 'copilot' &&
-      this.repository.endpoint === 'https://api.github.com'
+      isDotCom(this.repository.endpoint)
     ) {
       const { userId, login, endpoint } = copilotSweAgentBot
       return {
