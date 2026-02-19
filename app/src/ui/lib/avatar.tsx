@@ -175,6 +175,8 @@ interface IAvatarProps {
 
   /** Defaults true */
   readonly tooltip?: boolean
+
+  readonly 'aria-hidden'?: React.AriaAttributes['aria-hidden']
 }
 
 interface IAvatarState {
@@ -424,6 +426,7 @@ export class Avatar extends React.Component<IAvatarProps, IAvatarState> {
             onLoad={this.onImageLoad}
             onError={this.onImageError}
             style={{ display: imageError ? 'none' : undefined }}
+            aria-hidden={this.props['aria-hidden']}
           />
         )}
       </>
