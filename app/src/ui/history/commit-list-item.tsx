@@ -26,6 +26,8 @@ import { Account } from '../../models/account'
 import { Emoji } from '../../lib/emoji'
 import { enableAccessibleListToolTips } from '../../lib/feature-flag'
 import { TooltippedContent } from '../lib/tooltipped-content'
+import { getRelativeTimeInCommitList } from '../../models/formatting-preferences'
+import { formatDate } from '../../lib/format-date'
 
 interface ICommitProps {
   readonly gitHubRepository: GitHubRepository | null
@@ -237,7 +239,11 @@ function renderRelativeTime(date: Date) {
   return (
     <>
       {` • `}
-      <RelativeTime date={date} tooltip={!enableAccessibleListToolTips()} />
+      {getRelativeTimeInCommitList() ? (
+        <RelativeTime date={date} tooltip={!enableAccessibleListToolTips()} />
+      ) : (
+        formatDate(date)
+      )}
     </>
   )
 }

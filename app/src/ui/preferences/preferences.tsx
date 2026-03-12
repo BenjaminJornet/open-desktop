@@ -66,6 +66,10 @@ import {
   defaultTimeFormat,
   numberFormatToKey,
   numberFormatFromKey,
+  getRelativeTimeInCommitList,
+  getRelativeTimeInBranchList,
+  setRelativeTimeInCommitList,
+  setRelativeTimeInBranchList,
 } from '../../models/formatting-preferences'
 import { enableFormattingPreferences } from '../../lib/feature-flag'
 
@@ -170,6 +174,8 @@ interface IPreferencesState {
   readonly selectedDateFormat: DateFormat
   readonly selectedTimeFormat: TimeFormat
   readonly selectedNumberFormat: INumberFormat
+  readonly relativeTimeInCommitList: boolean
+  readonly relativeTimeInBranchList: boolean
 }
 
 /**
@@ -241,6 +247,8 @@ export class Preferences extends React.Component<
       selectedNumberFormat: numberFormatFromKey(
         localStorage.getItem(numberFormatKey) ?? ''
       ),
+      relativeTimeInCommitList: getRelativeTimeInCommitList(),
+      relativeTimeInBranchList: getRelativeTimeInBranchList(),
     }
   }
 
@@ -561,6 +569,14 @@ export class Preferences extends React.Component<
             onSelectedTimeFormatChanged={this.onSelectedTimeFormatChanged}
             selectedNumberFormat={this.state.selectedNumberFormat}
             onSelectedNumberFormatChanged={this.onSelectedNumberFormatChanged}
+            relativeTimeInCommitList={this.state.relativeTimeInCommitList}
+            onRelativeTimeInCommitListChanged={
+              this.onRelativeTimeInCommitListChanged
+            }
+            relativeTimeInBranchList={this.state.relativeTimeInBranchList}
+            onRelativeTimeInBranchListChanged={
+              this.onRelativeTimeInBranchListChanged
+            }
           />
         )
         break
@@ -780,6 +796,18 @@ export class Preferences extends React.Component<
     this.setState({ selectedNumberFormat })
   }
 
+  private onRelativeTimeInCommitListChanged = (
+    relativeTimeInCommitList: boolean
+  ) => {
+    this.setState({ relativeTimeInCommitList })
+  }
+
+  private onRelativeTimeInBranchListChanged = (
+    relativeTimeInBranchList: boolean
+  ) => {
+    this.setState({ relativeTimeInBranchList })
+  }
+
   private onUseCustomEditorChanged = (useCustomEditor: boolean) => {
     this.setState({ useCustomEditor })
   }
@@ -978,6 +1006,9 @@ export class Preferences extends React.Component<
       numberFormatKey,
       numberFormatToKey(this.state.selectedNumberFormat)
     )
+
+    setRelativeTimeInCommitList(this.state.relativeTimeInCommitList)
+    setRelativeTimeInBranchList(this.state.relativeTimeInBranchList)
 
     this.props.onDismissed()
   }

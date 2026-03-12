@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { DialogContent } from '../dialog'
 import { Select } from '../lib/select'
+import { Checkbox, CheckboxValue } from '../lib/checkbox'
 import {
   DateFormat,
   TimeFormat,
@@ -18,6 +19,10 @@ interface IFormattingProps {
   readonly onSelectedTimeFormatChanged: (format: TimeFormat) => void
   readonly selectedNumberFormat: INumberFormat
   readonly onSelectedNumberFormatChanged: (format: INumberFormat) => void
+  readonly relativeTimeInCommitList: boolean
+  readonly onRelativeTimeInCommitListChanged: (value: boolean) => void
+  readonly relativeTimeInBranchList: boolean
+  readonly onRelativeTimeInBranchListChanged: (value: boolean) => void
 }
 
 export class Formatting extends React.Component<IFormattingProps> {
@@ -44,9 +49,25 @@ export class Formatting extends React.Component<IFormattingProps> {
     }
   }
 
+  private onRelativeTimeInCommitListChanged = (
+    event: React.FormEvent<HTMLInputElement>
+  ) => {
+    this.props.onRelativeTimeInCommitListChanged(
+      event.currentTarget.checked
+    )
+  }
+
+  private onRelativeTimeInBranchListChanged = (
+    event: React.FormEvent<HTMLInputElement>
+  ) => {
+    this.props.onRelativeTimeInBranchListChanged(
+      event.currentTarget.checked
+    )
+  }
+
   public render() {
     return (
-      <DialogContent className="formatting-tab">
+      <DialogContent>
         <h2>{__DARWIN__ ? 'Formatting' : 'Formatting'}</h2>
 
         <Select
@@ -87,6 +108,27 @@ export class Formatting extends React.Component<IFormattingProps> {
             </option>
           ))}
         </Select>
+
+        <h2>{__DARWIN__ ? 'Relative Time' : 'Relative time'}</h2>
+
+        <Checkbox
+          label="Show relative time in commit list"
+          value={
+            this.props.relativeTimeInCommitList
+              ? CheckboxValue.On
+              : CheckboxValue.Off
+          }
+          onChange={this.onRelativeTimeInCommitListChanged}
+        />
+        <Checkbox
+          label="Show relative time in branch list"
+          value={
+            this.props.relativeTimeInBranchList
+              ? CheckboxValue.On
+              : CheckboxValue.Off
+          }
+          onChange={this.onRelativeTimeInBranchListChanged}
+        />
       </DialogContent>
     )
   }

@@ -11,6 +11,8 @@ import { RelativeTime } from '../relative-time'
 import classNames from 'classnames'
 import { TooltippedContent } from '../lib/tooltipped-content'
 import { enableAccessibleListToolTips } from '../../lib/feature-flag'
+import { getRelativeTimeInBranchList } from '../../models/formatting-preferences'
+import { formatDate } from '../../lib/format-date'
 
 interface IBranchListItemProps {
   /** The name of the branch */
@@ -120,14 +122,17 @@ export class BranchListItem extends React.Component<
         >
           <HighlightText text={name} highlight={this.props.matches.title} />
         </TooltippedContent>
-        {authorDate && (
-          <RelativeTime
-            className="description"
-            date={authorDate}
-            onlyRelative={true}
-            tooltip={!enableAccessibleListToolTips()}
-          />
-        )}
+        {authorDate &&
+          (getRelativeTimeInBranchList() ? (
+            <RelativeTime
+              className="description"
+              date={authorDate}
+              onlyRelative={true}
+              tooltip={!enableAccessibleListToolTips()}
+            />
+          ) : (
+            <span className="description">{formatDate(authorDate)}</span>
+          ))}
       </div>
     )
   }

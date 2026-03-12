@@ -168,3 +168,24 @@ export function numberFormatFromKey(key: string): INumberFormat {
   const match = numberFormats.find(n => numberFormatToKey(n.format) === key)
   return match?.format ?? defaultNumberFormat
 }
+
+const relativeTimeInCommitListKey = 'relativeTimeInCommitList'
+const relativeTimeInBranchListKey = 'relativeTimeInBranchList'
+
+/** Whether to show relative time in the commit list. Defaults to true. */
+export function getRelativeTimeInCommitList(): boolean {
+  return localStorage.getItem(relativeTimeInCommitListKey) !== '0'
+}
+
+/** Whether to show relative time in the branch list. Defaults to true. */
+export function getRelativeTimeInBranchList(): boolean {
+  return localStorage.getItem(relativeTimeInBranchListKey) !== '0'
+}
+
+export function setRelativeTimeInCommitList(value: boolean): void {
+  localStorage.setItem(relativeTimeInCommitListKey, value ? '1' : '0')
+}
+
+export function setRelativeTimeInBranchList(value: boolean): void {
+  localStorage.setItem(relativeTimeInBranchListKey, value ? '1' : '0')
+}
