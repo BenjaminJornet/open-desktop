@@ -46,6 +46,12 @@ export class RenameBranch extends React.Component<
     this.state = { newName: props.branch.name, currentError: null }
   }
 
+  public componentWillUnmount() {
+    if (this.branchRulesDebounceId !== null) {
+      window.clearTimeout(this.branchRulesDebounceId)
+    }
+  }
+
   public render() {
     const disabled =
       this.state.newName.length === 0 ||
