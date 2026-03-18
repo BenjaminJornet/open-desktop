@@ -46,6 +46,14 @@ export class RenameBranch extends React.Component<
     this.state = { newName: props.branch.name, currentError: null }
   }
 
+  public componentDidMount() {
+    // Validate the pre-filled branch name on dialog open so existing
+    // rule violations are shown immediately.
+    if (this.state.newName !== '') {
+      this.checkBranchRules(this.state.newName)
+    }
+  }
+
   public componentWillUnmount() {
     if (this.branchRulesDebounceId !== null) {
       window.clearTimeout(this.branchRulesDebounceId)
