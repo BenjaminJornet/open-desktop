@@ -95,7 +95,7 @@ function getE2ELaunchOptions() {
   }
 }
 
-function killLingeringWindowsUpdaterProcesses() {
+export function terminateWindowsUpdaterProcesses() {
   if (process.platform !== 'win32') {
     return
   }
@@ -106,10 +106,6 @@ function killLingeringWindowsUpdaterProcesses() {
       windowsHide: true,
     })
   }
-}
-
-export function terminateWindowsUpdaterProcesses() {
-  killLingeringWindowsUpdaterProcesses()
 }
 
 // ── Helpers exposed to tests ────────────────────────────────────────
@@ -190,12 +186,9 @@ export const test = base.extend<{}, E2EFixtures>({
 
       await use(app)
 
-      if (process.platform === 'win32') {
-        killLingeringWindowsUpdaterProcesses()
-      }
-
+      terminateWindowsUpdaterProcesses()
       await app.close().catch(() => {})
-      killLingeringWindowsUpdaterProcesses()
+      terminateWindowsUpdaterProcesses()
       await new Promise(resolve => setTimeout(resolve, 1000))
     },
     { scope: 'worker' },
