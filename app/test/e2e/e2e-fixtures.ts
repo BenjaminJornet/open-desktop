@@ -37,6 +37,12 @@ const projectRoot = path.resolve(__dirname, '..', '..', '..')
 const userDataDir = path.join(os.tmpdir(), 'github-desktop-pw-e2e')
 const fakeHomeDir = path.join(os.tmpdir(), 'github-desktop-pw-fake-home')
 const installedAppExecutablePath = process.env.DESKTOP_E2E_APP_PATH
+// `packaged` is the default because CI runs the suite against packaged or
+// installed production artifacts. `unpackaged` exists for local iteration so
+// the same tests can run against the staged app in `out/main.js` without
+// requiring packaging or signing.
+const e2eAppMode = process.env.DESKTOP_E2E_APP_MODE ?? 'packaged'
+const unpackagedAppEntryPoint = path.join(projectRoot, 'out', 'main.js')
 
 function getPackagedAppExecutablePath() {
   const distPath = getDistPath()
@@ -61,6 +67,33 @@ function getPackagedAppExecutablePath() {
 
 const e2eAppExecutablePath =
   installedAppExecutablePath ?? getPackagedAppExecutablePath()
+
+function getE2ELaunchOptions() {
+  if (installedAppExecutablePath !== undefined) {
+    return {
+      executablePath: installedAppExecutablePath,
+      args: [`--user-data-dir=${userDataDir}`, `--cli-open=${smokeRepoPath}`],
+      missingPath: installedAppExecutablePath,
+    }
+  }
+
+  if (e2eAppMode === 'unpackaged') {
+    return {
+      args: [
+        unpackagedAppEntryPoint,
+        `--user-data-dir=${userDataDir}`,
+        `--cli-open=${smokeRepoPath}`,
+      ],
+      missingPath: unpackagedAppEntryPoint,
+    }
+  }
+
+  return {
+    executablePath: e2eAppExecutablePath,
+    args: [`--user-data-dir=${userDataDir}`, `--cli-open=${smokeRepoPath}`],
+    missingPath: e2eAppExecutablePath,
+  }
+}
 
 function killLingeringWindowsUpdaterProcesses() {
   if (process.platform !== 'win32') {
@@ -125,9 +158,11 @@ export const test = base.extend<{}, E2EFixtures>({
       // Setup directories
       ensureSmokeTestRepository()
 
-      if (!fs.existsSync(e2eAppExecutablePath)) {
+      const launchOptions = getE2ELaunchOptions()
+
+      if (!fs.existsSync(launchOptions.missingPath)) {
         throw new Error(
-          `E2E app not found at ${e2eAppExecutablePath}. Run yarn test:e2e:build first.`
+          `E2E app not found at ${launchOptions.missingPath}. Run the matching E2E build step first.`
         )
       }
 
@@ -137,8 +172,7 @@ export const test = base.extend<{}, E2EFixtures>({
       fs.mkdirSync(fakeHomeDir, { recursive: true })
 
       const app = await electron.launch({
-        executablePath: e2eAppExecutablePath,
-        args: [`--user-data-dir=${userDataDir}`, `--cli-open=${smokeRepoPath}`],
+        ...launchOptions,
         env: {
           ...process.env,
           GIT_CONFIG_GLOBAL: path.join(fakeHomeDir, '.gitconfig'),

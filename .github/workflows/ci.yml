@@ -296,5 +296,5 @@ jobs:
           }
 
           Add-Content -Path $env:GITHUB_ENV -Value "DESKTOP_E2E_APP_PATH=$installedExe"
-      - name: Run E2E smoke tests
-        run: yarn test:e2e:run
+      - name: Run packaged E2E smoke tests
+        run: yarn test:e2e:run:packaged
