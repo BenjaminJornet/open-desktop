@@ -34,7 +34,7 @@ function getWindowsUpdateAvailableReleases() {
   return `${fakeSha} ${nextWindowsPackageName} ${fakePackageSize}`
 }
 
-type UpdateBehavior = 'no-update' | 'update-available'
+export type UpdateBehavior = 'no-update' | 'update-available'
 
 export interface IMockUpdateServer {
   readonly server: http.Server

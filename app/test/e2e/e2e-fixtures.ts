@@ -29,6 +29,7 @@ import {
   createMockUpdateServer,
   MOCK_CONTROL_URL,
   type IMockUpdateServer,
+  type UpdateBehavior,
 } from './mock-update-server'
 import { getDistPath, getExecutableName } from '../../../script/dist-info'
 import { getProductName } from '../../package-info'
@@ -110,7 +111,13 @@ export function terminateWindowsUpdaterProcesses() {
 
 // ── Helpers exposed to tests ────────────────────────────────────────
 
-export function controlMockServer(action: string): Promise<string> {
+type MockControlAction =
+  | `set-behavior/${UpdateBehavior}`
+  | 'reset-requests'
+  | 'requests'
+  | 'behavior'
+
+export function controlMockServer(action: MockControlAction): Promise<string> {
   return new Promise((resolve, reject) => {
     http
       .get(`${MOCK_CONTROL_URL}/${action}`, res => {
