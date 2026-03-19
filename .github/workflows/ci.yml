@@ -298,3 +298,10 @@ jobs:
           Add-Content -Path $env:GITHUB_ENV -Value "DESKTOP_E2E_APP_PATH=$installedExe"
       - name: Run packaged E2E smoke tests
         run: yarn test:e2e:run:packaged
+      - name: Upload E2E artifacts
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-${{matrix.friendlyName}}-${{matrix.arch}}
+          path: playwright-videos/**
+          if-no-files-found: warn
