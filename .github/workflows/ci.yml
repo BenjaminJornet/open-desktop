@@ -89,19 +89,10 @@ jobs:
           repository: ${{ inputs.repository || github.repository }}
           ref: ${{ inputs.ref }}
           submodules: recursive
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-      - name: Use Node.js ${{ env.NODE_VERSION }}
-        uses: actions/setup-node@v4
+      - uses: ./.github/actions/setup-ci-environment
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: yarn
-      - name: Install and build dependencies
-        run: yarn
-        env:
-          npm_config_arch: ${{ matrix.arch }}
-          TARGET_ARCH: ${{ matrix.arch }}
+          arch: ${{ matrix.arch }}
       - name: Validate macOS version
         if: runner.os == 'macOS'
         run: yarn validate-macos-version
@@ -133,22 +124,11 @@ jobs:
         run: yarn test:unit
       - name: Run script tests
         run: yarn test:script
-      - name: Install Azure Code Signing Client
-        if: ${{ runner.os == 'Windows' && inputs.sign }}
-        run: |
-          $acsZip = Join-Path $env:RUNNER_TEMP "acs.zip"
-          $acsDir = Join-Path $env:RUNNER_TEMP "acs"
-          Invoke-WebRequest -Uri https://www.nuget.org/api/v2/package/Microsoft.Trusted.Signing.Client/1.0.95 -OutFile $acsZip -Verbose
-          Expand-Archive $acsZip -Destination $acsDir -Force -Verbose
-          # Replace ancient signtool in electron-winstall with one that supports ACS
-          Copy-Item -Path "C:\Program Files (x86)\Windows Kits\10\bin\10.0.22621.0\x64\*" -Include signtool.exe,signtool.exe.manifest,Microsoft.Windows.Build.Signing.mssign32.dll.manifest,mssign32.dll,Microsoft.Windows.Build.Signing.wintrust.dll.manifest,wintrust.dll,Microsoft.Windows.Build.Appx.AppxSip.dll.manifest,AppxSip.dll,Microsoft.Windows.Build.Appx.AppxPackaging.dll.manifest,AppxPackaging.dll,Microsoft.Windows.Build.Appx.OpcServices.dll.manifest,OpcServices.dll -Destination "node_modules\electron-winstaller\vendor" -Verbose
-      - name: Azure Login (OIDC)
-        if: ${{ runner.os == 'Windows' && inputs.sign }}
-        uses: azure/login@v2
+      - uses: ./.github/actions/setup-windows-signing
         with:
-          client-id: ${{ secrets.AZURE_CODE_SIGNING_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_CODE_SIGNING_TENANT_ID }}
-          allow-no-subscriptions: true
+          enabled: ${{ inputs.sign }}
+          azure-client-id: ${{ secrets.AZURE_CODE_SIGNING_CLIENT_ID }}
+          azure-tenant-id: ${{ secrets.AZURE_CODE_SIGNING_TENANT_ID }}
       - name: Package production app
         run: yarn package
         env:
@@ -192,22 +172,11 @@ jobs:
           repository: ${{ inputs.repository || github.repository }}
           ref: ${{ inputs.ref }}
           submodules: recursive
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-      - name: Use Node.js ${{ env.NODE_VERSION }}
-        uses: actions/setup-node@v4
+      - uses: ./.github/actions/setup-ci-environment
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: yarn
-      - name: Install ffmpeg
-        if: runner.os == 'Windows'
-        run: choco install ffmpeg --yes --no-progress
-      - name: Install and build dependencies
-        run: yarn
-        env:
-          npm_config_arch: ${{ matrix.arch }}
-          TARGET_ARCH: ${{ matrix.arch }}
+          arch: ${{ matrix.arch }}
+          install-ffmpeg: 'true'
       - name: Build production app
         run: yarn build:prod
         env:
@@ -222,21 +191,11 @@ jobs:
           KEY_PASSWORD: ${{ secrets.APPLE_APPLICATION_CERT_PASSWORD }}
           npm_config_arch: ${{ matrix.arch }}
           TARGET_ARCH: ${{ matrix.arch }}
-      - name: Install Azure Code Signing Client
-        if: ${{ runner.os == 'Windows' && inputs.sign }}
-        run: |
-          $acsZip = Join-Path $env:RUNNER_TEMP "acs.zip"
-          $acsDir = Join-Path $env:RUNNER_TEMP "acs"
-          Invoke-WebRequest -Uri https://www.nuget.org/api/v2/package/Microsoft.Trusted.Signing.Client/1.0.95 -OutFile $acsZip -Verbose
-          Expand-Archive $acsZip -Destination $acsDir -Force -Verbose
-          Copy-Item -Path "C:\Program Files (x86)\Windows Kits\10\bin\10.0.22621.0\x64\*" -Include signtool.exe,signtool.exe.manifest,Microsoft.Windows.Build.Signing.mssign32.dll.manifest,mssign32.dll,Microsoft.Windows.Build.Signing.wintrust.dll.manifest,wintrust.dll,Microsoft.Windows.Build.Appx.AppxSip.dll.manifest,AppxSip.dll,Microsoft.Windows.Build.Appx.AppxPackaging.dll.manifest,AppxPackaging.dll,Microsoft.Windows.Build.Appx.OpcServices.dll.manifest,OpcServices.dll -Destination "node_modules\electron-winstaller\vendor" -Verbose
-      - name: Azure Login (OIDC)
-        if: ${{ runner.os == 'Windows' && inputs.sign }}
-        uses: azure/login@v2
+      - uses: ./.github/actions/setup-windows-signing
         with:
-          client-id: ${{ secrets.AZURE_CODE_SIGNING_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_CODE_SIGNING_TENANT_ID }}
-          allow-no-subscriptions: true
+          enabled: ${{ inputs.sign }}
+          azure-client-id: ${{ secrets.AZURE_CODE_SIGNING_CLIENT_ID }}
+          azure-tenant-id: ${{ secrets.AZURE_CODE_SIGNING_TENANT_ID }}
       - name: Package production app
         run: yarn package
         env:
