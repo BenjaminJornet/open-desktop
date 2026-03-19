@@ -136,6 +136,10 @@ export async function getMockRequests(): Promise<
 }
 
 export async function dismissMoveToApplicationsDialog(page: Page) {
+  if (process.platform !== 'darwin') {
+    return
+  }
+
   const btn = page.locator(
     'button:has-text("Not Now"), button:has-text("Not now")'
   )
