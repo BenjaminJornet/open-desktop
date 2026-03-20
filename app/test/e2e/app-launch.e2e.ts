@@ -23,7 +23,8 @@ import {
   getSmokeRepoHeadMessage,
   getSmokeRepoStatus,
 } from './test-helpers'
-import type { Page } from '@playwright/test'
+import { getVersion } from '../../package-info'
+import type { Locator, Page } from '@playwright/test'
 
 // All tests run sequentially in the same Electron session.
 test.describe.configure({ mode: 'serial' })
@@ -56,6 +57,43 @@ function isMockUpdateRequest(url: string) {
     url.endsWith('.nupkg') ||
     url.startsWith('/download/')
   )
+}
+
+function getReleaseChannelForE2E() {
+  const configuredChannel = process.env.RELEASE_CHANNEL
+
+  if (configuredChannel !== undefined) {
+    return configuredChannel
+  }
+
+  const version = getVersion()
+
+  if (version.includes('test')) {
+    return 'test'
+  }
+
+  if (version.includes('beta')) {
+    return 'beta'
+  }
+
+  return 'production'
+}
+
+const releaseChannel = getReleaseChannelForE2E()
+const shouldAutoCheckForUpdatesOnLaunch =
+  releaseChannel !== 'development' && releaseChannel !== 'test'
+
+async function clickCheckForUpdatesIfAvailable(target: Page | Locator) {
+  const checkBtn = target.locator(
+    'button.button-component:has-text("Check for Updates")'
+  )
+
+  if (
+    (await checkBtn.isVisible().catch(() => false)) &&
+    (await checkBtn.isEnabled().catch(() => false))
+  ) {
+    await checkBtn.click()
+  }
 }
 
 // ── Smoke tests ─────────────────────────────────────────────────────
@@ -223,6 +261,11 @@ test.describe('Auto-update', () => {
     test('sends an update check to the mock server on launch', async ({
       mockServer,
     }) => {
+      test.skip(
+        !shouldAutoCheckForUpdatesOnLaunch,
+        `Startup update checks are disabled for the ${releaseChannel} channel.`
+      )
+
       await expect
         .poll(
           async () => {
@@ -260,6 +303,10 @@ test.describe('Auto-update', () => {
     test('shows up-to-date status after no-update check', async ({
       mainWindow: page,
     }) => {
+      if (!shouldAutoCheckForUpdatesOnLaunch) {
+        await clickCheckForUpdatesIfAvailable(page)
+      }
+
       const updateStatus = page.locator('#about .update-status')
       await updateStatus.waitFor({ state: 'visible', timeout: 10000 })
 
@@ -291,15 +338,7 @@ test.describe('Auto-update', () => {
       const aboutDialog = page.locator('#about')
       await aboutDialog.waitFor({ state: 'visible', timeout: 5000 })
 
-      const checkBtn = aboutDialog.locator(
-        'button.button-component:has-text("Check for Updates")'
-      )
-      if (
-        (await checkBtn.isVisible().catch(() => false)) &&
-        (await checkBtn.isEnabled().catch(() => false))
-      ) {
-        await checkBtn.click()
-      }
+      await clickCheckForUpdatesIfAvailable(aboutDialog)
 
       // Wait for status change
       const updateStatus = aboutDialog.locator('.update-status')
@@ -346,15 +385,7 @@ test.describe('Auto-update', () => {
       const aboutDialog = page.locator('#about')
       await aboutDialog.waitFor({ state: 'visible', timeout: 5000 })
 
-      const checkBtn = aboutDialog.locator(
-        'button.button-component:has-text("Check for Updates")'
-      )
-      if (
-        (await checkBtn.isVisible().catch(() => false)) &&
-        (await checkBtn.isEnabled().catch(() => false))
-      ) {
-        await checkBtn.click()
-      }
+      await clickCheckForUpdatesIfAvailable(aboutDialog)
 
       const updateStatus = aboutDialog.locator('.update-status')
       await expect
