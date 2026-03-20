@@ -1,9 +1,6 @@
 import { describe, it } from 'node:test'
 import * as assert from 'node:assert'
-import {
-  formatNumber,
-  formatCompactNumber,
-} from '../../src/lib/format-number'
+import { formatNumber, formatCompactNumber } from '../../src/lib/format-number'
 import { INumberFormat } from '../../src/models/formatting-preferences'
 
 // Standard number formats for testing
@@ -96,20 +93,29 @@ describe('formatNumber', () => {
     it('formats without thousands separator when configured', () => {
       assert.strictEqual(formatNumber(1000, noThousandsDotDecimal), '1000')
       assert.strictEqual(formatNumber(12345, noThousandsDotDecimal), '12345')
-      assert.strictEqual(formatNumber(1234567, noThousandsDotDecimal), '1234567')
+      assert.strictEqual(
+        formatNumber(1234567, noThousandsDotDecimal),
+        '1234567'
+      )
     })
   })
 
   describe('decimals', () => {
     it('formats decimals with dot separator', () => {
       assert.strictEqual(formatNumber(1.5, commaThousandsDotDecimal), '1.5')
-      assert.strictEqual(formatNumber(3.14159, commaThousandsDotDecimal), '3.14159')
+      assert.strictEqual(
+        formatNumber(3.14159, commaThousandsDotDecimal),
+        '3.14159'
+      )
       assert.strictEqual(formatNumber(0.123, commaThousandsDotDecimal), '0.123')
     })
 
     it('formats decimals with comma separator (European style)', () => {
       assert.strictEqual(formatNumber(1.5, dotThousandsCommaDecimal), '1,5')
-      assert.strictEqual(formatNumber(3.14159, dotThousandsCommaDecimal), '3,14159')
+      assert.strictEqual(
+        formatNumber(3.14159, dotThousandsCommaDecimal),
+        '3,14159'
+      )
       assert.strictEqual(formatNumber(0.123, dotThousandsCommaDecimal), '0,123')
     })
 
@@ -132,7 +138,10 @@ describe('formatNumber', () => {
   describe('negative numbers', () => {
     it('formats negative integers', () => {
       assert.strictEqual(formatNumber(-1, commaThousandsDotDecimal), '-1')
-      assert.strictEqual(formatNumber(-1000, commaThousandsDotDecimal), '-1,000')
+      assert.strictEqual(
+        formatNumber(-1000, commaThousandsDotDecimal),
+        '-1,000'
+      )
       assert.strictEqual(
         formatNumber(-1234567, commaThousandsDotDecimal),
         '-1,234,567'
@@ -264,22 +273,30 @@ describe('formatCompactNumber', () => {
   describe('millions (m)', () => {
     it('formats millions with m suffix', () => {
       assert.strictEqual(
-        formatCompactNumber(1000000, { numberFormat: commaThousandsDotDecimal }),
+        formatCompactNumber(1000000, {
+          numberFormat: commaThousandsDotDecimal,
+        }),
         '1m'
       )
       assert.strictEqual(
-        formatCompactNumber(1500000, { numberFormat: commaThousandsDotDecimal }),
+        formatCompactNumber(1500000, {
+          numberFormat: commaThousandsDotDecimal,
+        }),
         '1.5m'
       )
     })
 
     it('shows one decimal for values under 10m', () => {
       assert.strictEqual(
-        formatCompactNumber(1234567, { numberFormat: commaThousandsDotDecimal }),
+        formatCompactNumber(1234567, {
+          numberFormat: commaThousandsDotDecimal,
+        }),
         '1.2m'
       )
       assert.strictEqual(
-        formatCompactNumber(9876543, { numberFormat: commaThousandsDotDecimal }),
+        formatCompactNumber(9876543, {
+          numberFormat: commaThousandsDotDecimal,
+        }),
         '9.9m'
       )
     })
