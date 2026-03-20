@@ -3,7 +3,8 @@
  *
  * These tests launch the real production-built app, interact with it
  * via Playwright, and verify core functionality end-to-end. Video and
- * trace recording are enabled via playwright.config.ts.
+ * trace recording behavior is configured in the shared Electron fixtures
+ * (see ./e2e-fixtures), not directly in playwright.config.ts.
  */
 
 import {
