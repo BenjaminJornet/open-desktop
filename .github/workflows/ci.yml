@@ -191,6 +191,10 @@ jobs:
           KEY_PASSWORD: ${{ secrets.APPLE_APPLICATION_CERT_PASSWORD }}
           npm_config_arch: ${{ matrix.arch }}
           TARGET_ARCH: ${{ matrix.arch }}
+      - name: Prepare testing environment
+        run: yarn test:setup
+        env:
+          npm_config_arch: ${{ matrix.arch }}
       - uses: ./.github/actions/setup-windows-signing
         with:
           enabled: ${{ inputs.sign }}
