@@ -309,9 +309,14 @@ test.describe('Auto-update', () => {
 
       const updateStatus = page.locator('#about .update-status')
       await updateStatus.waitFor({ state: 'visible', timeout: 10000 })
-
-      const txt = await updateStatus.textContent()
-      expect(txt?.toLowerCase()).toContain('you have the latest version')
+      await expect
+        .poll(
+          async () => {
+            return ((await updateStatus.textContent()) ?? '').toLowerCase()
+          },
+          { timeout: 15000, intervals: [1000] }
+        )
+        .toContain('you have the latest version')
     })
 
     test('closes the About dialog', async ({ mainWindow: page }) => {
