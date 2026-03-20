@@ -5,7 +5,7 @@
  *
  * Provides:
  *  - `app`  — the ElectronApplication instance
- *  - `page` — the main BrowserWindow page
+ *  - `mainWindow` — the main BrowserWindow page
  *  - `mockServer` — the mock update server (with control helpers)
  *
  * All fixtures are scoped to the **worker** so the app launches once
