@@ -124,7 +124,8 @@ jobs:
         run: yarn test:unit
       - name: Run script tests
         run: yarn test:script
-      - uses: ./.github/actions/setup-windows-signing
+      - if: runner.os == 'Windows'
+        uses: ./.github/actions/setup-windows-signing
         with:
           enabled: ${{ inputs.sign }}
           azure-client-id: ${{ secrets.AZURE_CODE_SIGNING_CLIENT_ID }}
@@ -195,7 +196,8 @@ jobs:
         run: yarn test:setup
         env:
           npm_config_arch: ${{ matrix.arch }}
-      - uses: ./.github/actions/setup-windows-signing
+      - if: runner.os == 'Windows'
+        uses: ./.github/actions/setup-windows-signing
         with:
           enabled: ${{ inputs.sign }}
           azure-client-id: ${{ secrets.AZURE_CODE_SIGNING_CLIENT_ID }}
