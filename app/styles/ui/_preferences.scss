@@ -67,14 +67,13 @@
     }
   }
 
-  .formatting-tab {
-    h2:not(:first-child) {
-      margin-top: var(--spacing);
-    }
+  .formatting-section {
+    margin-top: var(--spacing);
+  }
 
-    .select-component {
-      margin-top: var(--spacing);
-    }
+  .relative-time-section {
+    margin-top: var(--spacing);
+    margin-bottom: var(--spacing);
   }
 
   .accounts-tab {

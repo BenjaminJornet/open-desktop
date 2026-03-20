@@ -42,7 +42,6 @@ import { Prompts } from './prompts'
 import { Repository } from '../../models/repository'
 import { Notifications } from './notifications'
 import { Accessibility } from './accessibility'
-import { Formatting } from './formatting'
 import {
   ICustomIntegration,
   TargetPathArgument,
@@ -73,7 +72,6 @@ import {
   setTimeFormatPreference,
   setNumberFormatPreference,
 } from '../../models/formatting-preferences'
-import { enableFormattingPreferences } from '../../lib/feature-flag'
 
 interface IPreferencesProps {
   readonly dispatcher: Dispatcher
@@ -354,12 +352,6 @@ export class Preferences extends React.Component<
               <Octicon className="icon" symbol={octicons.paintbrush} />
               Appearance
             </span>
-            {enableFormattingPreferences() && (
-              <span id={this.getTabId(PreferencesTab.Formatting)}>
-                <Octicon className="icon" symbol={octicons.number} />
-                Formatting
-              </span>
-            )}
             <span id={this.getTabId(PreferencesTab.Notifications)}>
               <Octicon className="icon" symbol={octicons.bell} />
               Notifications
@@ -399,9 +391,6 @@ export class Preferences extends React.Component<
         break
       case PreferencesTab.Appearance:
         suffix = 'appearance'
-        break
-      case PreferencesTab.Formatting:
-        suffix = 'formatting'
         break
       case PreferencesTab.Notifications:
         suffix = 'notifications'
@@ -549,12 +538,6 @@ export class Preferences extends React.Component<
             onSelectedThemeChanged={this.onSelectedThemeChanged}
             selectedTabSize={this.props.selectedTabSize}
             onSelectedTabSizeChanged={this.onSelectedTabSizeChanged}
-          />
-        )
-        break
-      case PreferencesTab.Formatting:
-        View = (
-          <Formatting
             selectedDateFormat={this.state.selectedDateFormat}
             onSelectedDateFormatChanged={this.onSelectedDateFormatChanged}
             selectedTimeFormat={this.state.selectedTimeFormat}
