@@ -58,10 +58,13 @@ export interface IMockUpdateServer {
  *
  * By default, it responds with "no update available" (HTTP 204).
  *
- * In `update-available` mode, the JSON feed tells Squirrel an update
- * exists. Squirrel will attempt to download the zip, receive a 404, and
- * emit an `error` event. This is enough to verify that the app correctly
- * processes the update feed and transitions through the expected states.
+ * In `update-available` mode, the JSON (macOS) or RELEASES (Windows)
+ * feed tells Squirrel that an update exists. When Squirrel then requests
+ * the update payload (zip or `.nupkg`), the mock server responds with
+ * HTTP 200 and intentionally keeps the download response open without
+ * completing. This is enough to verify that the app correctly processes
+ * the update feed and transitions into (and remains in) the expected
+ * "update available" / "downloading" states during tests.
  *
  * Full binary verification is not possible in dev builds because
  * Squirrel.Mac requires the update zip to satisfy the running app's code
