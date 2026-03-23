@@ -76,14 +76,6 @@ export class Git extends React.Component<IGitProps> {
   private renderHooksSettings() {
     return (
       <>
-        <div className="hooks-warning">
-          GitHub Desktop hook support is experimental and currently only
-          supports hooks related to committing. Please{' '}
-          <LinkButton uri="https://github.com/desktop/desktop/issues/new/choose">
-            let us know
-          </LinkButton>{' '}
-          if you encounter any issues or have feedback!
-        </div>
         <Checkbox
           label="Load Git hook environment variables from shell"
           ariaDescribedBy="git-hooks-env-description"
@@ -152,7 +144,7 @@ export class Git extends React.Component<IGitProps> {
           <span>Author</span>
           <span>Default branch</span>
           <span>
-            Hooks <span className="beta-pill">Beta</span>
+            Hooks
           </span>
         </TabBar>
         <div className="git-preferences-content">{this.renderCurrentTab()}</div>
