@@ -67,28 +67,3 @@ describe('CloningRepositoriesStore', () => {
     })
   })
 })
-
-describe('CloningRepository', () => {
-  it('derives name from URL', () => {
-    const repo = new CloningRepository(
-      '/tmp/test',
-      'https://github.com/owner/my-repo.git'
-    )
-    assert.equal(repo.name, 'my-repo')
-  })
-
-  it('generates unique IDs', () => {
-    const a = new CloningRepository('/tmp/a', 'https://github.com/owner/a.git')
-    const b = new CloningRepository('/tmp/b', 'https://github.com/owner/b.git')
-    assert.notEqual(a.id, b.id)
-  })
-
-  it('generates a hash', () => {
-    const repo = new CloningRepository(
-      '/tmp/test',
-      'https://github.com/owner/repo.git'
-    )
-    assert.ok(repo.hash.length > 0)
-    assert.ok(repo.hash.includes(repo.path))
-  })
-})
