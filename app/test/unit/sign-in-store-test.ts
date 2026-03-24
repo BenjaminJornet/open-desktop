@@ -76,11 +76,10 @@ describe('SignInStore', () => {
 
     it('transitions to ExistingAccountWarning when a dotcom account exists', async () => {
       const existingAccount = createDotComAccount()
-      accountsStore = createAccountsStore([existingAccount])
+      accountsStore = createAccountsStore()
       signInStore = new SignInStore(accountsStore)
 
-      // Allow the constructor's async getAll() to complete
-      await new Promise(resolve => setTimeout(resolve, 10))
+      await accountsStore.addAccount(existingAccount)
 
       signInStore.beginDotComSignIn()
       const state = signInStore.getState()
@@ -175,11 +174,10 @@ describe('SignInStore', () => {
     it('shows ExistingAccountWarning if enterprise account exists', async () => {
       const endpoint = 'https://github.example.com/api/v3'
       const existingAccount = createEnterpriseAccount('user', endpoint)
-      accountsStore = createAccountsStore([existingAccount])
+      accountsStore = createAccountsStore()
       signInStore = new SignInStore(accountsStore)
 
-      // Allow the constructor's async getAll() to complete
-      await new Promise(resolve => setTimeout(resolve, 10))
+      await accountsStore.addAccount(existingAccount)
 
       signInStore.beginEnterpriseSignIn()
       await signInStore.setEndpoint('https://github.example.com')
