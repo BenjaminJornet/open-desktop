@@ -73,6 +73,7 @@ describe('IPC channel contract', () => {
       'get-path',
       'get-app-architecture',
       'get-app-path',
+      'get-exec-path',
       'is-running-under-arm64-translation',
       'move-to-trash',
       'show-item-in-folder',
@@ -123,7 +124,7 @@ describe('IPC channel contract', () => {
 
   describe('RequestResponseChannels', () => {
     it('has the expected number of channels', () => {
-      assert.equal(expectedResponseChannels.length, 25)
+      assert.equal(expectedResponseChannels.length, 26)
     })
 
     it('includes critical request-response channels', () => {
@@ -144,10 +145,10 @@ describe('IPC channel contract', () => {
   })
 
   describe('total channel count', () => {
-    it('has 74 total IPC channels', () => {
+    it('has 75 total IPC channels', () => {
       const total =
         expectedRequestChannels.length + expectedResponseChannels.length
-      assert.equal(total, 74)
+      assert.equal(total, 75)
     })
   })
 })
