@@ -13,7 +13,11 @@ interface IPCInvokeCall {
   readonly args: ReadonlyArray<unknown>
 }
 
-type InvokeHandler = (...args: any[]) => any
+type InvokeHandlers = {
+  [Channel in keyof RequestResponseChannels]?: (
+    ...args: Parameters<RequestResponseChannels[Channel]>
+  ) => ReturnType<RequestResponseChannels[Channel]>
+}
 
 /**
  * A mock IPC implementation that records all send/invoke calls and allows
@@ -43,7 +47,7 @@ export class MockIPC {
   >()
 
   /** Registered invoke handlers */
-  private readonly invokeHandlers = new Map<string, InvokeHandler>()
+  private invokeHandlers: InvokeHandlers = {}
 
   /**
    * Mock implementation of ipcRenderer.send — records the call.
@@ -62,13 +66,15 @@ export class MockIPC {
   public async invoke<T extends keyof RequestResponseChannels>(
     channel: T,
     ...args: Parameters<RequestResponseChannels[T]>
-  ): Promise<any> {
+  ): ReturnType<RequestResponseChannels[T]> {
     this.invokes.push({ channel, args })
-    const handler = this.invokeHandlers.get(channel)
-    if (handler) {
-      return handler(...args)
+    const handler = this.invokeHandlers[channel]
+
+    if (handler === undefined) {
+      throw new Error(`No invoke handler registered for '${channel}'`)
     }
-    return undefined
+
+    return handler(...args)
   }
 
   /**
@@ -115,7 +121,7 @@ export class MockIPC {
       ...args: Parameters<RequestResponseChannels[T]>
     ) => ReturnType<RequestResponseChannels[T]>
   ): void {
-    this.invokeHandlers.set(channel, handler as InvokeHandler)
+    this.invokeHandlers[channel] = handler
   }
 
   /**
@@ -154,6 +160,6 @@ export class MockIPC {
     this.sends.length = 0
     this.invokes.length = 0
     this.listeners.clear()
-    this.invokeHandlers.clear()
+    this.invokeHandlers = {}
   }
 }
