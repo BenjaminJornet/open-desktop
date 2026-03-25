@@ -43,7 +43,7 @@ The `needs-triage` label is automatically removed when end-state labels (`enhanc
 | `invalid` | Auto-closes immediately |
 | `suspected-spam` | Auto-closes immediately |
 | `off-topic` | Auto-posts explanation comment + closes |
-| `no-help-wanted-issue` | Auto-posts explanation comment + closes |
+| `no-help-wanted-issue` | PRs only: Auto-posts explanation comment + closes |
 | `ready-for-review` | Auto-removes `needs-triage` + posts acknowledging comment |
 
 ## Off-topic, Spam & Abuse
