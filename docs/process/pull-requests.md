@@ -16,7 +16,7 @@ The **Assignee** field indicates who owns the review process for a contribution.
 2. When ready, the contributor marks it ready for review.
 3. A reviewer is **auto-assigned** via load-balanced code review assignment.
 4. **Reviewer** leaves feedback; contributor responds and iterates.
-5. Once approved, a **24-hour cooling-off period** applies before merging — ensuring all team members across time zones have a chance to provide feedback.
+5. Once approved, follow the [24-hour cooling-off period](#24-hour-cooling-off-period) before merging.
 
 ### No Self-Merges Without Review
 
