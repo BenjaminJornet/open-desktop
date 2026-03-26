@@ -113,13 +113,13 @@ component tests in GitHub Desktop.
 
 #### RelativeTime
 
-- [ ] Add a UI test file for [app/src/ui/relative-time.tsx](app/src/ui/relative-time.tsx).
-- [ ] Cover the default tooltip-enabled path.
-- [ ] Cover the `tooltip={false}` path.
-- [ ] Cover relative text for recent timestamps.
+- [x] Add a UI test file for [app/src/ui/relative-time.tsx](app/src/ui/relative-time.tsx).
+- [x] Cover the default tooltip-enabled path.
+- [x] Cover the `tooltip={false}` path.
+- [x] Cover relative text for recent timestamps.
 - [ ] Cover future or date-boundary behavior if practical.
-- [ ] Cover timer-driven refresh behavior with mock timers.
-- [ ] Cover prop updates when `date` changes.
+- [x] Cover timer-driven refresh behavior with mock timers.
+- [x] Cover prop updates when `date` changes.
 
 #### TabBarItem
 
@@ -214,18 +214,18 @@ component tests in GitHub Desktop.
 ## Verification Checklist
 
 - [x] `yarn test:unit`
-- [ ] `yarn test:unit app/test/unit/ui`
+- [x] `yarn test:unit app/test/unit/ui`
 - [x] Focused direct run of each new TSX test file.
 - [x] Focused lint and type-check validation for the shared helper files.
-- [ ] `yarn lint:src`
+- [x] `yarn lint:src`
 
 ## Commit Plan
 
 - [x] `docs(test): add testing-library adoption checklist`
 - [x] `test(ui): enable testing-library component test discovery`
 - [x] `test(ui): add shared testing-library helpers`
-- [ ] `test(ui): cover relative-time with testing-library`
-- [ ] `test(ui): cover tab-bar-item keyboard behavior`
+- [x] `test(ui): cover relative-time with testing-library`
+- [x] `test(ui): cover tab-bar-item keyboard behavior`
 - [ ] `test(ui): cover copy-button clipboard feedback`
 - [ ] `test(ui): cover repository list item rendering states`
 - [ ] `test(ui): add first container-level testing-library coverage`
@@ -236,8 +236,8 @@ component tests in GitHub Desktop.
 - [x] Commit 1: add the checklist document.
 - [x] Commit 2: land runner and discovery changes.
 - [x] Commit 3: land shared Testing Library helpers.
-- [ ] Commit 4: land the `RelativeTime` tests.
-- [ ] Commit 5: land the `TabBarItem` tests.
+- [x] Commit 4: land the `RelativeTime` tests.
+- [x] Commit 5: land the `TabBarItem` tests.
 - [ ] Commit 6: land the `CopyButton` tests.
 - [ ] Commit 7: land the `RepositoryListItem` tests.
 - [ ] Commit 8: land the first container-level test.
@@ -254,5 +254,7 @@ component tests in GitHub Desktop.
 - [ ] Tooltip behavior may require deterministic mocks or test-friendly query
       strategies.
 - [x] Timer-driven components should use Node mock timers to avoid flakiness.
+- [x] Tooltip-backed UI tests currently rely on the shared UI setup to provide
+      a minimal `ResizeObserver` shim under jsdom.
 - [ ] Electron-heavy components should be deferred until the helper patterns are
       stable.
