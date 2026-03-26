@@ -15,4 +15,13 @@ if (globalThis.ResizeObserver === undefined) {
 	})
 }
 
+if (
+	typeof window !== 'undefined' &&
+	globalThis.CustomEvent !== window.CustomEvent
+) {
+	Object.assign(globalThis, {
+		CustomEvent: window.CustomEvent,
+	})
+}
+
 afterEach(() => cleanup())

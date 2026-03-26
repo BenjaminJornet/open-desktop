@@ -132,12 +132,12 @@ component tests in GitHub Desktop.
 
 #### CopyButton
 
-- [ ] Add a UI test file for [app/src/ui/copy-button.tsx](app/src/ui/copy-button.tsx).
-- [ ] Add a targeted mock for `clipboard.writeText`.
-- [ ] Cover click-to-copy behavior.
-- [ ] Cover the temporary copied state.
-- [ ] Cover the state reset after the async delay.
-- [ ] Assert the aria-live announcement behavior at least once.
+- [x] Add a UI test file for [app/src/ui/copy-button.tsx](app/src/ui/copy-button.tsx).
+- [x] Add a targeted mock for `clipboard.writeText`.
+- [x] Cover click-to-copy behavior.
+- [x] Cover the temporary copied state.
+- [x] Cover the state reset after the async delay.
+- [x] Assert the aria-live announcement behavior at least once.
 
 ### Phase 5: Data-Driven UI Components
 
@@ -226,7 +226,7 @@ component tests in GitHub Desktop.
 - [x] `test(ui): add shared testing-library helpers`
 - [x] `test(ui): cover relative-time with testing-library`
 - [x] `test(ui): cover tab-bar-item keyboard behavior`
-- [ ] `test(ui): cover copy-button clipboard feedback`
+- [x] `test(ui): cover copy-button clipboard feedback`
 - [ ] `test(ui): cover repository list item rendering states`
 - [ ] `test(ui): add first container-level testing-library coverage`
 - [ ] `docs(test): document ui component testing pattern`
@@ -238,7 +238,7 @@ component tests in GitHub Desktop.
 - [x] Commit 3: land shared Testing Library helpers.
 - [x] Commit 4: land the `RelativeTime` tests.
 - [x] Commit 5: land the `TabBarItem` tests.
-- [ ] Commit 6: land the `CopyButton` tests.
+- [x] Commit 6: land the `CopyButton` tests.
 - [ ] Commit 7: land the `RepositoryListItem` tests.
 - [ ] Commit 8: land the first container-level test.
 - [ ] Commit 9: land follow-up documentation if still needed.
@@ -256,5 +256,9 @@ component tests in GitHub Desktop.
 - [x] Timer-driven components should use Node mock timers to avoid flakiness.
 - [x] Tooltip-backed UI tests currently rely on the shared UI setup to provide
       a minimal `ResizeObserver` shim under jsdom.
+- [x] Tooltip-backed click flows currently rely on the shared UI setup to align
+      `CustomEvent` with jsdom's event implementation.
+- [x] The global Electron mock now exposes a minimal `clipboard.writeText`
+      implementation for UI tests that need clipboard behavior.
 - [ ] Electron-heavy components should be deferred until the helper patterns are
       stable.
