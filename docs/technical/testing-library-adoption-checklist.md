@@ -55,8 +55,11 @@ component tests in GitHub Desktop.
       [app/test/globals.mts](app/test/globals.mts) or in a dedicated helper.
 - [x] Scope DOM cleanup to the Testing Library helper path rather than the
       global test bootstrap so existing non-UI tests are unaffected.
-- [ ] Decide whether `@testing-library/dom` adds enough value to justify a
-      separate dependency beyond what `@testing-library/react` already exposes.
+- [x] Keep Testing Library dependencies in [app/package.json](app/package.json)
+      and [app/yarn.lock](app/yarn.lock) so they resolve against the same React
+      installation as the UI code under `app/`.
+- [x] Add `@testing-library/dom` directly because it is a peer dependency of
+      `@testing-library/user-event` and part of the shared helper surface.
 - [ ] Decide whether `@testing-library/jest-dom` should be skipped entirely to
       keep assertions aligned with `node:assert`.
 
@@ -75,7 +78,7 @@ component tests in GitHub Desktop.
 - [x] Update [script/test.mjs](script/test.mjs) so directory-based discovery
       includes `-test.tsx` and `-test.jsx`.
 - [x] Preserve support for the currently discovered test extensions.
-- [ ] Verify explicit file execution still works for TSX test files.
+- [x] Verify explicit file execution still works for TSX test files.
 - [x] Evaluate whether any globals or module mocks in
       [app/test/globals.mts](app/test/globals.mts) need to expand for early UI
       tests.
@@ -87,10 +90,10 @@ component tests in GitHub Desktop.
 ### Phase 2: Dependency Setup
 
 - [x] Add a React-16-compatible `@testing-library/react` dependency in
-      [package.json](package.json).
-- [x] Add `@testing-library/user-event` in [package.json](package.json).
-- [ ] Add `@testing-library/dom` only if direct usage proves necessary.
-- [x] Update [yarn.lock](yarn.lock).
+      [app/package.json](app/package.json).
+- [x] Add `@testing-library/user-event` in [app/package.json](app/package.json).
+- [x] Add `@testing-library/dom` in [app/package.json](app/package.json).
+- [x] Update [app/yarn.lock](app/yarn.lock).
 - [x] Verify install and type resolution through the existing TypeScript test
       execution path.
 
@@ -120,12 +123,12 @@ component tests in GitHub Desktop.
 
 #### TabBarItem
 
-- [ ] Add a UI test file for [app/src/ui/tab-bar-item.tsx](app/src/ui/tab-bar-item.tsx).
-- [ ] Cover click behavior.
-- [ ] Cover `onMouseEnter` and `onMouseLeave` behavior.
-- [ ] Cover horizontal keyboard navigation.
-- [ ] Cover vertical keyboard navigation.
-- [ ] Assert `role`, `aria-selected`, and `tabIndex` behavior.
+- [x] Add a UI test file for [app/src/ui/tab-bar-item.tsx](app/src/ui/tab-bar-item.tsx).
+- [x] Cover click behavior.
+- [x] Cover `onMouseEnter` and `onMouseLeave` behavior.
+- [x] Cover horizontal keyboard navigation.
+- [x] Cover vertical keyboard navigation.
+- [x] Assert `role`, `aria-selected`, and `tabIndex` behavior.
 
 #### CopyButton
 
@@ -193,7 +196,7 @@ component tests in GitHub Desktop.
 ## Recommended File Layout
 
 - [ ] Use [app/test/unit](app/test/unit) as the base test tree.
-- [ ] Create a dedicated UI subdirectory such as `app/test/unit/ui` when the
+- [x] Create a dedicated UI subdirectory such as `app/test/unit/ui` when the
       first TSX tests land.
 - [x] Place shared UI helpers under `app/test/helpers/ui` if that directory is
       needed.
@@ -212,15 +215,15 @@ component tests in GitHub Desktop.
 
 - [x] `yarn test:unit`
 - [ ] `yarn test:unit app/test/unit/ui`
-- [ ] Focused direct run of each new TSX test file.
+- [x] Focused direct run of each new TSX test file.
 - [x] Focused lint and type-check validation for the shared helper files.
 - [ ] `yarn lint:src`
 
 ## Commit Plan
 
 - [x] `docs(test): add testing-library adoption checklist`
-- [ ] `test(ui): enable testing-library component test discovery`
-- [ ] `test(ui): add shared testing-library helpers`
+- [x] `test(ui): enable testing-library component test discovery`
+- [x] `test(ui): add shared testing-library helpers`
 - [ ] `test(ui): cover relative-time with testing-library`
 - [ ] `test(ui): cover tab-bar-item keyboard behavior`
 - [ ] `test(ui): cover copy-button clipboard feedback`
@@ -232,7 +235,7 @@ component tests in GitHub Desktop.
 
 - [x] Commit 1: add the checklist document.
 - [x] Commit 2: land runner and discovery changes.
-- [ ] Commit 3: land shared Testing Library helpers.
+- [x] Commit 3: land shared Testing Library helpers.
 - [ ] Commit 4: land the `RelativeTime` tests.
 - [ ] Commit 5: land the `TabBarItem` tests.
 - [ ] Commit 6: land the `CopyButton` tests.
@@ -246,6 +249,8 @@ component tests in GitHub Desktop.
       Testing Library version.
 - [ ] The `node:test` runner plus jsdom setup should be retained unless a hard
       limitation is found during pilot tests.
+- [x] Testing Library dependencies must resolve from the `app` package because
+      the UI code and its React installation live there.
 - [ ] Tooltip behavior may require deterministic mocks or test-friendly query
       strategies.
 - [x] Timer-driven components should use Node mock timers to avoid flakiness.
