@@ -50,9 +50,11 @@ component tests in GitHub Desktop.
 - [x] Adopt Testing Library incrementally, beginning with low-coupling,
       presentational components.
 - [x] Treat TSX test discovery as required harness work, not optional cleanup.
-- [ ] Pin a compatible `@testing-library/react` version for React 16.8.4.
-- [ ] Decide whether global DOM cleanup should live in
+- [x] Pin a compatible `@testing-library/react` version for React 16.8.4.
+- [x] Decide whether global DOM cleanup should live in
       [app/test/globals.mts](app/test/globals.mts) or in a dedicated helper.
+- [x] Scope DOM cleanup to the Testing Library helper path rather than the
+      global test bootstrap so existing non-UI tests are unaffected.
 - [ ] Decide whether `@testing-library/dom` adds enough value to justify a
       separate dependency beyond what `@testing-library/react` already exposes.
 - [ ] Decide whether `@testing-library/jest-dom` should be skipped entirely to
@@ -66,43 +68,43 @@ component tests in GitHub Desktop.
 - [x] Record the current test runner, jsdom status, dependency gaps, and TSX
       discovery gap.
 - [x] Record the proposed rollout order and commit strategy.
-- [ ] Keep this document updated after every meaningful implementation commit.
+- [x] Keep this document updated after every meaningful implementation commit.
 
 ### Phase 1: Harness Preparation
 
-- [ ] Update [script/test.mjs](script/test.mjs) so directory-based discovery
+- [x] Update [script/test.mjs](script/test.mjs) so directory-based discovery
       includes `-test.tsx` and `-test.jsx`.
-- [ ] Preserve support for the currently discovered test extensions.
+- [x] Preserve support for the currently discovered test extensions.
 - [ ] Verify explicit file execution still works for TSX test files.
-- [ ] Evaluate whether any globals or module mocks in
+- [x] Evaluate whether any globals or module mocks in
       [app/test/globals.mts](app/test/globals.mts) need to expand for early UI
       tests.
-- [ ] Add DOM cleanup in the least invasive place that still guarantees test
+- [x] Add DOM cleanup in the least invasive place that still guarantees test
       isolation.
-- [ ] Verify the runner does not hang when UI tests mount timer-driven
+- [x] Verify the runner does not hang when UI tests mount timer-driven
       components.
 
 ### Phase 2: Dependency Setup
 
-- [ ] Add a React-16-compatible `@testing-library/react` dependency in
+- [x] Add a React-16-compatible `@testing-library/react` dependency in
       [package.json](package.json).
-- [ ] Add `@testing-library/user-event` in [package.json](package.json).
+- [x] Add `@testing-library/user-event` in [package.json](package.json).
 - [ ] Add `@testing-library/dom` only if direct usage proves necessary.
-- [ ] Update [yarn.lock](yarn.lock).
-- [ ] Verify install and type resolution through the existing TypeScript test
+- [x] Update [yarn.lock](yarn.lock).
+- [x] Verify install and type resolution through the existing TypeScript test
       execution path.
 
 ### Phase 3: Shared Test Helpers
 
-- [ ] Create a shared helper area under
+- [x] Create a shared helper area under
       [app/test/helpers](app/test/helpers) for UI test utilities.
-- [ ] Add a common render helper that wraps Testing Library `render()`.
-- [ ] Add a common `userEvent` setup helper if repeated configuration appears.
+- [x] Add a common render helper that wraps Testing Library `render()`.
+- [x] Add a common `userEvent` setup helper if repeated configuration appears.
 - [ ] Add a pattern for targeted Electron mocks instead of over-expanding the
       global Electron mock.
 - [ ] Add timer helper utilities only if repetition appears across multiple
       tests.
-- [ ] Document the preferred helper import path in this file.
+- [x] Document the preferred helper import path in this file.
 
 ### Phase 4: Pilot Presentational Components
 
@@ -193,16 +195,25 @@ component tests in GitHub Desktop.
 - [ ] Use [app/test/unit](app/test/unit) as the base test tree.
 - [ ] Create a dedicated UI subdirectory such as `app/test/unit/ui` when the
       first TSX tests land.
-- [ ] Place shared UI helpers under `app/test/helpers/ui` if that directory is
+- [x] Place shared UI helpers under `app/test/helpers/ui` if that directory is
       needed.
 - [ ] Keep production component changes minimal and only refactor when testing
       reveals a real seam problem.
 
+## Helper Import Path
+
+- [x] Preferred Testing Library helper import path: `app/test/helpers/ui/render`.
+- [x] The helper currently owns Testing Library cleanup through
+      [app/test/helpers/ui/setup.ts](app/test/helpers/ui/setup.ts), so UI tests
+      should import the shared render helper rather than `@testing-library/react`
+      directly unless they have a specific reason not to.
+
 ## Verification Checklist
 
-- [ ] `yarn test:unit`
+- [x] `yarn test:unit`
 - [ ] `yarn test:unit app/test/unit/ui`
 - [ ] Focused direct run of each new TSX test file.
+- [x] Focused lint and type-check validation for the shared helper files.
 - [ ] `yarn lint:src`
 
 ## Commit Plan
@@ -219,8 +230,8 @@ component tests in GitHub Desktop.
 
 ## Commit Log
 
-- [ ] Commit 1: add the checklist document.
-- [ ] Commit 2: land runner and discovery changes.
+- [x] Commit 1: add the checklist document.
+- [x] Commit 2: land runner and discovery changes.
 - [ ] Commit 3: land shared Testing Library helpers.
 - [ ] Commit 4: land the `RelativeTime` tests.
 - [ ] Commit 5: land the `TabBarItem` tests.
@@ -231,12 +242,12 @@ component tests in GitHub Desktop.
 
 ## Risks and Notes
 
-- [ ] React 16.8.4 compatibility must be validated before choosing the final
+- [x] React 16.8.4 compatibility must be validated before choosing the final
       Testing Library version.
 - [ ] The `node:test` runner plus jsdom setup should be retained unless a hard
       limitation is found during pilot tests.
 - [ ] Tooltip behavior may require deterministic mocks or test-friendly query
       strategies.
-- [ ] Timer-driven components should use Node mock timers to avoid flakiness.
+- [x] Timer-driven components should use Node mock timers to avoid flakiness.
 - [ ] Electron-heavy components should be deferred until the helper patterns are
       stable.
