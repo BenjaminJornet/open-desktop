@@ -311,20 +311,20 @@ component tests in GitHub Desktop.
       surfaces.
 - [x] Cover link and publish helper surfaces with deterministic href and
       callback assertions.
-- [ ] Cover banner family behavior including focus, dismissal, and message
+- [x] Cover banner family behavior including focus, dismissal, and message
       variants with timer control.
 - [x] Keep the sixth wave in `app/test/unit/ui` with shared RTL helpers only.
-- [ ] Validate the new tests with focused runs, the UI directory target, and
+- [x] Validate the new tests with focused runs, the UI directory target, and
       lint.
 
 ### Phase 12 Targets
 
 - [x] [app/src/ui/repository-rules/repo-rulesets-for-branch-link.tsx](app/src/ui/repository-rules/repo-rulesets-for-branch-link.tsx)
 - [x] [app/src/ui/repository-settings/no-remote.tsx](app/src/ui/repository-settings/no-remote.tsx)
-- [ ] [app/src/ui/banners/banner.tsx](app/src/ui/banners/banner.tsx)
-- [ ] [app/src/ui/banners/success-banner.tsx](app/src/ui/banners/success-banner.tsx)
-- [ ] [app/src/ui/banners/branch-already-up-to-date-banner.tsx](app/src/ui/banners/branch-already-up-to-date-banner.tsx)
-- [ ] [app/src/ui/banners/cherry-pick-undone.tsx](app/src/ui/banners/cherry-pick-undone.tsx)
+- [x] [app/src/ui/banners/banner.tsx](app/src/ui/banners/banner.tsx)
+- [x] [app/src/ui/banners/success-banner.tsx](app/src/ui/banners/success-banner.tsx)
+- [x] [app/src/ui/banners/branch-already-up-to-date-banner.tsx](app/src/ui/banners/branch-already-up-to-date-banner.tsx)
+- [x] [app/src/ui/banners/cherry-pick-undone.tsx](app/src/ui/banners/cherry-pick-undone.tsx)
 
 ## Candidate Inventory
 
@@ -952,7 +952,7 @@ inventory, not remaining rollout tasks for this adoption pass.
 - [x] `test(ui): add static status and link coverage`
 - [x] `test(ui): add small action row and cli-installed coverage`
 - [x] `test(ui): add rulesets and publish surface coverage`
-- [ ] `test(ui): add banner surface coverage`
+- [x] `test(ui): add banner surface coverage`
 
 ## Commit Log
 
@@ -974,7 +974,7 @@ inventory, not remaining rollout tasks for this adoption pass.
 - [x] Commit 16: land the static status and link tests.
 - [x] Commit 17: land the action row and cli-installed tests.
 - [x] Commit 18: land the rulesets and publish surface tests.
-- [ ] Commit 19: land the banner surface tests.
+- [x] Commit 19: land the banner surface tests.
 
 ## Risks and Notes
 
