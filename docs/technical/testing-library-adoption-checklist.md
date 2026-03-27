@@ -5,26 +5,26 @@ component tests in GitHub Desktop.
 
 ## Goals
 
-- [ ] Add a supported path for DOM-based component tests without replacing the
+- [x] Add a supported path for DOM-based component tests without replacing the
       existing Node.js unit test runner.
-- [ ] Keep all changes compatible with the current React 16.8.4 stack.
-- [ ] Make `-test.tsx` component tests discoverable through the existing
+- [x] Keep all changes compatible with the current React 16.8.4 stack.
+- [x] Make `-test.tsx` component tests discoverable through the existing
       `yarn test:unit` workflow.
-- [ ] Add a reusable helper layer for Testing Library based tests.
-- [ ] Land representative coverage for at least 3 presentational UI components.
-- [ ] Land at least 1 moderate-complexity container or composition component if
+- [x] Add a reusable helper layer for Testing Library based tests.
+- [x] Land representative coverage for at least 3 presentational UI components.
+- [x] Land at least 1 moderate-complexity container or composition component if
       the helper layer proves stable.
-- [ ] Document the pattern well enough that future UI tests can follow the same
+- [x] Document the pattern well enough that future UI tests can follow the same
       approach without re-solving setup problems.
 
 ## Non-Goals
 
-- [ ] Do not replace `node:test` with Jest or Vitest in the first rollout.
-- [ ] Do not migrate existing non-UI unit tests unless a helper refactor makes
+- [x] Do not replace `node:test` with Jest or Vitest in the first rollout.
+- [x] Do not migrate existing non-UI unit tests unless a helper refactor makes
       that necessary.
-- [ ] Do not attempt broad integration coverage of `app.tsx`, sign-in flows, or
+- [x] Do not attempt broad integration coverage of `app.tsx`, sign-in flows, or
       Electron-heavy top-level surfaces in the first pass.
-- [ ] Do not mass-convert the UI test surface in one change.
+- [x] Do not mass-convert the UI test surface in one change.
 
 ## Current Baseline
 
@@ -60,8 +60,11 @@ component tests in GitHub Desktop.
       installation as the UI code under `app/`.
 - [x] Add `@testing-library/dom` directly because it is a peer dependency of
       `@testing-library/user-event` and part of the shared helper surface.
-- [ ] Decide whether `@testing-library/jest-dom` should be skipped entirely to
+- [x] Decide whether `@testing-library/jest-dom` should be skipped entirely to
       keep assertions aligned with `node:assert`.
+
+- [x] Skip `@testing-library/jest-dom` for this rollout. DOM assertions remain
+      explicit through `node:assert`, DOM APIs, and Testing Library queries.
 
 ## Phases
 
@@ -103,9 +106,9 @@ component tests in GitHub Desktop.
       [app/test/helpers](app/test/helpers) for UI test utilities.
 - [x] Add a common render helper that wraps Testing Library `render()`.
 - [x] Add a common `userEvent` setup helper if repeated configuration appears.
-- [ ] Add a pattern for targeted Electron mocks instead of over-expanding the
+- [x] Add a pattern for targeted Electron mocks instead of over-expanding the
       global Electron mock.
-- [ ] Add timer helper utilities only if repetition appears across multiple
+- [x] Add timer helper utilities only if repetition appears across multiple
       tests.
 - [x] Document the preferred helper import path in this file.
 
@@ -117,7 +120,7 @@ component tests in GitHub Desktop.
 - [x] Cover the default tooltip-enabled path.
 - [x] Cover the `tooltip={false}` path.
 - [x] Cover relative text for recent timestamps.
-- [ ] Cover future or date-boundary behavior if practical.
+- [x] Cover future or date-boundary behavior if practical.
 - [x] Cover timer-driven refresh behavior with mock timers.
 - [x] Cover prop updates when `date` changes.
 
@@ -170,30 +173,34 @@ component tests in GitHub Desktop.
 
 ### Phase 6: First Moderate Container
 
-- [ ] Choose one moderate container or composition component after the helper
+- [x] Choose one moderate container or composition component after the helper
       layer and pilot tests are stable.
-- [ ] Prefer a component with prop-driven callbacks over one tightly coupled to
+- [x] Prefer a component with prop-driven callbacks over one tightly coupled to
       AppStore subscriptions, IPC, or authentication flows.
-- [ ] Reuse [app/test/helpers/in-memory-dispatcher.ts](app/test/helpers/in-memory-dispatcher.ts)
+- [x] Reuse [app/test/helpers/in-memory-dispatcher.ts](app/test/helpers/in-memory-dispatcher.ts)
       if dispatcher-driven props are needed.
-- [ ] Avoid introducing new store or dispatcher doubles unless existing helpers
+- [x] Avoid introducing new store or dispatcher doubles unless existing helpers
       are clearly insufficient.
-- [ ] Cover user-visible behavior instead of implementation details.
+- [x] Cover user-visible behavior instead of implementation details.
+
+- [x] Chose [app/src/ui/tab-bar.tsx](app/src/ui/tab-bar.tsx) as the first
+      moderate composition component because it is prop-driven and exercises
+      focus management plus drag-over switching without new store doubles.
 
 ### Phase 7: Documentation and Rollout Quality
 
-- [ ] Decide whether this checklist is sufficient or whether a stable guide
+- [x] Decide whether this checklist is sufficient or whether a stable guide
       should be added under [docs/technical](docs/technical).
-- [ ] Document where UI tests live and how to run them.
-- [ ] Document how to add shared helpers and targeted Electron mocks.
-- [ ] Document the preferred timer pattern for timer-driven components.
-- [ ] Document the test file naming and discovery rule so TSX support does not
+- [x] Document where UI tests live and how to run them.
+- [x] Document how to add shared helpers and targeted Electron mocks.
+- [x] Document the preferred timer pattern for timer-driven components.
+- [x] Document the test file naming and discovery rule so TSX support does not
       regress.
-- [ ] Run focused UI test files individually.
-- [ ] Run the UI test directory target once TSX discovery is in place.
-- [ ] Run the full unit test suite.
-- [ ] Run linting for all touched files.
-- [ ] Confirm no lingering DOM or timer state causes hangs.
+- [x] Run focused UI test files individually.
+- [x] Run the UI test directory target once TSX discovery is in place.
+- [x] Run the full unit test suite.
+- [x] Run linting for all touched files.
+- [x] Confirm no lingering DOM or timer state causes hangs.
 
 ## Candidate Rollout Order
 
@@ -201,55 +208,86 @@ component tests in GitHub Desktop.
 - [x] `TabBarItem`
 - [x] `CopyButton`
 - [x] `RepositoryListItem`
-- [ ] One moderate container after the helper layer proves stable.
+- [x] One moderate container after the helper layer proves stable.
 
-## Additional Candidate Components
+## Candidate Inventory
+
+These are good follow-up targets for future Testing Library coverage. They are
+inventory, not remaining rollout tasks for this adoption pass.
 
 ### Smallest Components
 
-- [ ] [app/src/ui/dialog/error.tsx](app/src/ui/dialog/error.tsx): static inline banner with `role="alert"`; good for a minimal accessibility assertion.
-- [ ] [app/src/ui/dialog/success.tsx](app/src/ui/dialog/success.tsx): success-banner sibling to `DialogError`; same low-cost test surface.
-- [ ] [app/src/ui/dialog/footer.tsx](app/src/ui/dialog/footer.tsx): simple composition wrapper; useful for documenting children-based render assertions.
-- [ ] [app/src/ui/dialog/content.tsx](app/src/ui/dialog/content.tsx): another very small structural wrapper suited to smoke-level render tests.
-- [ ] [app/src/ui/dialog/header.tsx](app/src/ui/dialog/header.tsx): small header component with title/description semantics.
-- [ ] [app/src/ui/dialog/default-dialog-footer.tsx](app/src/ui/dialog/default-dialog-footer.tsx): small button-group composition component with stable visible output.
-- [ ] [app/src/ui/lib/highlight-text.tsx](app/src/ui/lib/highlight-text.tsx): pure render helper with deterministic markup (`mark` vs `span`).
-- [ ] [app/src/ui/lib/button.tsx](app/src/ui/lib/button.tsx): foundational button wrapper with tooltip wiring, aria props, and click behavior.
-- [ ] [app/src/ui/app-menu/menu-list-item.tsx](app/src/ui/app-menu/menu-list-item.tsx): compact interactive row component with selection and keyboard behavior.
+- [app/src/ui/dialog/error.tsx](app/src/ui/dialog/error.tsx): static inline
+      banner with `role="alert"`; good for a minimal accessibility assertion.
+- [app/src/ui/dialog/success.tsx](app/src/ui/dialog/success.tsx):
+      success-banner sibling to `DialogError`; same low-cost test surface.
+- [app/src/ui/dialog/footer.tsx](app/src/ui/dialog/footer.tsx): simple
+      composition wrapper; useful for documenting children-based render
+      assertions.
+- [app/src/ui/dialog/content.tsx](app/src/ui/dialog/content.tsx): another very
+      small structural wrapper suited to smoke-level render tests.
+- [app/src/ui/dialog/header.tsx](app/src/ui/dialog/header.tsx): small header
+      component with title/description semantics.
+- [app/src/ui/dialog/default-dialog-footer.tsx](app/src/ui/dialog/default-dialog-footer.tsx):
+      small button-group composition component with stable visible output.
+- [app/src/ui/lib/highlight-text.tsx](app/src/ui/lib/highlight-text.tsx): pure
+      render helper with deterministic markup (`mark` vs `span`).
+- [app/src/ui/lib/button.tsx](app/src/ui/lib/button.tsx): foundational button
+      wrapper with tooltip wiring, aria props, and click behavior.
+- [app/src/ui/app-menu/menu-list-item.tsx](app/src/ui/app-menu/menu-list-item.tsx):
+      compact interactive row component with selection and keyboard behavior.
 
 ### Small Presentational Components
 
-- [ ] [app/src/ui/branches/branch-list-item.tsx](app/src/ui/branches/branch-list-item.tsx): branch row with current-branch state, relative time, and drag/drop affordances.
-- [ ] [app/src/ui/history/compare-branch-list-item.tsx](app/src/ui/history/compare-branch-list-item.tsx): small branch comparison renderer with status-driven output.
-- [ ] [app/src/ui/branches/pull-request-list-item.tsx](app/src/ui/branches/pull-request-list-item.tsx): mostly prop-driven pull request row rendering.
-- [ ] [app/src/ui/history/commit-list-item.tsx](app/src/ui/history/commit-list-item.tsx): commit row with relative time, selection, and rich text fragments.
-- [ ] [app/src/ui/check-runs/ci-check-run-actions-job-step-item.tsx](app/src/ui/check-runs/ci-check-run-actions-job-step-item.tsx): compact list item with deterministic text and icon states.
-- [ ] [app/src/ui/check-runs/ci-check-run-list-item.tsx](app/src/ui/check-runs/ci-check-run-list-item.tsx): richer data-driven row once list-item test patterns are mature.
-- [ ] [app/src/ui/lib/list/list-item-insertion-overlay.tsx](app/src/ui/lib/list/list-item-insertion-overlay.tsx): tiny visual-state component with CSS-class assertions.
+- [app/src/ui/branches/branch-list-item.tsx](app/src/ui/branches/branch-list-item.tsx):
+      branch row with current-branch state, relative time, and drag/drop
+      affordances.
+- [app/src/ui/history/compare-branch-list-item.tsx](app/src/ui/history/compare-branch-list-item.tsx):
+      small branch comparison renderer with status-driven output.
+- [app/src/ui/branches/pull-request-list-item.tsx](app/src/ui/branches/pull-request-list-item.tsx):
+      mostly prop-driven pull request row rendering.
+- [app/src/ui/history/commit-list-item.tsx](app/src/ui/history/commit-list-item.tsx):
+      commit row with relative time, selection, and rich text fragments.
+- [app/src/ui/check-runs/ci-check-run-actions-job-step-item.tsx](app/src/ui/check-runs/ci-check-run-actions-job-step-item.tsx):
+      compact list item with deterministic text and icon states.
+- [app/src/ui/check-runs/ci-check-run-list-item.tsx](app/src/ui/check-runs/ci-check-run-list-item.tsx):
+      richer data-driven row once list-item test patterns are mature.
+- [app/src/ui/lib/list/list-item-insertion-overlay.tsx](app/src/ui/lib/list/list-item-insertion-overlay.tsx):
+      tiny visual-state component with CSS-class assertions.
 
 ### Composition and Moderate Containers
 
-- [ ] [app/src/ui/tab-bar.tsx](app/src/ui/tab-bar.tsx): moderate composition component that manages focus, adjacent selection, and drag-over switching.
-- [ ] [app/src/ui/dialog/dialog.tsx](app/src/ui/dialog/dialog.tsx): reusable dialog container with focus and portal behavior once the helper layer is mature enough.
-- [ ] [app/src/ui/preferences/custom-integration-form.tsx](app/src/ui/preferences/custom-integration-form.tsx): bounded form component with controlled input behavior.
-- [ ] [app/src/ui/repositories-list/repositories-list.tsx](app/src/ui/repositories-list/repositories-list.tsx): container-level candidate for filtering and grouped rendering behavior.
-- [ ] [app/src/ui/octicons/icon-preview-dialog.tsx](app/src/ui/octicons/icon-preview-dialog.tsx): small dialog composition candidate without major store coupling.
+- [app/src/ui/tab-bar.tsx](app/src/ui/tab-bar.tsx): moderate composition
+      component that manages focus, adjacent selection, and drag-over switching.
+- [app/src/ui/dialog/dialog.tsx](app/src/ui/dialog/dialog.tsx): reusable
+      dialog container with focus and portal behavior once the helper layer is
+      mature enough.
+- [app/src/ui/preferences/custom-integration-form.tsx](app/src/ui/preferences/custom-integration-form.tsx):
+      bounded form component with controlled input behavior.
+- [app/src/ui/repositories-list/repositories-list.tsx](app/src/ui/repositories-list/repositories-list.tsx):
+      container-level candidate for filtering and grouped rendering behavior.
+- [app/src/ui/octicons/icon-preview-dialog.tsx](app/src/ui/octicons/icon-preview-dialog.tsx):
+      small dialog composition candidate without major store coupling.
 
 ### Dialog Candidates After the First Container
 
-- [ ] [app/src/ui/stashing/confirm-discard-stash.tsx](app/src/ui/stashing/confirm-discard-stash.tsx): compact confirm dialog with predictable button text.
-- [ ] [app/src/ui/checkout/confirm-checkout-commit.tsx](app/src/ui/checkout/confirm-checkout-commit.tsx): similarly bounded confirmation dialog.
-- [ ] [app/src/ui/discard-changes/discard-changes-retry-dialog.tsx](app/src/ui/discard-changes/discard-changes-retry-dialog.tsx): small retry dialog with inline message assertions.
-- [ ] [app/src/ui/local-changes-overwritten/local-changes-overwritten-dialog.tsx](app/src/ui/local-changes-overwritten/local-changes-overwritten-dialog.tsx): another bounded dialog candidate once dialog helpers are established.
+- [app/src/ui/stashing/confirm-discard-stash.tsx](app/src/ui/stashing/confirm-discard-stash.tsx):
+      compact confirm dialog with predictable button text.
+- [app/src/ui/checkout/confirm-checkout-commit.tsx](app/src/ui/checkout/confirm-checkout-commit.tsx):
+      similarly bounded confirmation dialog.
+- [app/src/ui/discard-changes/discard-changes-retry-dialog.tsx](app/src/ui/discard-changes/discard-changes-retry-dialog.tsx):
+      small retry dialog with inline message assertions.
+- [app/src/ui/local-changes-overwritten/local-changes-overwritten-dialog.tsx](app/src/ui/local-changes-overwritten/local-changes-overwritten-dialog.tsx):
+      another bounded dialog candidate once dialog helpers are established.
 
 ## Recommended File Layout
 
-- [ ] Use [app/test/unit](app/test/unit) as the base test tree.
+- [x] Use [app/test/unit](app/test/unit) as the base test tree.
 - [x] Create a dedicated UI subdirectory such as `app/test/unit/ui` when the
       first TSX tests land.
 - [x] Place shared UI helpers under `app/test/helpers/ui` if that directory is
       needed.
-- [ ] Keep production component changes minimal and only refactor when testing
+- [x] Keep production component changes minimal and only refactor when testing
       reveals a real seam problem.
 
 ## Helper Import Path
@@ -267,6 +305,9 @@ component tests in GitHub Desktop.
 - [x] Focused direct run of each new TSX test file.
 - [x] Focused lint and type-check validation for the shared helper files.
 - [x] `yarn lint:src`
+- [x] Direct `markdownlint` validation for
+      [docs/technical/testing-library-adoption-checklist.md](docs/technical/testing-library-adoption-checklist.md)
+      and [docs/technical/ui-component-testing.md](docs/technical/ui-component-testing.md).
 
 ## Commit Plan
 
@@ -277,8 +318,8 @@ component tests in GitHub Desktop.
 - [x] `test(ui): cover tab-bar-item keyboard behavior`
 - [x] `test(ui): cover copy-button clipboard feedback`
 - [x] `test(ui): cover repository list item rendering states`
-- [ ] `test(ui): add first container-level testing-library coverage`
-- [ ] `docs(test): document ui component testing pattern`
+- [x] `test(ui): add tab-bar coverage and shared ui test utilities`
+- [x] `docs(test): document ui component testing pattern`
 
 ## Commit Log
 
@@ -289,18 +330,18 @@ component tests in GitHub Desktop.
 - [x] Commit 5: land the `TabBarItem` tests.
 - [x] Commit 6: land the `CopyButton` tests.
 - [x] Commit 7: land the `RepositoryListItem` tests.
-- [ ] Commit 8: land the first container-level test.
-- [ ] Commit 9: land follow-up documentation if still needed.
+- [x] Commit 8: land the first container-level test.
+- [x] Commit 9: land follow-up documentation if still needed.
 
 ## Risks and Notes
 
 - [x] React 16.8.4 compatibility must be validated before choosing the final
       Testing Library version.
-- [ ] The `node:test` runner plus jsdom setup should be retained unless a hard
+- [x] The `node:test` runner plus jsdom setup should be retained unless a hard
       limitation is found during pilot tests.
 - [x] Testing Library dependencies must resolve from the `app` package because
       the UI code and its React installation live there.
-- [ ] Tooltip behavior may require deterministic mocks or test-friendly query
+- [x] Tooltip behavior may require deterministic mocks or test-friendly query
       strategies.
 - [x] Timer-driven components should use Node mock timers to avoid flakiness.
 - [x] Tooltip-backed UI tests currently rely on the shared UI setup to provide
@@ -309,5 +350,10 @@ component tests in GitHub Desktop.
       `CustomEvent` with jsdom's event implementation.
 - [x] The global Electron mock now exposes a minimal `clipboard.writeText`
       implementation for UI tests that need clipboard behavior.
-- [ ] Electron-heavy components should be deferred until the helper patterns are
+- [x] Electron-heavy components should be deferred until the helper patterns are
       stable.
+- [x] `@testing-library/react@12.1.5` on React 16.8.4 emits the known
+      non-failing warning about non-awaitable `act`; the tests still pass.
+- [x] The repo-wide `yarn markdownlint` script still reports unrelated legacy
+      violations outside this rollout, so the two rollout docs were validated
+      directly with the local `markdownlint` binary.
