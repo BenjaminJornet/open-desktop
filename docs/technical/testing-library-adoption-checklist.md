@@ -159,8 +159,14 @@ component tests in GitHub Desktop.
       `enableAccessibleListToolTips()` resolves to `false` under the shared
       test bootstrap (`__DEV__ === false`, release channel `development`).
 
-- [ ] Evaluate one more data-driven, mostly presentational component after the
+- [x] Evaluate one more data-driven, mostly presentational component after the
       repository list item lands cleanly.
+
+#### BranchListItem Follow-up
+
+- [x] Add a UI test file for [app/src/ui/branches/branch-list-item.tsx](app/src/ui/branches/branch-list-item.tsx).
+- [x] Cover relative-time rendering for the author date.
+- [x] Cover commit drag/drop callbacks for current and non-current branches.
 
 ### Phase 6: First Moderate Container
 
