@@ -216,10 +216,10 @@ component tests in GitHub Desktop.
       components.
 - [x] Cover tiny wrapper and badge components without introducing new harness
       requirements.
-- [ ] Cover inline dialog status surfaces with accessibility assertions.
-- [ ] Cover input description wrappers, including error and warning semantics.
-- [ ] Keep the second wave in `app/test/unit/ui` with shared RTL helpers only.
-- [ ] Validate the new tests with focused runs, the UI directory target, and
+- [x] Cover inline dialog status surfaces with accessibility assertions.
+- [x] Cover input description wrappers, including error and warning semantics.
+- [x] Keep the second wave in `app/test/unit/ui` with shared RTL helpers only.
+- [x] Validate the new tests with focused runs, the UI directory target, and
       lint.
 
 ### Phase 8 Targets
@@ -230,11 +230,11 @@ component tests in GitHub Desktop.
 - [x] [app/src/ui/lib/ref.tsx](app/src/ui/lib/ref.tsx)
 - [x] [app/src/ui/toolbar/toolbar.tsx](app/src/ui/toolbar/toolbar.tsx)
 - [x] [app/src/ui/changes/files-changed-badge.tsx](app/src/ui/changes/files-changed-badge.tsx)
-- [ ] [app/src/ui/dialog/error.tsx](app/src/ui/dialog/error.tsx)
-- [ ] [app/src/ui/dialog/success.tsx](app/src/ui/dialog/success.tsx)
-- [ ] [app/src/ui/lib/input-description/input-caption.tsx](app/src/ui/lib/input-description/input-caption.tsx)
-- [ ] [app/src/ui/lib/input-description/input-error.tsx](app/src/ui/lib/input-description/input-error.tsx)
-- [ ] [app/src/ui/lib/input-description/input-warning.tsx](app/src/ui/lib/input-description/input-warning.tsx)
+- [x] [app/src/ui/dialog/error.tsx](app/src/ui/dialog/error.tsx)
+- [x] [app/src/ui/dialog/success.tsx](app/src/ui/dialog/success.tsx)
+- [x] [app/src/ui/lib/input-description/input-caption.tsx](app/src/ui/lib/input-description/input-caption.tsx)
+- [x] [app/src/ui/lib/input-description/input-error.tsx](app/src/ui/lib/input-description/input-error.tsx)
+- [x] [app/src/ui/lib/input-description/input-warning.tsx](app/src/ui/lib/input-description/input-warning.tsx)
 
 ## Candidate Inventory
 
@@ -813,6 +813,8 @@ inventory, not remaining rollout tasks for this adoption pass.
 - [x] `test(ui): cover repository list item rendering states`
 - [x] `test(ui): add tab-bar coverage and shared ui test utilities`
 - [x] `docs(test): document ui component testing pattern`
+- [x] `test(ui): add second-wave primitive component coverage`
+- [x] `test(ui): add dialog and input description coverage`
 
 ## Commit Log
 
@@ -825,6 +827,8 @@ inventory, not remaining rollout tasks for this adoption pass.
 - [x] Commit 7: land the `RepositoryListItem` tests.
 - [x] Commit 8: land the first container-level test.
 - [x] Commit 9: land follow-up documentation if still needed.
+- [x] Commit 10: land the second-wave primitive component tests.
+- [x] Commit 11: land the dialog and input description tests.
 
 ## Risks and Notes
 
