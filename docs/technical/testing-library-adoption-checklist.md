@@ -332,11 +332,11 @@ component tests in GitHub Desktop.
       render surfaces.
 - [x] Cover tiny visual components with deterministic DOM, class, and wrapper
       assertions.
-- [ ] Cover branch warning and email-attribution warning surfaces with
+- [x] Cover branch warning and email-attribution warning surfaces with
       realistic model fixtures.
 - [x] Keep the seventh wave in `app/test/unit/ui` with shared RTL helpers
       only.
-- [ ] Validate the new tests with focused runs, the UI directory target, and
+- [x] Validate the new tests with focused runs, the UI directory target, and
       lint.
 
 ### Phase 13 Targets
@@ -344,7 +344,7 @@ component tests in GitHub Desktop.
 - [x] [app/src/ui/octicons/octicon.tsx](app/src/ui/octicons/octicon.tsx)
 - [x] [app/src/ui/donut.tsx](app/src/ui/donut.tsx)
 - [x] [app/src/ui/lib/branch-name-warnings.tsx](app/src/ui/lib/branch-name-warnings.tsx)
-- [ ] [app/src/ui/lib/git-email-not-found-warning.tsx](app/src/ui/lib/git-email-not-found-warning.tsx)
+- [x] [app/src/ui/lib/git-email-not-found-warning.tsx](app/src/ui/lib/git-email-not-found-warning.tsx)
 
 ## Candidate Inventory
 
@@ -980,7 +980,7 @@ inventory, not remaining rollout tasks for this adoption pass.
 - [x] `test(ui): add rulesets and publish surface coverage`
 - [x] `test(ui): add banner surface coverage`
 - [x] `test(ui): add visual helper surface coverage`
-- [ ] `test(ui): add warning helper surface coverage`
+- [x] `test(ui): add warning helper surface coverage`
 
 ## Commit Log
 
@@ -1004,7 +1004,7 @@ inventory, not remaining rollout tasks for this adoption pass.
 - [x] Commit 18: land the rulesets and publish surface tests.
 - [x] Commit 19: land the banner surface tests.
 - [x] Commit 20: land the visual helper surface tests.
-- [ ] Commit 21: land the warning helper surface tests.
+- [x] Commit 21: land the warning helper surface tests.
 
 ## Risks and Notes
 
