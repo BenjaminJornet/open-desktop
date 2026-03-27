@@ -407,6 +407,25 @@ component tests in GitHub Desktop.
 - [x] [app/src/ui/app-theme.tsx](app/src/ui/app-theme.tsx)
 - [x] [app/src/ui/lib/config-lock-file-exists.tsx](app/src/ui/lib/config-lock-file-exists.tsx)
 
+## Phase 17: Path Text and Link Helpers
+
+- [x] Add an eleventh-wave batch focused on small path-text and link-oriented
+      helper surfaces.
+- [x] Cover path-text rendering and exported truncation helpers with
+      deterministic assertions.
+- [ ] Cover link-button and password-text-box behavior with targeted click,
+      role, and focus assertions.
+- [x] Keep the eleventh wave in `app/test/unit/ui` with shared RTL helpers and
+      narrow local mocks only.
+- [ ] Validate the new tests with focused runs, the UI directory target, and
+      lint.
+
+### Phase 17 Targets
+
+- [x] [app/src/ui/lib/path-text.tsx](app/src/ui/lib/path-text.tsx)
+- [x] [app/src/ui/lib/link-button.tsx](app/src/ui/lib/link-button.tsx)
+- [ ] [app/src/ui/lib/password-text-box.tsx](app/src/ui/lib/password-text-box.tsx)
+
 ## Candidate Inventory
 
 These are good follow-up targets for future Testing Library coverage. They are
@@ -760,6 +779,12 @@ inventory, not remaining rollout tasks for this adoption pass.
 - [app/src/ui/lib/avatar.tsx](app/src/ui/lib/avatar.tsx):
       avatar surface with bounded fallback rendering and account-aware
       resolution seams.
+- [app/src/ui/lib/git-config-user-form.tsx](app/src/ui/lib/git-config-user-form.tsx):
+      account-aware git user form with bounded email selection and fallback
+      textbox behavior.
+- [app/src/ui/lib/branch-name-rule-validation.tsx](app/src/ui/lib/branch-name-rule-validation.tsx):
+      repo-rule validation helper surface with deterministic warning or error
+      rendering.
 - [app/src/ui/lib/rich-text.tsx](app/src/ui/lib/rich-text.tsx):
       rich-text renderer with emoji, link, and overflow behavior.
 - [app/src/ui/stashing/stash-diff-viewer.tsx](app/src/ui/stashing/stash-diff-viewer.tsx):
@@ -1063,6 +1088,8 @@ inventory, not remaining rollout tasks for this adoption pass.
 - [x] `test(ui): add text box coverage`
 - [x] `test(ui): add path and empty-selection coverage`
 - [x] `test(ui): add helper side-effect coverage`
+- [x] `test(ui): add path text and link button coverage`
+- [ ] `test(ui): add password text box coverage`
 
 ## Commit Log
 
@@ -1093,6 +1120,8 @@ inventory, not remaining rollout tasks for this adoption pass.
 - [x] Commit 25: land the text box tests.
 - [x] Commit 26: land the path and empty-selection tests.
 - [x] Commit 27: land the helper side-effect tests.
+- [x] Commit 28: land the path text and link button tests.
+- [ ] Commit 29: land the password text box tests.
 
 ## Risks and Notes
 
