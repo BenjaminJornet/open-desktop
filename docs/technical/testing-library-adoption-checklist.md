@@ -346,6 +346,28 @@ component tests in GitHub Desktop.
 - [x] [app/src/ui/lib/branch-name-warnings.tsx](app/src/ui/lib/branch-name-warnings.tsx)
 - [x] [app/src/ui/lib/git-email-not-found-warning.tsx](app/src/ui/lib/git-email-not-found-warning.tsx)
 
+## Phase 14: Control Primitives and Live Regions
+
+- [x] Add an eighth-wave batch focused on shared control primitives and the
+      aria-live helper.
+- [x] Cover deterministic button, checkbox, radio, and select behavior without
+      tooltip-specific wiring.
+- [ ] Cover the live-region helper with direct message and tracked-input
+      reread behavior.
+- [x] Keep the eighth wave in `app/test/unit/ui` with shared RTL helpers and
+      existing timer helpers only.
+- [ ] Validate the new tests with focused runs, the UI directory target, and
+      lint.
+
+### Phase 14 Targets
+
+- [x] [app/src/ui/lib/button.tsx](app/src/ui/lib/button.tsx)
+- [x] [app/src/ui/lib/checkbox.tsx](app/src/ui/lib/checkbox.tsx)
+- [x] [app/src/ui/lib/radio-button.tsx](app/src/ui/lib/radio-button.tsx)
+- [x] [app/src/ui/lib/radio-group.tsx](app/src/ui/lib/radio-group.tsx)
+- [x] [app/src/ui/lib/select.tsx](app/src/ui/lib/select.tsx)
+- [ ] [app/src/ui/accessibility/aria-live-container.tsx](app/src/ui/accessibility/aria-live-container.tsx)
+
 ## Candidate Inventory
 
 These are good follow-up targets for future Testing Library coverage. They are
@@ -684,6 +706,10 @@ inventory, not remaining rollout tasks for this adoption pass.
       bounded diff-and-file-list surface with clear empty and context-menu seams.
 - [app/src/ui/branches/pull-request-list.tsx](app/src/ui/branches/pull-request-list.tsx):
       filtered list surface with loading, search, and empty-state branches.
+- [app/src/ui/lib/sandboxed-markdown.tsx](app/src/ui/lib/sandboxed-markdown.tsx):
+      iframe-backed markdown renderer with bounded link, tooltip, and rerender seams.
+- [app/src/ui/lib/filter-list.tsx](app/src/ui/lib/filter-list.tsx):
+      reusable filtered-list container with deterministic selection and empty-state behavior.
 - [app/src/ui/lib/rich-text.tsx](app/src/ui/lib/rich-text.tsx):
       rich-text renderer with emoji, link, and overflow behavior.
 - [app/src/ui/stashing/stash-diff-viewer.tsx](app/src/ui/stashing/stash-diff-viewer.tsx):
@@ -981,6 +1007,8 @@ inventory, not remaining rollout tasks for this adoption pass.
 - [x] `test(ui): add banner surface coverage`
 - [x] `test(ui): add visual helper surface coverage`
 - [x] `test(ui): add warning helper surface coverage`
+- [x] `test(ui): add control primitive coverage`
+- [ ] `test(ui): add aria live container coverage`
 
 ## Commit Log
 
@@ -1005,6 +1033,8 @@ inventory, not remaining rollout tasks for this adoption pass.
 - [x] Commit 19: land the banner surface tests.
 - [x] Commit 20: land the visual helper surface tests.
 - [x] Commit 21: land the warning helper surface tests.
+- [x] Commit 22: land the control primitive tests.
+- [ ] Commit 23: land the aria live container tests.
 
 ## Risks and Notes
 
