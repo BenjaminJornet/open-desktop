@@ -245,6 +245,18 @@ inventory, not remaining rollout tasks for this adoption pass.
       compact banner component with fixed messaging and action affordances.
 - [app/src/ui/diff/image-diffs/deleted-image-diff.tsx](app/src/ui/diff/image-diffs/deleted-image-diff.tsx):
       small image-diff state component paired with the new-image variant.
+- [app/src/ui/repository-rules/repo-ruleset-link.tsx](app/src/ui/repository-rules/repo-ruleset-link.tsx):
+      tiny link-style component with stable URL and label rendering.
+- [app/src/ui/banners/successful-cherry-pick.tsx](app/src/ui/banners/successful-cherry-pick.tsx):
+      compact success banner with predictable messaging and action callbacks.
+- [app/src/ui/banners/successful-merge.tsx](app/src/ui/banners/successful-merge.tsx):
+      small banner variant with stable success copy.
+- [app/src/ui/banners/successful-rebase.tsx](app/src/ui/banners/successful-rebase.tsx):
+      small banner variant with deterministic text and actions.
+- [app/src/ui/lib/call-to-action.tsx](app/src/ui/lib/call-to-action.tsx):
+      concise composition component with visible content plus a button callback.
+- [app/src/ui/welcome/configure-git.tsx](app/src/ui/welcome/configure-git.tsx):
+      small welcome-step wrapper with a bounded cancel flow.
 - [app/src/ui/dialog/footer.tsx](app/src/ui/dialog/footer.tsx): simple
       composition wrapper; useful for documenting children-based render
       assertions.
@@ -271,6 +283,14 @@ inventory, not remaining rollout tasks for this adoption pass.
       compact status banner with predictable visible text.
 - [app/src/ui/keyboard-shortcut/keyboard-shortcut.tsx](app/src/ui/keyboard-shortcut/keyboard-shortcut.tsx):
       small rendering component with deterministic keycap output.
+- [app/src/ui/diff/binary-file.tsx](app/src/ui/diff/binary-file.tsx):
+      compact diff surface with a single open-file action.
+- [app/src/ui/tutorial/confirm-exit-tutorial.tsx](app/src/ui/tutorial/confirm-exit-tutorial.tsx):
+      bounded confirmation dialog with predictable submit and dismiss paths.
+- [app/src/ui/open-pull-request/pull-request-merge-status.tsx](app/src/ui/open-pull-request/pull-request-merge-status.tsx):
+      small state-description component with finite rendering branches.
+- [app/src/ui/lib/avatar-stack.tsx](app/src/ui/lib/avatar-stack.tsx):
+      small compositional component with threshold-driven avatar rendering.
 - [app/src/ui/branches/branch-list-item.tsx](app/src/ui/branches/branch-list-item.tsx):
       branch row with current-branch state, relative time, and drag/drop
       affordances.
@@ -294,6 +314,19 @@ inventory, not remaining rollout tasks for this adoption pass.
 - [app/src/ui/dialog/dialog.tsx](app/src/ui/dialog/dialog.tsx): reusable
       dialog container with focus and portal behavior once the helper layer is
       mature enough.
+- [app/src/ui/suggested-actions/suggested-action.tsx](app/src/ui/suggested-actions/suggested-action.tsx):
+      prop-driven action panel with optional description, image, and button.
+- [app/src/ui/lib/link-button.tsx](app/src/ui/lib/link-button.tsx): shared
+      interactive control with click behavior, external-link behavior, and
+      tooltip wiring.
+- [app/src/ui/check-runs/ci-check-re-run-button.tsx](app/src/ui/check-runs/ci-check-re-run-button.tsx):
+      moderate action component with conditional menu behavior.
+- [app/src/ui/diff/diff-header.tsx](app/src/ui/diff/diff-header.tsx):
+      moderate composition component for path display and diff actions.
+- [app/src/ui/lib/vertical-segmented-control/vertical-segmented-control.tsx](app/src/ui/lib/vertical-segmented-control/vertical-segmented-control.tsx):
+      moderate compositional control with keyboard and selection behavior.
+- [app/src/ui/banners/banner.tsx](app/src/ui/banners/banner.tsx): reusable
+      banner base component with focus management and dismissal timing.
 - [app/src/ui/preferences/custom-integration-form.tsx](app/src/ui/preferences/custom-integration-form.tsx):
       bounded form component with controlled input behavior.
 - [app/src/ui/repositories-list/repositories-list.tsx](app/src/ui/repositories-list/repositories-list.tsx):
