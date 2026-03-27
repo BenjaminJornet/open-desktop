@@ -143,17 +143,21 @@ component tests in GitHub Desktop.
 
 #### RepositoryListItem
 
-- [ ] Add a UI test file for
+- [x] Add a UI test file for
       [app/src/ui/repositories-list/repository-list-item.tsx](app/src/ui/repositories-list/repository-list-item.tsx).
-- [ ] Add minimal fixture creation for `Repository`-backed props.
-- [ ] Cover name rendering without alias.
-- [ ] Cover alias rendering.
-- [ ] Cover owner prefix rendering when disambiguation is enabled.
-- [ ] Cover ahead and behind indicator combinations.
-- [ ] Cover changed-files indicator rendering.
-- [ ] Cover tooltip content rendering.
-- [ ] Decide whether feature-flag behavior for accessible tooltips requires a
+- [x] Add minimal fixture creation for `Repository`-backed props.
+- [x] Cover name rendering without alias.
+- [x] Cover alias rendering.
+- [x] Cover owner prefix rendering when disambiguation is enabled.
+- [x] Cover ahead and behind indicator combinations.
+- [x] Cover changed-files indicator rendering.
+- [x] Cover tooltip content rendering.
+- [x] Decide whether feature-flag behavior for accessible tooltips requires a
       deterministic test double.
+
+- [x] Current tests do not need a dedicated feature-flag test double because
+      `enableAccessibleListToolTips()` resolves to `false` under the shared
+      test bootstrap (`__DEV__ === false`, release channel `development`).
 
 - [ ] Evaluate one more data-driven, mostly presentational component after the
       repository list item lands cleanly.
@@ -193,6 +197,45 @@ component tests in GitHub Desktop.
 - [x] `RepositoryListItem`
 - [ ] One moderate container after the helper layer proves stable.
 
+## Additional Candidate Components
+
+### Smallest Components
+
+- [ ] [app/src/ui/dialog/error.tsx](app/src/ui/dialog/error.tsx): static inline banner with `role="alert"`; good for a minimal accessibility assertion.
+- [ ] [app/src/ui/dialog/success.tsx](app/src/ui/dialog/success.tsx): success-banner sibling to `DialogError`; same low-cost test surface.
+- [ ] [app/src/ui/dialog/footer.tsx](app/src/ui/dialog/footer.tsx): simple composition wrapper; useful for documenting children-based render assertions.
+- [ ] [app/src/ui/dialog/content.tsx](app/src/ui/dialog/content.tsx): another very small structural wrapper suited to smoke-level render tests.
+- [ ] [app/src/ui/dialog/header.tsx](app/src/ui/dialog/header.tsx): small header component with title/description semantics.
+- [ ] [app/src/ui/dialog/default-dialog-footer.tsx](app/src/ui/dialog/default-dialog-footer.tsx): small button-group composition component with stable visible output.
+- [ ] [app/src/ui/lib/highlight-text.tsx](app/src/ui/lib/highlight-text.tsx): pure render helper with deterministic markup (`mark` vs `span`).
+- [ ] [app/src/ui/lib/button.tsx](app/src/ui/lib/button.tsx): foundational button wrapper with tooltip wiring, aria props, and click behavior.
+- [ ] [app/src/ui/app-menu/menu-list-item.tsx](app/src/ui/app-menu/menu-list-item.tsx): compact interactive row component with selection and keyboard behavior.
+
+### Small Presentational Components
+
+- [ ] [app/src/ui/branches/branch-list-item.tsx](app/src/ui/branches/branch-list-item.tsx): branch row with current-branch state, relative time, and drag/drop affordances.
+- [ ] [app/src/ui/history/compare-branch-list-item.tsx](app/src/ui/history/compare-branch-list-item.tsx): small branch comparison renderer with status-driven output.
+- [ ] [app/src/ui/branches/pull-request-list-item.tsx](app/src/ui/branches/pull-request-list-item.tsx): mostly prop-driven pull request row rendering.
+- [ ] [app/src/ui/history/commit-list-item.tsx](app/src/ui/history/commit-list-item.tsx): commit row with relative time, selection, and rich text fragments.
+- [ ] [app/src/ui/check-runs/ci-check-run-actions-job-step-item.tsx](app/src/ui/check-runs/ci-check-run-actions-job-step-item.tsx): compact list item with deterministic text and icon states.
+- [ ] [app/src/ui/check-runs/ci-check-run-list-item.tsx](app/src/ui/check-runs/ci-check-run-list-item.tsx): richer data-driven row once list-item test patterns are mature.
+- [ ] [app/src/ui/lib/list/list-item-insertion-overlay.tsx](app/src/ui/lib/list/list-item-insertion-overlay.tsx): tiny visual-state component with CSS-class assertions.
+
+### Composition and Moderate Containers
+
+- [ ] [app/src/ui/tab-bar.tsx](app/src/ui/tab-bar.tsx): moderate composition component that manages focus, adjacent selection, and drag-over switching.
+- [ ] [app/src/ui/dialog/dialog.tsx](app/src/ui/dialog/dialog.tsx): reusable dialog container with focus and portal behavior once the helper layer is mature enough.
+- [ ] [app/src/ui/preferences/custom-integration-form.tsx](app/src/ui/preferences/custom-integration-form.tsx): bounded form component with controlled input behavior.
+- [ ] [app/src/ui/repositories-list/repositories-list.tsx](app/src/ui/repositories-list/repositories-list.tsx): container-level candidate for filtering and grouped rendering behavior.
+- [ ] [app/src/ui/octicons/icon-preview-dialog.tsx](app/src/ui/octicons/icon-preview-dialog.tsx): small dialog composition candidate without major store coupling.
+
+### Dialog Candidates After the First Container
+
+- [ ] [app/src/ui/stashing/confirm-discard-stash.tsx](app/src/ui/stashing/confirm-discard-stash.tsx): compact confirm dialog with predictable button text.
+- [ ] [app/src/ui/checkout/confirm-checkout-commit.tsx](app/src/ui/checkout/confirm-checkout-commit.tsx): similarly bounded confirmation dialog.
+- [ ] [app/src/ui/discard-changes/discard-changes-retry-dialog.tsx](app/src/ui/discard-changes/discard-changes-retry-dialog.tsx): small retry dialog with inline message assertions.
+- [ ] [app/src/ui/local-changes-overwritten/local-changes-overwritten-dialog.tsx](app/src/ui/local-changes-overwritten/local-changes-overwritten-dialog.tsx): another bounded dialog candidate once dialog helpers are established.
+
 ## Recommended File Layout
 
 - [ ] Use [app/test/unit](app/test/unit) as the base test tree.
@@ -227,7 +270,7 @@ component tests in GitHub Desktop.
 - [x] `test(ui): cover relative-time with testing-library`
 - [x] `test(ui): cover tab-bar-item keyboard behavior`
 - [x] `test(ui): cover copy-button clipboard feedback`
-- [ ] `test(ui): cover repository list item rendering states`
+- [x] `test(ui): cover repository list item rendering states`
 - [ ] `test(ui): add first container-level testing-library coverage`
 - [ ] `docs(test): document ui component testing pattern`
 
@@ -239,7 +282,7 @@ component tests in GitHub Desktop.
 - [x] Commit 4: land the `RelativeTime` tests.
 - [x] Commit 5: land the `TabBarItem` tests.
 - [x] Commit 6: land the `CopyButton` tests.
-- [ ] Commit 7: land the `RepositoryListItem` tests.
+- [x] Commit 7: land the `RepositoryListItem` tests.
 - [ ] Commit 8: land the first container-level test.
 - [ ] Commit 9: land follow-up documentation if still needed.
 
