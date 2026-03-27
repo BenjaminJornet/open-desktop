@@ -263,6 +263,27 @@ component tests in GitHub Desktop.
 - [x] [app/src/ui/dialog/default-dialog-footer.tsx](app/src/ui/dialog/default-dialog-footer.tsx)
 - [x] [app/src/ui/lib/toggle-button.tsx](app/src/ui/lib/toggle-button.tsx)
 
+## Phase 10: Empty-State and Message Components
+
+- [x] Add a fourth-wave batch focused on empty-state components and tiny
+      message/layout surfaces.
+- [x] Cover deterministic layout and message primitives without introducing
+      new helper infrastructure.
+- [ ] Cover empty-state branching and callback flows for the branches and pull
+      request placeholders.
+- [x] Keep the fourth wave in `app/test/unit/ui` with shared RTL helpers only.
+- [ ] Validate the new tests with focused runs, the UI directory target, and
+      lint.
+
+### Phase 10 Targets
+
+- [x] [app/src/ui/lib/row.tsx](app/src/ui/lib/row.tsx)
+- [x] [app/src/ui/keyboard-shortcut/keyboard-shortcut.tsx](app/src/ui/keyboard-shortcut/keyboard-shortcut.tsx)
+- [x] [app/src/ui/lib/errors.tsx](app/src/ui/lib/errors.tsx)
+- [x] [app/src/ui/changes/commit-warning.tsx](app/src/ui/changes/commit-warning.tsx)
+- [ ] [app/src/ui/branches/no-branches.tsx](app/src/ui/branches/no-branches.tsx)
+- [ ] [app/src/ui/branches/no-pull-requests.tsx](app/src/ui/branches/no-pull-requests.tsx)
+
 ## Candidate Inventory
 
 These are good follow-up targets for future Testing Library coverage. They are
@@ -571,6 +592,18 @@ inventory, not remaining rollout tasks for this adoption pass.
       bounded acknowledgements surface with deterministic section rendering.
 - [app/src/ui/changes/changes.tsx](app/src/ui/changes/changes.tsx):
       presentational changes pane with bounded empty and populated states.
+- [app/src/ui/pull-request-quick-view.tsx](app/src/ui/pull-request-quick-view.tsx):
+      mid-sized PR detail surface with deterministic state sections once data
+      fixtures are in place.
+- [app/src/ui/commit-message/commit-message-dialog.tsx](app/src/ui/commit-message/commit-message-dialog.tsx):
+      bounded dialog surface for commit message editing with controlled input
+      behavior.
+- [app/src/ui/resizable/resizable.tsx](app/src/ui/resizable/resizable.tsx):
+      reusable resizable wrapper with clear drag-handle and persistence seams.
+- [app/src/ui/changes/changes-list-filter-options.tsx](app/src/ui/changes/changes-list-filter-options.tsx):
+      compact filter-options surface with finite toggle combinations.
+- [app/src/ui/app-menu/app-menu-bar-button.tsx](app/src/ui/app-menu/app-menu-bar-button.tsx):
+      bounded menu-trigger button with keyboard and expanded-state coverage.
 - [app/src/ui/lib/rich-text.tsx](app/src/ui/lib/rich-text.tsx):
       rich-text renderer with emoji, link, and overflow behavior.
 - [app/src/ui/stashing/stash-diff-viewer.tsx](app/src/ui/stashing/stash-diff-viewer.tsx):
@@ -860,6 +893,8 @@ inventory, not remaining rollout tasks for this adoption pass.
 - [x] `test(ui): add dialog and input description coverage`
 - [x] `test(ui): add structural and text component coverage`
 - [x] `test(ui): add dialog composition and toggle coverage`
+- [x] `test(ui): add layout and message component coverage`
+- [ ] `test(ui): add branch empty-state coverage`
 
 ## Commit Log
 
@@ -876,6 +911,8 @@ inventory, not remaining rollout tasks for this adoption pass.
 - [x] Commit 11: land the dialog and input description tests.
 - [x] Commit 12: land the structural and text component tests.
 - [x] Commit 13: land the dialog composition and toggle tests.
+- [x] Commit 14: land the layout and message component tests.
+- [ ] Commit 15: land the branch empty-state tests.
 
 ## Risks and Notes
 
