@@ -445,6 +445,24 @@ component tests in GitHub Desktop.
 - [x] [app/src/ui/dialog/footer.tsx](app/src/ui/dialog/footer.tsx)
 - [x] [app/src/ui/dialog/ok-cancel-button-group.tsx](app/src/ui/dialog/ok-cancel-button-group.tsx)
 
+## Phase 19: Commit Message Warning Dialogs
+
+- [x] Add a thirteenth-wave batch focused on the small Copilot commit-message
+      warning dialogs.
+- [x] Cover the disclaimer dialog with stable copy, help-link, and submit-side
+      effect assertions.
+- [x] Cover the override warning dialog with tip rendering, checkbox state,
+      and override-submit assertions.
+- [x] Keep the thirteenth wave in `app/test/unit/ui` with shared RTL helpers,
+      typed local fixtures, and narrow DOM shims only.
+- [x] Validate the new tests with focused runs, the UI directory target, and
+      lint.
+
+### Phase 19 Targets
+
+- [x] [app/src/ui/generate-commit-message/generate-commit-message-disclaimer.tsx](app/src/ui/generate-commit-message/generate-commit-message-disclaimer.tsx)
+- [x] [app/src/ui/generate-commit-message/generate-commit-message-override-warning.tsx](app/src/ui/generate-commit-message/generate-commit-message-override-warning.tsx)
+
 ## Candidate Inventory
 
 These are good follow-up targets for future Testing Library coverage. They are
@@ -1125,6 +1143,7 @@ inventory, not remaining rollout tasks for this adoption pass.
 - [x] `test(ui): add path text and link button coverage`
 - [x] `test(ui): add password text box coverage`
 - [x] `test(ui): add dialog action wrapper coverage`
+- [x] `test(ui): add commit message warning dialog coverage`
 
 ## Commit Log
 
@@ -1158,6 +1177,7 @@ inventory, not remaining rollout tasks for this adoption pass.
 - [x] Commit 28: land the path text and link button tests.
 - [x] Commit 29: land the password text box tests.
 - [x] Commit 30: land the dialog action wrapper tests.
+- [x] Commit 31: land the commit message warning dialog tests.
 
 ## Risks and Notes
 
