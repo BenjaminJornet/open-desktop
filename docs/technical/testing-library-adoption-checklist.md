@@ -463,6 +463,25 @@ component tests in GitHub Desktop.
 - [x] [app/src/ui/generate-commit-message/generate-commit-message-disclaimer.tsx](app/src/ui/generate-commit-message/generate-commit-message-disclaimer.tsx)
 - [x] [app/src/ui/generate-commit-message/generate-commit-message-override-warning.tsx](app/src/ui/generate-commit-message/generate-commit-message-override-warning.tsx)
 
+## Phase 20: Welcome and Sign-In Wrappers
+
+- [x] Add a fourteenth-wave batch focused on small welcome-flow and sign-in
+      wrapper surfaces.
+- [x] Cover the shared sign-in wrapper with endpoint-entry, warning, browser,
+      and success-state assertions.
+- [x] Cover the enterprise sign-in and configure-git welcome steps with
+      deterministic section and cancel-flow assertions.
+- [x] Keep the fourteenth wave in `app/test/unit/ui` with shared RTL helpers,
+      typed local fixtures, and no broad module mocks.
+- [x] Validate the new tests with focused runs, the UI directory target, and
+      lint.
+
+### Phase 20 Targets
+
+- [x] [app/src/ui/lib/sign-in.tsx](app/src/ui/lib/sign-in.tsx)
+- [x] [app/src/ui/welcome/sign-in-enterprise.tsx](app/src/ui/welcome/sign-in-enterprise.tsx)
+- [x] [app/src/ui/welcome/configure-git.tsx](app/src/ui/welcome/configure-git.tsx)
+
 ## Candidate Inventory
 
 These are good follow-up targets for future Testing Library coverage. They are
@@ -1144,6 +1163,7 @@ inventory, not remaining rollout tasks for this adoption pass.
 - [x] `test(ui): add password text box coverage`
 - [x] `test(ui): add dialog action wrapper coverage`
 - [x] `test(ui): add commit message warning dialog coverage`
+- [x] `test(ui): add welcome and sign-in wrapper coverage`
 
 ## Commit Log
 
@@ -1178,6 +1198,7 @@ inventory, not remaining rollout tasks for this adoption pass.
 - [x] Commit 29: land the password text box tests.
 - [x] Commit 30: land the dialog action wrapper tests.
 - [x] Commit 31: land the commit message warning dialog tests.
+- [x] Commit 32: land the welcome and sign-in wrapper tests.
 
 ## Risks and Notes
 
