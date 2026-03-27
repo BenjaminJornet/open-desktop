@@ -210,6 +210,32 @@ component tests in GitHub Desktop.
 - [x] `RepositoryListItem`
 - [x] One moderate container after the helper layer proves stable.
 
+## Phase 8: Second-Wave Small Components
+
+- [x] Add a second-wave batch focused on the smallest remaining low-coupling
+      components.
+- [x] Cover tiny wrapper and badge components without introducing new harness
+      requirements.
+- [ ] Cover inline dialog status surfaces with accessibility assertions.
+- [ ] Cover input description wrappers, including error and warning semantics.
+- [ ] Keep the second wave in `app/test/unit/ui` with shared RTL helpers only.
+- [ ] Validate the new tests with focused runs, the UI directory target, and
+      lint.
+
+### Phase 8 Targets
+
+- [x] [app/src/ui/lib/loading.tsx](app/src/ui/lib/loading.tsx)
+- [x] [app/src/ui/lib/horizontal-rule.tsx](app/src/ui/lib/horizontal-rule.tsx)
+- [x] [app/src/ui/dialog/footer.tsx](app/src/ui/dialog/footer.tsx)
+- [x] [app/src/ui/lib/ref.tsx](app/src/ui/lib/ref.tsx)
+- [x] [app/src/ui/toolbar/toolbar.tsx](app/src/ui/toolbar/toolbar.tsx)
+- [x] [app/src/ui/changes/files-changed-badge.tsx](app/src/ui/changes/files-changed-badge.tsx)
+- [ ] [app/src/ui/dialog/error.tsx](app/src/ui/dialog/error.tsx)
+- [ ] [app/src/ui/dialog/success.tsx](app/src/ui/dialog/success.tsx)
+- [ ] [app/src/ui/lib/input-description/input-caption.tsx](app/src/ui/lib/input-description/input-caption.tsx)
+- [ ] [app/src/ui/lib/input-description/input-error.tsx](app/src/ui/lib/input-description/input-error.tsx)
+- [ ] [app/src/ui/lib/input-description/input-warning.tsx](app/src/ui/lib/input-description/input-warning.tsx)
+
 ## Candidate Inventory
 
 These are good follow-up targets for future Testing Library coverage. They are
