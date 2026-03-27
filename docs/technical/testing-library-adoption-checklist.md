@@ -284,6 +284,27 @@ component tests in GitHub Desktop.
 - [x] [app/src/ui/branches/no-branches.tsx](app/src/ui/branches/no-branches.tsx)
 - [x] [app/src/ui/branches/no-pull-requests.tsx](app/src/ui/branches/no-pull-requests.tsx)
 
+## Phase 11: Static Status and Small Action Surfaces
+
+- [x] Add a fifth-wave batch focused on tiny status, link, and explanatory
+      surfaces.
+- [x] Cover stateless render-only components with deterministic text, class,
+      and href assertions.
+- [ ] Cover one small action row and one simple dialog surface without adding
+      new helper infrastructure.
+- [x] Keep the fifth wave in `app/test/unit/ui` with shared RTL helpers only.
+- [ ] Validate the new tests with focused runs, the UI directory target, and
+      lint.
+
+### Phase 11 Targets
+
+- [x] [app/src/ui/repository-rules/repo-ruleset-link.tsx](app/src/ui/repository-rules/repo-ruleset-link.tsx)
+- [x] [app/src/ui/repository-settings/fork-contribution-target-description.tsx](app/src/ui/repository-settings/fork-contribution-target-description.tsx)
+- [x] [app/src/ui/lib/action-status-icon.tsx](app/src/ui/lib/action-status-icon.tsx)
+- [x] [app/src/ui/lib/vertical-segmented-control/segmented-item.tsx](app/src/ui/lib/vertical-segmented-control/segmented-item.tsx)
+- [ ] [app/src/ui/check-runs/ci-check-run-no-steps.tsx](app/src/ui/check-runs/ci-check-run-no-steps.tsx)
+- [ ] [app/src/ui/cli-installed/cli-installed.tsx](app/src/ui/cli-installed/cli-installed.tsx)
+
 ## Candidate Inventory
 
 These are good follow-up targets for future Testing Library coverage. They are
@@ -604,6 +625,12 @@ inventory, not remaining rollout tasks for this adoption pass.
       compact filter-options surface with finite toggle combinations.
 - [app/src/ui/app-menu/app-menu-bar-button.tsx](app/src/ui/app-menu/app-menu-bar-button.tsx):
       bounded menu-trigger button with keyboard and expanded-state coverage.
+- [app/src/ui/multi-commit-operation/dialog/conflicts-dialog.tsx](app/src/ui/multi-commit-operation/dialog/conflicts-dialog.tsx):
+      bounded conflict dialog with explicit continue and abort affordances.
+- [app/src/ui/tutorial/tutorial-panel.tsx](app/src/ui/tutorial/tutorial-panel.tsx):
+      mid-sized instructional panel with stable step and CTA rendering.
+- [app/src/ui/clone-repository/cloneable-repository-filter-list.tsx](app/src/ui/clone-repository/cloneable-repository-filter-list.tsx):
+      list-plus-filter surface with deterministic empty and populated states.
 - [app/src/ui/lib/rich-text.tsx](app/src/ui/lib/rich-text.tsx):
       rich-text renderer with emoji, link, and overflow behavior.
 - [app/src/ui/stashing/stash-diff-viewer.tsx](app/src/ui/stashing/stash-diff-viewer.tsx):
@@ -895,6 +922,8 @@ inventory, not remaining rollout tasks for this adoption pass.
 - [x] `test(ui): add dialog composition and toggle coverage`
 - [x] `test(ui): add layout and message component coverage`
 - [x] `test(ui): add branch empty-state coverage`
+- [x] `test(ui): add static status and link coverage`
+- [ ] `test(ui): add small action row and cli-installed coverage`
 
 ## Commit Log
 
@@ -913,6 +942,8 @@ inventory, not remaining rollout tasks for this adoption pass.
 - [x] Commit 13: land the dialog composition and toggle tests.
 - [x] Commit 14: land the layout and message component tests.
 - [x] Commit 15: land the branch empty-state tests.
+- [x] Commit 16: land the static status and link tests.
+- [ ] Commit 17: land the action row and cli-installed tests.
 
 ## Risks and Notes
 
