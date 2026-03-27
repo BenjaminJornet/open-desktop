@@ -1,5 +1,5 @@
 import assert from 'node:assert'
-import { afterEach, beforeEach, describe, it, mock } from 'node:test'
+import { afterEach, beforeEach, describe, it } from 'node:test'
 import * as React from 'react'
 
 import { DragType } from '../../../src/models/drag-drop'
@@ -7,20 +7,20 @@ import { dragAndDropManager } from '../../../src/lib/drag-and-drop-manager'
 import { BranchListItem } from '../../../src/ui/branches/branch-list-item'
 import { IMatches } from '../../../src/lib/fuzzy-find'
 import { fireEvent, render, screen } from '../../helpers/ui/render'
+import { enableTestTimers, resetTestTimers } from '../../helpers/ui/timers'
 
 const noMatches: IMatches = { title: [], subtitle: [] }
 const now = Date.parse('2026-03-26T12:00:00.000Z')
 
 describe('BranchListItem', () => {
   beforeEach(() => {
-    mock.timers.enable({ apis: ['Date', 'setTimeout'] })
-    mock.timers.setTime(now)
+    enableTestTimers(['Date', 'setTimeout'], now)
   })
 
   afterEach(() => {
     dragAndDropManager.setDragData(null)
     dragAndDropManager.dragEnded(undefined)
-    mock.timers.reset()
+    resetTestTimers()
   })
 
   it('renders the branch name and relative author date', () => {

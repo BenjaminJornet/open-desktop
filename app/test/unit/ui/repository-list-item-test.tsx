@@ -1,5 +1,5 @@
 import assert from 'node:assert'
-import { afterEach, beforeEach, describe, it, mock } from 'node:test'
+import { afterEach, beforeEach, describe, it } from 'node:test'
 import * as React from 'react'
 
 import { Repository } from '../../../src/models/repository'
@@ -8,6 +8,11 @@ import { Owner } from '../../../src/models/owner'
 import { RepositoryListItem } from '../../../src/ui/repositories-list/repository-list-item'
 import { render, fireEvent, screen, waitFor } from '../../helpers/ui/render'
 import { IMatches } from '../../../src/lib/fuzzy-find'
+import {
+  advanceTimersBy,
+  enableTestTimers,
+  resetTestTimers,
+} from '../../helpers/ui/timers'
 
 const noMatches: IMatches = { title: [], subtitle: [] }
 
@@ -26,11 +31,11 @@ function createRepository(alias: string | null = null) {
 
 describe('RepositoryListItem', () => {
   beforeEach(() => {
-    mock.timers.enable({ apis: ['setTimeout'] })
+    enableTestTimers(['setTimeout'])
   })
 
   afterEach(() => {
-    mock.timers.reset()
+    resetTestTimers()
   })
 
   it('renders the repository name and status indicators', () => {
@@ -98,7 +103,7 @@ describe('RepositoryListItem', () => {
 
     fireEvent.mouseEnter(row, { clientX: 20, clientY: 20 })
     fireEvent.mouseMove(row, { clientX: 20, clientY: 20 })
-    mock.timers.tick(400)
+    advanceTimersBy(400)
 
     await waitFor(() => {
       assert.ok(screen.getByText('octocat/desktop', { selector: 'strong' }))

@@ -1,20 +1,25 @@
 import assert from 'node:assert'
-import { afterEach, beforeEach, describe, it, mock } from 'node:test'
+import { afterEach, beforeEach, describe, it } from 'node:test'
 import * as React from 'react'
 
+import { formatDate } from '../../../src/lib/format-date'
 import { render, screen } from '../../helpers/ui/render'
+import {
+  advanceTimersBy,
+  enableTestTimers,
+  resetTestTimers,
+} from '../../helpers/ui/timers'
 import { RelativeTime } from '../../../src/ui/relative-time'
 
 const now = Date.parse('2026-03-26T12:00:00.000Z')
 
 describe('RelativeTime', () => {
   beforeEach(() => {
-    mock.timers.enable({ apis: ['Date', 'setTimeout'] })
-    mock.timers.setTime(now)
+    enableTestTimers(['Date', 'setTimeout'], now)
   })
 
   afterEach(() => {
-    mock.timers.reset()
+    resetTestTimers()
   })
 
   it('renders recent relative text without a tooltip wrapper when disabled', () => {
@@ -57,8 +62,18 @@ describe('RelativeTime', () => {
 
     assert.equal(screen.getByText('just now').textContent, 'just now')
 
-    mock.timers.tick(16 * 1000)
+    advanceTimersBy(16 * 1000)
 
     assert.equal(screen.getByText('1 minute ago').textContent, '1 minute ago')
+  })
+
+  it('renders an absolute date for older timestamps when onlyRelative is false', () => {
+    const then = new Date(now - 8 * 24 * 60 * 60 * 1000)
+
+    render(<RelativeTime date={then} onlyRelative={false} tooltip={false} />)
+
+    const absoluteDate = formatDate(then, { dateStyle: 'medium' })
+
+    assert.equal(screen.getByText(absoluteDate).textContent, absoluteDate)
   })
 })

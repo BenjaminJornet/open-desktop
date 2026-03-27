@@ -1,24 +1,27 @@
 import assert from 'node:assert'
-import { afterEach, beforeEach, describe, it, mock } from 'node:test'
-import { clipboard } from 'electron'
+import { afterEach, beforeEach, describe, it } from 'node:test'
 import * as React from 'react'
 
 import { fireEvent, render, screen, waitFor } from '../../helpers/ui/render'
+import { captureClipboardWrites } from '../../helpers/ui/electron'
+import {
+  advanceTimersBy,
+  enableTestTimers,
+  resetTestTimers,
+} from '../../helpers/ui/timers'
 import { CopyButton } from '../../../src/ui/copy-button'
 
 describe('CopyButton', () => {
-  const writes: Array<string> = []
+  let clipboardCapture = captureClipboardWrites()
 
   beforeEach(() => {
-    mock.timers.enable({ apis: ['setTimeout'] })
-    writes.length = 0
-    clipboard.writeText = (text: string) => {
-      writes.push(text)
-    }
+    enableTestTimers(['setTimeout'])
+    clipboardCapture = captureClipboardWrites()
   })
 
   afterEach(() => {
-    mock.timers.reset()
+    clipboardCapture.restore()
+    resetTestTimers()
   })
 
   it('copies content and announces the copied state before resetting', async () => {
@@ -33,16 +36,16 @@ describe('CopyButton', () => {
 
     fireEvent.click(button)
 
-    assert.deepEqual(writes, ['refs/heads/main'])
+    assert.deepEqual(clipboardCapture.writes, ['refs/heads/main'])
 
-    mock.timers.tick(1000)
+    advanceTimersBy(1000)
 
     await waitFor(() => {
       const liveRegion = screen.getByText(/^Copied!/, { selector: 'div' })
       assert.ok(liveRegion.textContent?.startsWith('Copied!'))
     })
 
-    mock.timers.tick(2000)
+    advanceTimersBy(2000)
 
     await waitFor(() => {
       assert.equal(screen.queryByText(/^Copied!/, { selector: 'div' }), null)
