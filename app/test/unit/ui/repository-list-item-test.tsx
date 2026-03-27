@@ -107,7 +107,9 @@ describe('RepositoryListItem', () => {
 
     await waitFor(() => {
       assert.ok(screen.getByText('octocat/desktop', { selector: 'strong' }))
-      assert.ok(screen.getByText('/Users/sergiou87/Developer/GitHub/desktop-fixture'))
+      assert.ok(
+        screen.getByText('/Users/sergiou87/Developer/GitHub/desktop-fixture')
+      )
     })
   })
 })

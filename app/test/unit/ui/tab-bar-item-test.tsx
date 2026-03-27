@@ -41,10 +41,7 @@ function renderTabBarItem(
     onMouseLeaveCalls.count++
   }
 
-  function onSelectAdjacent(
-    direction: 'next' | 'previous',
-    index: number
-  ) {
+  function onSelectAdjacent(direction: 'next' | 'previous', index: number) {
     adjacentSelections.push({ direction, index })
   }
 

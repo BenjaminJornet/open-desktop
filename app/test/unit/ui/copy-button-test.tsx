@@ -26,10 +26,7 @@ describe('CopyButton', () => {
 
   it('copies content and announces the copied state before resetting', async () => {
     render(
-      <CopyButton
-        copyContent="refs/heads/main"
-        ariaLabel="Copy branch name"
-      />
+      <CopyButton copyContent="refs/heads/main" ariaLabel="Copy branch name" />
     )
 
     const button = screen.getByRole('button', { name: 'Copy branch name' })

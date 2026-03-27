@@ -2,10 +2,7 @@ import { mock } from 'node:test'
 
 type TimerApi = 'Date' | 'setTimeout'
 
-export function enableTestTimers(
-  apis: ReadonlyArray<TimerApi>,
-  now?: number
-) {
+export function enableTestTimers(apis: ReadonlyArray<TimerApi>, now?: number) {
   mock.timers.enable({ apis: [...apis] })
 
   if (now !== undefined) {

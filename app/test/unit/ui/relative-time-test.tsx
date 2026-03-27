@@ -23,9 +23,7 @@ describe('RelativeTime', () => {
   })
 
   it('renders recent relative text without a tooltip wrapper when disabled', () => {
-    render(
-      <RelativeTime date={new Date(now - 30 * 1000)} tooltip={false} />
-    )
+    render(<RelativeTime date={new Date(now - 30 * 1000)} tooltip={false} />)
 
     const text = screen.getByText('just now')
 
@@ -56,9 +54,7 @@ describe('RelativeTime', () => {
   })
 
   it('refreshes once the scheduled timeout elapses', () => {
-    render(
-      <RelativeTime date={new Date(now - 44 * 1000)} tooltip={false} />
-    )
+    render(<RelativeTime date={new Date(now - 44 * 1000)} tooltip={false} />)
 
     assert.equal(screen.getByText('just now').textContent, 'just now')
 
