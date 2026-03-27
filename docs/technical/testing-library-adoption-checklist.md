@@ -253,6 +253,14 @@ inventory, not remaining rollout tasks for this adoption pass.
       compact installed-success dialog with fixed copy.
 - [app/src/ui/lib/vertical-segmented-control/segmented-item.tsx](app/src/ui/lib/vertical-segmented-control/segmented-item.tsx):
       minimal segmented item renderer with simple selected-state output.
+- [app/src/ui/lib/access-text.tsx](app/src/ui/lib/access-text.tsx): tiny text
+      renderer for access-key highlighting with deterministic markup.
+- [app/src/ui/lib/path-label.tsx](app/src/ui/lib/path-label.tsx): compact path
+      display component with bounded truncation behavior.
+- [app/src/ui/lib/action-status-icon.tsx](app/src/ui/lib/action-status-icon.tsx):
+      tiny icon renderer mapping status values to stable output.
+- [app/src/ui/lib/git-email-not-found-warning.tsx](app/src/ui/lib/git-email-not-found-warning.tsx):
+      very small warning surface with deterministic text.
 - [app/src/ui/ui-view.tsx](app/src/ui/ui-view.tsx): lightweight layout shell
       for cloning and repository views.
 - [app/src/ui/banners/os-version-no-longer-supported-banner.tsx](app/src/ui/banners/os-version-no-longer-supported-banner.tsx):
@@ -302,11 +310,27 @@ inventory, not remaining rollout tasks for this adoption pass.
       render helper with deterministic markup (`mark` vs `span`).
 - [app/src/ui/lib/button.tsx](app/src/ui/lib/button.tsx): foundational button
       wrapper with tooltip wiring, aria props, and click behavior.
+- [app/src/ui/lib/checkbox.tsx](app/src/ui/lib/checkbox.tsx): core checkbox
+      control with mixed-state behavior and label wiring.
+- [app/src/ui/lib/radio-button.tsx](app/src/ui/lib/radio-button.tsx): small
+      radio option component with straightforward aria and focus behavior.
+- [app/src/ui/lib/radio-group.tsx](app/src/ui/lib/radio-group.tsx): compact
+      radiogroup container with prop-driven selection handling.
 - [app/src/ui/app-menu/menu-list-item.tsx](app/src/ui/app-menu/menu-list-item.tsx):
       compact interactive row component with selection and keyboard behavior.
 
 ### Small Presentational Components
 
+- [app/src/ui/lib/toggle-button.tsx](app/src/ui/lib/toggle-button.tsx):
+      small switch-style control with checked-state assertions.
+- [app/src/ui/lib/tooltipped-content.tsx](app/src/ui/lib/tooltipped-content.tsx):
+      compact wrapper for tooltip-backed content and accessible markup.
+- [app/src/ui/lib/text-box.tsx](app/src/ui/lib/text-box.tsx): shared text
+      input wrapper with validation and focus behavior.
+- [app/src/ui/lib/text-area.tsx](app/src/ui/lib/text-area.tsx): small textarea
+      control with predictable input and styling behavior.
+- [app/src/ui/lib/select.tsx](app/src/ui/lib/select.tsx): bounded select
+      component with prop-driven option rendering.
 - [app/src/ui/changes/multiple-selection.tsx](app/src/ui/changes/multiple-selection.tsx):
       concise selection-state component with stable text output.
 - [app/src/ui/lib/row.tsx](app/src/ui/lib/row.tsx): small layout component
@@ -341,6 +365,14 @@ inventory, not remaining rollout tasks for this adoption pass.
       isolated popover explaining whitespace mode.
 - [app/src/ui/lib/config-lock-file-exists.tsx](app/src/ui/lib/config-lock-file-exists.tsx):
       small lock-file notice with retry and help behavior.
+- [app/src/ui/branches/pull-request-badge.tsx](app/src/ui/branches/pull-request-badge.tsx):
+      compact PR status badge with bounded click behavior.
+- [app/src/ui/history/merge-call-to-action.tsx](app/src/ui/history/merge-call-to-action.tsx):
+      small action surface with conflict guidance and button flows.
+- [app/src/ui/changes/no-changes.tsx](app/src/ui/changes/no-changes.tsx):
+      empty-state component with deterministic messaging.
+- [app/src/ui/branches/no-pull-requests.tsx](app/src/ui/branches/no-pull-requests.tsx):
+      empty-state surface with create action callbacks.
 - [app/src/ui/repository-settings/no-remote.tsx](app/src/ui/repository-settings/no-remote.tsx):
       compact publish CTA shown when a repository has no remote.
 - [app/src/ui/repository-rules/repo-rulesets-for-branch-link.tsx](app/src/ui/repository-rules/repo-rulesets-for-branch-link.tsx):
@@ -410,6 +442,16 @@ inventory, not remaining rollout tasks for this adoption pass.
       reusable sign-in form with clear submit and cancel behavior.
 - [app/src/ui/diff/diff-search-input.tsx](app/src/ui/diff/diff-search-input.tsx):
       moderate search control with next and previous navigation actions.
+- [app/src/ui/lib/popover.tsx](app/src/ui/lib/popover.tsx): anchored popover
+      container with focus-trap and click-outside behavior.
+- [app/src/ui/branches/branch-renderer.tsx](app/src/ui/branches/branch-renderer.tsx):
+      state-driven branch row renderer covering several UI variants.
+- [app/src/ui/branches/ci-status.tsx](app/src/ui/branches/ci-status.tsx):
+      CI indicator component with stateful check-status behavior.
+- [app/src/ui/history/commit-list.tsx](app/src/ui/history/commit-list.tsx):
+      moderate history list with selection and delegation behavior.
+- [app/src/ui/changes/confirm-commit-filtered-changes-dialog.tsx](app/src/ui/changes/confirm-commit-filtered-changes-dialog.tsx):
+      focused confirmation dialog with filtered-file rendering and actions.
 - [app/src/ui/preferences/custom-integration-form.tsx](app/src/ui/preferences/custom-integration-form.tsx):
       bounded form component with controlled input behavior.
 - [app/src/ui/repositories-list/repositories-list.tsx](app/src/ui/repositories-list/repositories-list.tsx):
