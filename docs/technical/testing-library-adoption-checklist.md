@@ -291,6 +291,14 @@ inventory, not remaining rollout tasks for this adoption pass.
       small state-description component with finite rendering branches.
 - [app/src/ui/lib/avatar-stack.tsx](app/src/ui/lib/avatar-stack.tsx):
       small compositional component with threshold-driven avatar rendering.
+- [app/src/ui/repository-settings/no-remote.tsx](app/src/ui/repository-settings/no-remote.tsx):
+      compact publish CTA shown when a repository has no remote.
+- [app/src/ui/repository-rules/repo-rulesets-for-branch-link.tsx](app/src/ui/repository-rules/repo-rulesets-for-branch-link.tsx):
+      small rulesets link with a bounded null or missing-data path.
+- [app/src/ui/repository-settings/remote.tsx](app/src/ui/repository-settings/remote.tsx):
+      compact remote URL surface with simple edit and display behavior.
+- [app/src/ui/repository-settings/git-ignore.tsx](app/src/ui/repository-settings/git-ignore.tsx):
+      small gitignore settings surface with stable help-link behavior.
 - [app/src/ui/branches/branch-list-item.tsx](app/src/ui/branches/branch-list-item.tsx):
       branch row with current-branch state, relative time, and drag/drop
       affordances.
@@ -327,6 +335,21 @@ inventory, not remaining rollout tasks for this adoption pass.
       moderate compositional control with keyboard and selection behavior.
 - [app/src/ui/banners/banner.tsx](app/src/ui/banners/banner.tsx): reusable
       banner base component with focus management and dismissal timing.
+- [app/src/ui/check-runs/ci-check-run-actions-job-step-list.tsx](app/src/ui/check-runs/ci-check-run-actions-job-step-list.tsx):
+      moderate workflow-step list with deterministic failure highlighting.
+- [app/src/ui/lib/password-text-box.tsx](app/src/ui/lib/password-text-box.tsx):
+      shared control with local visibility-toggle state and predictable input
+      behavior.
+- [app/src/ui/banners/open-thank-you-card.tsx](app/src/ui/banners/open-thank-you-card.tsx):
+      interactive banner with open and dismiss action flows.
+- [app/src/ui/invalidated-token/invalidated-token.tsx](app/src/ui/invalidated-token/invalidated-token.tsx):
+      bounded re-authentication dialog with clear account-state messaging.
+- [app/src/ui/delete-branch/delete-pull-request-dialog.tsx](app/src/ui/delete-branch/delete-pull-request-dialog.tsx):
+      focused delete-branch warning dialog with pull-request guidance.
+- [app/src/ui/hook-failed/hook-failed.tsx](app/src/ui/hook-failed/hook-failed.tsx):
+      moderate failure dialog with embedded terminal output and recovery text.
+- [app/src/ui/delete-tag/delete-tag-dialog.tsx](app/src/ui/delete-tag/delete-tag-dialog.tsx):
+      async confirmation dialog with loading-state coverage opportunities.
 - [app/src/ui/preferences/custom-integration-form.tsx](app/src/ui/preferences/custom-integration-form.tsx):
       bounded form component with controlled input behavior.
 - [app/src/ui/repositories-list/repositories-list.tsx](app/src/ui/repositories-list/repositories-list.tsx):
