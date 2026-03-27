@@ -326,6 +326,26 @@ component tests in GitHub Desktop.
 - [x] [app/src/ui/banners/branch-already-up-to-date-banner.tsx](app/src/ui/banners/branch-already-up-to-date-banner.tsx)
 - [x] [app/src/ui/banners/cherry-pick-undone.tsx](app/src/ui/banners/cherry-pick-undone.tsx)
 
+## Phase 13: Visual and Warning Helper Surfaces
+
+- [x] Add a seventh-wave batch focused on visual helper components and warning
+      render surfaces.
+- [x] Cover tiny visual components with deterministic DOM, class, and wrapper
+      assertions.
+- [ ] Cover branch warning and email-attribution warning surfaces with
+      realistic model fixtures.
+- [x] Keep the seventh wave in `app/test/unit/ui` with shared RTL helpers
+      only.
+- [ ] Validate the new tests with focused runs, the UI directory target, and
+      lint.
+
+### Phase 13 Targets
+
+- [x] [app/src/ui/octicons/octicon.tsx](app/src/ui/octicons/octicon.tsx)
+- [x] [app/src/ui/donut.tsx](app/src/ui/donut.tsx)
+- [x] [app/src/ui/lib/branch-name-warnings.tsx](app/src/ui/lib/branch-name-warnings.tsx)
+- [ ] [app/src/ui/lib/git-email-not-found-warning.tsx](app/src/ui/lib/git-email-not-found-warning.tsx)
+
 ## Candidate Inventory
 
 These are good follow-up targets for future Testing Library coverage. They are
@@ -658,6 +678,12 @@ inventory, not remaining rollout tasks for this adoption pass.
       settings pane with finite checkbox and radio preference branches.
 - [app/src/ui/check-runs/ci-check-run-popover.tsx](app/src/ui/check-runs/ci-check-run-popover.tsx):
       check-run summary popover with list, rerun, and empty-state branches.
+- [app/src/ui/app-menu/menu-pane.tsx](app/src/ui/app-menu/menu-pane.tsx):
+      keyboard-driven menu surface with finite navigation and selection rules.
+- [app/src/ui/open-pull-request/pull-request-files-changed.tsx](app/src/ui/open-pull-request/pull-request-files-changed.tsx):
+      bounded diff-and-file-list surface with clear empty and context-menu seams.
+- [app/src/ui/branches/pull-request-list.tsx](app/src/ui/branches/pull-request-list.tsx):
+      filtered list surface with loading, search, and empty-state branches.
 - [app/src/ui/lib/rich-text.tsx](app/src/ui/lib/rich-text.tsx):
       rich-text renderer with emoji, link, and overflow behavior.
 - [app/src/ui/stashing/stash-diff-viewer.tsx](app/src/ui/stashing/stash-diff-viewer.tsx):
@@ -953,6 +979,8 @@ inventory, not remaining rollout tasks for this adoption pass.
 - [x] `test(ui): add small action row and cli-installed coverage`
 - [x] `test(ui): add rulesets and publish surface coverage`
 - [x] `test(ui): add banner surface coverage`
+- [x] `test(ui): add visual helper surface coverage`
+- [ ] `test(ui): add warning helper surface coverage`
 
 ## Commit Log
 
@@ -975,6 +1003,8 @@ inventory, not remaining rollout tasks for this adoption pass.
 - [x] Commit 17: land the action row and cli-installed tests.
 - [x] Commit 18: land the rulesets and publish surface tests.
 - [x] Commit 19: land the banner surface tests.
+- [x] Commit 20: land the visual helper surface tests.
+- [ ] Commit 21: land the warning helper surface tests.
 
 ## Risks and Notes
 
