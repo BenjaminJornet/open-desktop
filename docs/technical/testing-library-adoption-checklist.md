@@ -217,10 +217,34 @@ inventory, not remaining rollout tasks for this adoption pass.
 
 ### Smallest Components
 
+- [app/src/ui/lib/loading.tsx](app/src/ui/lib/loading.tsx): tiny loading
+      indicator component with deterministic DOM output.
+- [app/src/ui/lib/horizontal-rule.tsx](app/src/ui/lib/horizontal-rule.tsx):
+      minimal structural component suited to smoke-level rendering assertions.
+- [app/src/ui/lib/ref.tsx](app/src/ui/lib/ref.tsx): tiny ref-forwarding helper
+      component that is useful for focused render and children assertions.
+- [app/src/ui/toolbar/toolbar.tsx](app/src/ui/toolbar/toolbar.tsx): compact
+      wrapper component with simple structural and children rendering behavior.
 - [app/src/ui/dialog/error.tsx](app/src/ui/dialog/error.tsx): static inline
       banner with `role="alert"`; good for a minimal accessibility assertion.
 - [app/src/ui/dialog/success.tsx](app/src/ui/dialog/success.tsx):
       success-banner sibling to `DialogError`; same low-cost test surface.
+- [app/src/ui/diff/image-diffs/new-image-diff.tsx](app/src/ui/diff/image-diffs/new-image-diff.tsx):
+      small image-diff state component with stable text and layout.
+- [app/src/ui/lib/errors.tsx](app/src/ui/lib/errors.tsx): compact error message
+      rendering component with deterministic copy.
+- [app/src/ui/changes/files-changed-badge.tsx](app/src/ui/changes/files-changed-badge.tsx):
+      tiny badge component with stable count-driven output.
+- [app/src/ui/lib/input-description/input-caption.tsx](app/src/ui/lib/input-description/input-caption.tsx):
+      very small form-caption component with predictable text rendering.
+- [app/src/ui/lib/input-description/input-error.tsx](app/src/ui/lib/input-description/input-error.tsx):
+      very small form-error component with stable semantics.
+- [app/src/ui/lib/input-description/input-warning.tsx](app/src/ui/lib/input-description/input-warning.tsx):
+      very small form-warning component with stable semantics.
+- [app/src/ui/banners/cherry-pick-undone.tsx](app/src/ui/banners/cherry-pick-undone.tsx):
+      compact banner component with fixed messaging and action affordances.
+- [app/src/ui/diff/image-diffs/deleted-image-diff.tsx](app/src/ui/diff/image-diffs/deleted-image-diff.tsx):
+      small image-diff state component paired with the new-image variant.
 - [app/src/ui/dialog/footer.tsx](app/src/ui/dialog/footer.tsx): simple
       composition wrapper; useful for documenting children-based render
       assertions.
@@ -239,6 +263,14 @@ inventory, not remaining rollout tasks for this adoption pass.
 
 ### Small Presentational Components
 
+- [app/src/ui/changes/multiple-selection.tsx](app/src/ui/changes/multiple-selection.tsx):
+      concise selection-state component with stable text output.
+- [app/src/ui/lib/row.tsx](app/src/ui/lib/row.tsx): small layout component
+      suited to structural and class-based assertions.
+- [app/src/ui/banners/successful-squash.tsx](app/src/ui/banners/successful-squash.tsx):
+      compact status banner with predictable visible text.
+- [app/src/ui/keyboard-shortcut/keyboard-shortcut.tsx](app/src/ui/keyboard-shortcut/keyboard-shortcut.tsx):
+      small rendering component with deterministic keycap output.
 - [app/src/ui/branches/branch-list-item.tsx](app/src/ui/branches/branch-list-item.tsx):
       branch row with current-branch state, relative time, and drag/drop
       affordances.
