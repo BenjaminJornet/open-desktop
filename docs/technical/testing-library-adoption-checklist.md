@@ -247,12 +247,44 @@ inventory, not remaining rollout tasks for this adoption pass.
       small image-diff state component paired with the new-image variant.
 - [app/src/ui/repository-rules/repo-ruleset-link.tsx](app/src/ui/repository-rules/repo-ruleset-link.tsx):
       tiny link-style component with stable URL and label rendering.
+- [app/src/ui/lib/form.tsx](app/src/ui/lib/form.tsx): tiny form wrapper with
+      straightforward submit behavior.
+- [app/src/ui/cli-installed/cli-installed.tsx](app/src/ui/cli-installed/cli-installed.tsx):
+      compact installed-success dialog with fixed copy.
+- [app/src/ui/lib/vertical-segmented-control/segmented-item.tsx](app/src/ui/lib/vertical-segmented-control/segmented-item.tsx):
+      minimal segmented item renderer with simple selected-state output.
+- [app/src/ui/ui-view.tsx](app/src/ui/ui-view.tsx): lightweight layout shell
+      for cloning and repository views.
+- [app/src/ui/banners/os-version-no-longer-supported-banner.tsx](app/src/ui/banners/os-version-no-longer-supported-banner.tsx):
+      dismissible warning banner with a bounded help-link flow.
+- [app/src/ui/check-runs/ci-check-run-no-steps.tsx](app/src/ui/check-runs/ci-check-run-no-steps.tsx):
+      compact empty-state row with open-details behavior.
+- [app/src/ui/banners/branch-already-up-to-date-banner.tsx](app/src/ui/banners/branch-already-up-to-date-banner.tsx):
+      narrow status banner with simple branch-name interpolation.
+- [app/src/ui/repository-settings/fork-contribution-target-description.tsx](app/src/ui/repository-settings/fork-contribution-target-description.tsx):
+      short explanatory text surface with a GitHub link.
+- [app/src/ui/cloning-repository.tsx](app/src/ui/cloning-repository.tsx):
+      compact cloning progress and status view.
+- [app/src/ui/welcome/sign-in-enterprise.tsx](app/src/ui/welcome/sign-in-enterprise.tsx):
+      small enterprise sign-in CTA surface.
 - [app/src/ui/banners/successful-cherry-pick.tsx](app/src/ui/banners/successful-cherry-pick.tsx):
       compact success banner with predictable messaging and action callbacks.
 - [app/src/ui/banners/successful-merge.tsx](app/src/ui/banners/successful-merge.tsx):
       small banner variant with stable success copy.
 - [app/src/ui/banners/successful-rebase.tsx](app/src/ui/banners/successful-rebase.tsx):
       small banner variant with deterministic text and actions.
+- [app/src/ui/banners/merge-conflicts-banner.tsx](app/src/ui/banners/merge-conflicts-banner.tsx):
+      compact conflicts banner with a reopen action.
+- [app/src/ui/diff/image-diffs/difference-blend.tsx](app/src/ui/diff/image-diffs/difference-blend.tsx):
+      small image-diff presentation mode with deterministic rendering.
+- [app/src/ui/banners/success-banner.tsx](app/src/ui/banners/success-banner.tsx):
+      generic success banner with optional action-link behavior.
+- [app/src/ui/banners/cherry-pick-conflicts-banner.tsx](app/src/ui/banners/cherry-pick-conflicts-banner.tsx):
+      compact conflicts banner variant with link action coverage.
+- [app/src/ui/lib/commit-attribution.tsx](app/src/ui/lib/commit-attribution.tsx):
+      short attribution renderer with deterministic author and committer text.
+- [app/src/ui/banners/rebase-conflicts-banner.tsx](app/src/ui/banners/rebase-conflicts-banner.tsx):
+      compact conflicts banner variant with reopen handling.
 - [app/src/ui/lib/call-to-action.tsx](app/src/ui/lib/call-to-action.tsx):
       concise composition component with visible content plus a button callback.
 - [app/src/ui/welcome/configure-git.tsx](app/src/ui/welcome/configure-git.tsx):
@@ -291,6 +323,24 @@ inventory, not remaining rollout tasks for this adoption pass.
       small state-description component with finite rendering branches.
 - [app/src/ui/lib/avatar-stack.tsx](app/src/ui/lib/avatar-stack.tsx):
       small compositional component with threshold-driven avatar rendering.
+- [app/src/ui/history/committed-file-item.tsx](app/src/ui/history/committed-file-item.tsx):
+      compact committed-file row with path and status display.
+- [app/src/ui/banners/conflicts-found-banner.tsx](app/src/ui/banners/conflicts-found-banner.tsx):
+      small banner prompting the user to resolve conflicts.
+- [app/src/ui/tutorial/welcome.tsx](app/src/ui/tutorial/welcome.tsx):
+      static tutorial welcome surface with bounded copy and assets.
+- [app/src/ui/changes/commit-warning.tsx](app/src/ui/changes/commit-warning.tsx):
+      concise warning renderer with icon and message output.
+- [app/src/ui/lfs/attribute-mismatch.tsx](app/src/ui/lfs/attribute-mismatch.tsx):
+      small confirmation dialog for updating LFS filters.
+- [app/src/ui/suggested-actions/suggested-action-group.tsx](app/src/ui/suggested-actions/suggested-action-group.tsx):
+      compact animated wrapper around suggested actions.
+- [app/src/ui/branches/no-branches.tsx](app/src/ui/branches/no-branches.tsx):
+      empty-state surface with a create-branch action.
+- [app/src/ui/diff/whitespace-hint-popover.tsx](app/src/ui/diff/whitespace-hint-popover.tsx):
+      isolated popover explaining whitespace mode.
+- [app/src/ui/lib/config-lock-file-exists.tsx](app/src/ui/lib/config-lock-file-exists.tsx):
+      small lock-file notice with retry and help behavior.
 - [app/src/ui/repository-settings/no-remote.tsx](app/src/ui/repository-settings/no-remote.tsx):
       compact publish CTA shown when a repository has no remote.
 - [app/src/ui/repository-rules/repo-rulesets-for-branch-link.tsx](app/src/ui/repository-rules/repo-rulesets-for-branch-link.tsx):
@@ -350,6 +400,16 @@ inventory, not remaining rollout tasks for this adoption pass.
       moderate failure dialog with embedded terminal output and recovery text.
 - [app/src/ui/delete-tag/delete-tag-dialog.tsx](app/src/ui/delete-tag/delete-tag-dialog.tsx):
       async confirmation dialog with loading-state coverage opportunities.
+- [app/src/ui/repository-settings/fork-settings.tsx](app/src/ui/repository-settings/fork-settings.tsx):
+      moderate radio-group settings dialog built from small child controls.
+- [app/src/ui/changes/undo-commit.tsx](app/src/ui/changes/undo-commit.tsx):
+      moderate undo-commit surface with button-state transitions.
+- [app/src/ui/commit-progress/commit-progress.tsx](app/src/ui/commit-progress/commit-progress.tsx):
+      moderate progress dialog wrapping terminal output.
+- [app/src/ui/lib/authentication-form.tsx](app/src/ui/lib/authentication-form.tsx):
+      reusable sign-in form with clear submit and cancel behavior.
+- [app/src/ui/diff/diff-search-input.tsx](app/src/ui/diff/diff-search-input.tsx):
+      moderate search control with next and previous navigation actions.
 - [app/src/ui/preferences/custom-integration-form.tsx](app/src/ui/preferences/custom-integration-form.tsx):
       bounded form component with controlled input behavior.
 - [app/src/ui/repositories-list/repositories-list.tsx](app/src/ui/repositories-list/repositories-list.tsx):
