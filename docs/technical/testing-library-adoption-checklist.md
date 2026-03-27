@@ -368,6 +368,25 @@ component tests in GitHub Desktop.
 - [x] [app/src/ui/lib/select.tsx](app/src/ui/lib/select.tsx)
 - [x] [app/src/ui/accessibility/aria-live-container.tsx](app/src/ui/accessibility/aria-live-container.tsx)
 
+## Phase 15: Text Entry and Description Surfaces
+
+- [x] Add a ninth-wave batch focused on shared text-entry controls and the
+      base input-description surface.
+- [x] Cover textarea and input-description behavior with deterministic DOM,
+      role, and callback assertions.
+- [ ] Cover text-box search, clear, and keyboard behavior without introducing
+      new global mocks.
+- [x] Keep the ninth wave in `app/test/unit/ui` with shared RTL helpers and
+      existing timer helpers only.
+- [ ] Validate the new tests with focused runs, the UI directory target, and
+      lint.
+
+### Phase 15 Targets
+
+- [x] [app/src/ui/lib/input-description/input-description.tsx](app/src/ui/lib/input-description/input-description.tsx)
+- [x] [app/src/ui/lib/text-area.tsx](app/src/ui/lib/text-area.tsx)
+- [ ] [app/src/ui/lib/text-box.tsx](app/src/ui/lib/text-box.tsx)
+
 ## Candidate Inventory
 
 These are good follow-up targets for future Testing Library coverage. They are
@@ -712,6 +731,9 @@ inventory, not remaining rollout tasks for this adoption pass.
 - [app/src/ui/lib/filter-list.tsx](app/src/ui/lib/filter-list.tsx):
       reusable filtered-list container with deterministic selection and
       empty-state behavior.
+- [app/src/ui/lib/augmented-filter-list.tsx](app/src/ui/lib/augmented-filter-list.tsx):
+      reusable multi-selection filter surface with bounded keyboard and
+      no-results behavior.
 - [app/src/ui/lib/rich-text.tsx](app/src/ui/lib/rich-text.tsx):
       rich-text renderer with emoji, link, and overflow behavior.
 - [app/src/ui/stashing/stash-diff-viewer.tsx](app/src/ui/stashing/stash-diff-viewer.tsx):
@@ -1011,6 +1033,8 @@ inventory, not remaining rollout tasks for this adoption pass.
 - [x] `test(ui): add warning helper surface coverage`
 - [x] `test(ui): add control primitive coverage`
 - [x] `test(ui): add aria live container coverage`
+- [x] `test(ui): add input description and textarea coverage`
+- [ ] `test(ui): add text box coverage`
 
 ## Commit Log
 
@@ -1037,6 +1061,8 @@ inventory, not remaining rollout tasks for this adoption pass.
 - [x] Commit 21: land the warning helper surface tests.
 - [x] Commit 22: land the control primitive tests.
 - [x] Commit 23: land the aria live container tests.
+- [x] Commit 24: land the input description and textarea tests.
+- [ ] Commit 25: land the text box tests.
 
 ## Risks and Notes
 
