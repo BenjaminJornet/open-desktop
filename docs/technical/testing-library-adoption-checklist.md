@@ -356,6 +356,16 @@ inventory, not remaining rollout tasks for this adoption pass.
       small warning prompt with explicit next-step messaging.
 - [app/src/ui/window/zoom-info.tsx](app/src/ui/window/zoom-info.tsx):
       tiny info surface with stable zoom-level text.
+- [app/src/ui/workflow-push-rejected/workflow-push-rejected.tsx](app/src/ui/workflow-push-rejected/workflow-push-rejected.tsx):
+      tiny rejection dialog with one clear remediation action.
+- [app/src/ui/toolbar/revert-progress.tsx](app/src/ui/toolbar/revert-progress.tsx):
+      compact toolbar progress surface with deterministic disabled-state output.
+- [app/src/ui/multi-commit-operation/dialog/confirm-abort-dialog.tsx](app/src/ui/multi-commit-operation/dialog/confirm-abort-dialog.tsx):
+      very small confirm and cancel dialog with bounded actions.
+- [app/src/ui/multi-commit-operation/dialog/warn-force-push-dialog.tsx](app/src/ui/multi-commit-operation/dialog/warn-force-push-dialog.tsx):
+      concise warning dialog with checkbox-driven state.
+- [app/src/ui/welcome/start.tsx](app/src/ui/welcome/start.tsx): compact
+      onboarding step with clear call-to-action coverage.
 - [app/src/ui/app-menu/menu-list-item.tsx](app/src/ui/app-menu/menu-list-item.tsx):
       compact interactive row component with selection and keyboard behavior.
 
@@ -479,6 +489,20 @@ inventory, not remaining rollout tasks for this adoption pass.
       small title-bar surface with bounded structural behavior.
 - [app/src/ui/window/window-controls.tsx](app/src/ui/window/window-controls.tsx):
       compact window-control strip with predictable button output.
+- [app/src/ui/rename-branch/rename-branch-dialog.tsx](app/src/ui/rename-branch/rename-branch-dialog.tsx):
+      focused rename dialog with controlled input and validation copy.
+- [app/src/ui/notifications/pull-request-comment.tsx](app/src/ui/notifications/pull-request-comment.tsx):
+      small notification card with bounded repository and PR actions.
+- [app/src/ui/notifications/pull-request-review.tsx](app/src/ui/notifications/pull-request-review.tsx):
+      compact review notification variant with similar action coverage.
+- [app/src/ui/window/full-screen-info.tsx](app/src/ui/window/full-screen-info.tsx):
+      small transient info surface with deterministic copy.
+- [app/src/ui/banners/update-available.tsx](app/src/ui/banners/update-available.tsx):
+      concise update banner with release and download actions.
+- [app/src/ui/discard-changes/discard-changes-dialog.tsx](app/src/ui/discard-changes/discard-changes-dialog.tsx):
+      destructive-confirm dialog with bounded state transitions.
+- [app/src/ui/secret-scanning/push-protection-error-dialog.tsx](app/src/ui/secret-scanning/push-protection-error-dialog.tsx):
+      focused error dialog with bypass and help actions.
 - [app/src/ui/branches/branch-list-item.tsx](app/src/ui/branches/branch-list-item.tsx):
       branch row with current-branch state, relative time, and drag/drop
       affordances.
@@ -584,12 +608,33 @@ inventory, not remaining rollout tasks for this adoption pass.
       settings pane with theme-oriented controls and deterministic copy.
 - [app/src/ui/preferences/notifications.tsx](app/src/ui/preferences/notifications.tsx):
       bounded settings pane with toggle-focused behavior.
+- [app/src/ui/check-runs/ci-check-run-rerun-dialog.tsx](app/src/ui/check-runs/ci-check-run-rerun-dialog.tsx):
+      rerun dialog with rerunnable and non-rerunnable state coverage.
+- [app/src/ui/sign-in/sign-in.tsx](app/src/ui/sign-in/sign-in.tsx):
+      moderate sign-in surface with browser and enterprise branches.
+- [app/src/ui/open-pull-request/open-pull-request-dialog.tsx](app/src/ui/open-pull-request/open-pull-request-dialog.tsx):
+      medium pull-request form dialog with validation and action states.
+- [app/src/ui/history/merge-call-to-action-with-conflicts.tsx](app/src/ui/history/merge-call-to-action-with-conflicts.tsx):
+      conflict-aware merge CTA surface with option-state behavior.
+- [app/src/ui/no-repositories/no-repositories-view.tsx](app/src/ui/no-repositories/no-repositories-view.tsx):
+      empty-state screen with onboarding and create-repository actions.
 - [app/src/ui/preferences/custom-integration-form.tsx](app/src/ui/preferences/custom-integration-form.tsx):
       bounded form component with controlled input behavior.
 - [app/src/ui/repositories-list/repositories-list.tsx](app/src/ui/repositories-list/repositories-list.tsx):
       container-level candidate for filtering and grouped rendering behavior.
 - [app/src/ui/octicons/icon-preview-dialog.tsx](app/src/ui/octicons/icon-preview-dialog.tsx):
       small dialog composition candidate without major store coupling.
+
+### Dialog and Flow Candidates
+
+- [app/src/ui/publish-repository/publish.tsx](app/src/ui/publish-repository/publish.tsx):
+      publish flow surface with dotcom and enterprise branching.
+- [app/src/ui/repository-settings/repository-settings.tsx](app/src/ui/repository-settings/repository-settings.tsx):
+      tabbed settings surface with several user-visible states.
+- [app/src/ui/branches/branches-container.tsx](app/src/ui/branches/branches-container.tsx):
+      container coordinating tab switching and merge or PR state.
+- [app/src/ui/toolbar/branch-dropdown.tsx](app/src/ui/toolbar/branch-dropdown.tsx):
+      interaction-heavy branch chooser with detached, rebase, and loading states.
 
 ### Dialog Candidates After the First Container
 
