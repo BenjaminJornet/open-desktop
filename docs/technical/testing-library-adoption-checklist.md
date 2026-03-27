@@ -374,18 +374,18 @@ component tests in GitHub Desktop.
       base input-description surface.
 - [x] Cover textarea and input-description behavior with deterministic DOM,
       role, and callback assertions.
-- [ ] Cover text-box search, clear, and keyboard behavior without introducing
+- [x] Cover text-box search, clear, and keyboard behavior without introducing
       new global mocks.
 - [x] Keep the ninth wave in `app/test/unit/ui` with shared RTL helpers and
       existing timer helpers only.
-- [ ] Validate the new tests with focused runs, the UI directory target, and
+- [x] Validate the new tests with focused runs, the UI directory target, and
       lint.
 
 ### Phase 15 Targets
 
 - [x] [app/src/ui/lib/input-description/input-description.tsx](app/src/ui/lib/input-description/input-description.tsx)
 - [x] [app/src/ui/lib/text-area.tsx](app/src/ui/lib/text-area.tsx)
-- [ ] [app/src/ui/lib/text-box.tsx](app/src/ui/lib/text-box.tsx)
+- [x] [app/src/ui/lib/text-box.tsx](app/src/ui/lib/text-box.tsx)
 
 ## Candidate Inventory
 
@@ -1034,7 +1034,7 @@ inventory, not remaining rollout tasks for this adoption pass.
 - [x] `test(ui): add control primitive coverage`
 - [x] `test(ui): add aria live container coverage`
 - [x] `test(ui): add input description and textarea coverage`
-- [ ] `test(ui): add text box coverage`
+- [x] `test(ui): add text box coverage`
 
 ## Commit Log
 
@@ -1062,7 +1062,7 @@ inventory, not remaining rollout tasks for this adoption pass.
 - [x] Commit 22: land the control primitive tests.
 - [x] Commit 23: land the aria live container tests.
 - [x] Commit 24: land the input description and textarea tests.
-- [ ] Commit 25: land the text box tests.
+- [x] Commit 25: land the text box tests.
 
 ## Risks and Notes
 
