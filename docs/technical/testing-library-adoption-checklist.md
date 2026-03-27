@@ -393,19 +393,19 @@ component tests in GitHub Desktop.
       of low-coupling helper components.
 - [x] Cover static path and empty-selection surfaces with deterministic DOM and
       copy assertions.
-- [ ] Cover theme and config-lock helper behavior with targeted side-effect
+- [x] Cover theme and config-lock helper behavior with targeted side-effect
       assertions only.
 - [x] Keep the tenth wave in `app/test/unit/ui` with shared RTL helpers and
       narrow local mocks only.
-- [ ] Validate the new tests with focused runs, the UI directory target, and
+- [x] Validate the new tests with focused runs, the UI directory target, and
       lint.
 
 ### Phase 16 Targets
 
 - [x] [app/src/ui/lib/path-label.tsx](app/src/ui/lib/path-label.tsx)
 - [x] [app/src/ui/changes/multiple-selection.tsx](app/src/ui/changes/multiple-selection.tsx)
-- [ ] [app/src/ui/app-theme.tsx](app/src/ui/app-theme.tsx)
-- [ ] [app/src/ui/lib/config-lock-file-exists.tsx](app/src/ui/lib/config-lock-file-exists.tsx)
+- [x] [app/src/ui/app-theme.tsx](app/src/ui/app-theme.tsx)
+- [x] [app/src/ui/lib/config-lock-file-exists.tsx](app/src/ui/lib/config-lock-file-exists.tsx)
 
 ## Candidate Inventory
 
@@ -1062,7 +1062,7 @@ inventory, not remaining rollout tasks for this adoption pass.
 - [x] `test(ui): add input description and textarea coverage`
 - [x] `test(ui): add text box coverage`
 - [x] `test(ui): add path and empty-selection coverage`
-- [ ] `test(ui): add helper side-effect coverage`
+- [x] `test(ui): add helper side-effect coverage`
 
 ## Commit Log
 
@@ -1092,7 +1092,7 @@ inventory, not remaining rollout tasks for this adoption pass.
 - [x] Commit 24: land the input description and textarea tests.
 - [x] Commit 25: land the text box tests.
 - [x] Commit 26: land the path and empty-selection tests.
-- [ ] Commit 27: land the helper side-effect tests.
+- [x] Commit 27: land the helper side-effect tests.
 
 ## Risks and Notes
 
