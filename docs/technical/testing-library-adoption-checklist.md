@@ -236,6 +236,33 @@ component tests in GitHub Desktop.
 - [x] [app/src/ui/lib/input-description/input-error.tsx](app/src/ui/lib/input-description/input-error.tsx)
 - [x] [app/src/ui/lib/input-description/input-warning.tsx](app/src/ui/lib/input-description/input-warning.tsx)
 
+## Phase 9: Third-Wave Structural and Text Components
+
+- [x] Add a third-wave batch focused on structural wrappers and deterministic
+      text-rendering components.
+- [x] Cover wrapper and composition components without introducing new helper
+      infrastructure.
+- [x] Cover pure text and attribution surfaces with deterministic markup
+      assertions.
+- [ ] Cover dialog header and default-footer composition behavior, including
+      close and loading states.
+- [x] Keep the third wave in `app/test/unit/ui` with shared RTL helpers only.
+- [ ] Validate the new tests with focused runs, the UI directory target, and
+      lint.
+
+### Phase 9 Targets
+
+- [x] [app/src/ui/lib/form.tsx](app/src/ui/lib/form.tsx)
+- [x] [app/src/ui/dialog/content.tsx](app/src/ui/dialog/content.tsx)
+- [x] [app/src/ui/ui-view.tsx](app/src/ui/ui-view.tsx)
+- [x] [app/src/ui/lib/commit-attribution.tsx](app/src/ui/lib/commit-attribution.tsx)
+- [x] [app/src/ui/lib/access-text.tsx](app/src/ui/lib/access-text.tsx)
+- [x] [app/src/ui/lib/highlight-text.tsx](app/src/ui/lib/highlight-text.tsx)
+- [ ] [app/src/ui/lib/call-to-action.tsx](app/src/ui/lib/call-to-action.tsx)
+- [ ] [app/src/ui/dialog/header.tsx](app/src/ui/dialog/header.tsx)
+- [ ] [app/src/ui/dialog/default-dialog-footer.tsx](app/src/ui/dialog/default-dialog-footer.tsx)
+- [ ] [app/src/ui/lib/toggle-button.tsx](app/src/ui/lib/toggle-button.tsx)
+
 ## Candidate Inventory
 
 These are good follow-up targets for future Testing Library coverage. They are
@@ -515,8 +542,21 @@ inventory, not remaining rollout tasks for this adoption pass.
       small password dialog with predictable submit and cancel flows.
 - [app/src/ui/stashing/stash-diff-header.tsx](app/src/ui/stashing/stash-diff-header.tsx):
       compact header surface for stash diff metadata.
+- [app/src/ui/stash-changes/stash-and-switch-branch-dialog.tsx](app/src/ui/stash-changes/stash-and-switch-branch-dialog.tsx):
+      bounded stash-or-move dialog with a finite selection matrix and
+      overwrite-warning state.
 - [app/src/ui/suggested-actions/menu-backed-suggested-action.tsx](app/src/ui/suggested-actions/menu-backed-suggested-action.tsx):
       small action surface with menu-trigger behavior.
+- [app/src/ui/branches/pull-request-list-item-context-menu.tsx](app/src/ui/branches/pull-request-list-item-context-menu.tsx):
+      compact context-menu surface once menu-invocation helpers are expanded.
+- [app/src/ui/branches/branch-list-item-context-menu.tsx](app/src/ui/branches/branch-list-item-context-menu.tsx):
+      sibling branch context-menu component with a bounded action matrix.
+- [app/src/ui/notifications/pull-request-comment-like.tsx](app/src/ui/notifications/pull-request-comment-like.tsx):
+      dialog surface with deterministic timeline copy once avatar and markdown
+      dependencies are acceptable in tests.
+- [app/src/ui/terms-and-conditions/terms-and-conditions.tsx](app/src/ui/terms-and-conditions/terms-and-conditions.tsx):
+      long but deterministic legal-text dialog suited to structural and link
+      coverage.
 - [app/src/ui/thank-you/thank-you.tsx](app/src/ui/thank-you/thank-you.tsx):
       bounded thank-you surface with stable text and links.
 - [app/src/ui/tutorial/done.tsx](app/src/ui/tutorial/done.tsx):
@@ -541,6 +581,9 @@ inventory, not remaining rollout tasks for this adoption pass.
       compact suggested-action variant with dropdown behavior.
 - [app/src/ui/lib/author-input/author-handle.tsx](app/src/ui/lib/author-input/author-handle.tsx):
       small author-handle renderer with predictable output.
+- [app/src/ui/lib/branch-name-warnings.tsx](app/src/ui/lib/branch-name-warnings.tsx):
+      small warning render helpers for remote-tracking and duplicate-name
+      states.
 - [app/src/ui/branches/push-branch-commits.tsx](app/src/ui/branches/push-branch-commits.tsx):
       compact commit-push surface with bounded action states.
 - [app/src/ui/missing-repository.tsx](app/src/ui/missing-repository.tsx):
@@ -815,6 +858,8 @@ inventory, not remaining rollout tasks for this adoption pass.
 - [x] `docs(test): document ui component testing pattern`
 - [x] `test(ui): add second-wave primitive component coverage`
 - [x] `test(ui): add dialog and input description coverage`
+- [x] `test(ui): add structural and text component coverage`
+- [ ] `test(ui): add dialog composition and toggle coverage`
 
 ## Commit Log
 
@@ -829,6 +874,8 @@ inventory, not remaining rollout tasks for this adoption pass.
 - [x] Commit 9: land follow-up documentation if still needed.
 - [x] Commit 10: land the second-wave primitive component tests.
 - [x] Commit 11: land the dialog and input description tests.
+- [x] Commit 12: land the structural and text component tests.
+- [ ] Commit 13: land the dialog composition and toggle tests.
 
 ## Risks and Notes
 
