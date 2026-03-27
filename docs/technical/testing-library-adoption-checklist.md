@@ -482,6 +482,25 @@ component tests in GitHub Desktop.
 - [x] [app/src/ui/welcome/sign-in-enterprise.tsx](app/src/ui/welcome/sign-in-enterprise.tsx)
 - [x] [app/src/ui/welcome/configure-git.tsx](app/src/ui/welcome/configure-git.tsx)
 
+## Phase 21: Tutorial Welcome Surfaces
+
+- [x] Add a fifteenth-wave batch focused on small tutorial welcome and
+      completion surfaces.
+- [x] Cover tutorial welcome and step-instruction rendering with deterministic
+      copy, icon-state, and toggle assertions.
+- [x] Cover tutorial completion actions with focus and dispatcher callback
+      assertions.
+- [x] Keep the fifteenth wave in `app/test/unit/ui` with shared RTL helpers,
+      typed local fixtures, and narrow DOM events only.
+- [x] Validate the new tests with focused runs, the UI directory target, and
+      lint.
+
+### Phase 21 Targets
+
+- [x] [app/src/ui/tutorial/welcome.tsx](app/src/ui/tutorial/welcome.tsx)
+- [x] [app/src/ui/tutorial/tutorial-step-instruction.tsx](app/src/ui/tutorial/tutorial-step-instruction.tsx)
+- [x] [app/src/ui/tutorial/done.tsx](app/src/ui/tutorial/done.tsx)
+
 ## Candidate Inventory
 
 These are good follow-up targets for future Testing Library coverage. They are
@@ -1164,6 +1183,7 @@ inventory, not remaining rollout tasks for this adoption pass.
 - [x] `test(ui): add dialog action wrapper coverage`
 - [x] `test(ui): add commit message warning dialog coverage`
 - [x] `test(ui): add welcome and sign-in wrapper coverage`
+- [x] `test(ui): add tutorial welcome surface coverage`
 
 ## Commit Log
 
@@ -1199,6 +1219,7 @@ inventory, not remaining rollout tasks for this adoption pass.
 - [x] Commit 30: land the dialog action wrapper tests.
 - [x] Commit 31: land the commit message warning dialog tests.
 - [x] Commit 32: land the welcome and sign-in wrapper tests.
+- [x] Commit 33: land the tutorial welcome surface tests.
 
 ## Risks and Notes
 
