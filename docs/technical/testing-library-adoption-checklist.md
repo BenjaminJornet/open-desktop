@@ -413,18 +413,18 @@ component tests in GitHub Desktop.
       helper surfaces.
 - [x] Cover path-text rendering and exported truncation helpers with
       deterministic assertions.
-- [ ] Cover link-button and password-text-box behavior with targeted click,
+- [x] Cover link-button and password-text-box behavior with targeted click,
       role, and focus assertions.
 - [x] Keep the eleventh wave in `app/test/unit/ui` with shared RTL helpers and
       narrow local mocks only.
-- [ ] Validate the new tests with focused runs, the UI directory target, and
+- [x] Validate the new tests with focused runs, the UI directory target, and
       lint.
 
 ### Phase 17 Targets
 
 - [x] [app/src/ui/lib/path-text.tsx](app/src/ui/lib/path-text.tsx)
 - [x] [app/src/ui/lib/link-button.tsx](app/src/ui/lib/link-button.tsx)
-- [ ] [app/src/ui/lib/password-text-box.tsx](app/src/ui/lib/password-text-box.tsx)
+- [x] [app/src/ui/lib/password-text-box.tsx](app/src/ui/lib/password-text-box.tsx)
 
 ## Candidate Inventory
 
@@ -1089,7 +1089,7 @@ inventory, not remaining rollout tasks for this adoption pass.
 - [x] `test(ui): add path and empty-selection coverage`
 - [x] `test(ui): add helper side-effect coverage`
 - [x] `test(ui): add path text and link button coverage`
-- [ ] `test(ui): add password text box coverage`
+- [x] `test(ui): add password text box coverage`
 
 ## Commit Log
 
@@ -1121,7 +1121,7 @@ inventory, not remaining rollout tasks for this adoption pass.
 - [x] Commit 26: land the path and empty-selection tests.
 - [x] Commit 27: land the helper side-effect tests.
 - [x] Commit 28: land the path text and link button tests.
-- [ ] Commit 29: land the password text box tests.
+- [x] Commit 29: land the password text box tests.
 
 ## Risks and Notes
 
