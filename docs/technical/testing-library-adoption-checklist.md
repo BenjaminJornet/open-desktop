@@ -316,6 +316,46 @@ inventory, not remaining rollout tasks for this adoption pass.
       radio option component with straightforward aria and focus behavior.
 - [app/src/ui/lib/radio-group.tsx](app/src/ui/lib/radio-group.tsx): compact
       radiogroup container with prop-driven selection handling.
+- [app/src/ui/accessibility/aria-live-container.tsx](app/src/ui/accessibility/aria-live-container.tsx):
+      tiny accessibility wrapper with deterministic aria-live behavior.
+- [app/src/ui/app-theme.tsx](app/src/ui/app-theme.tsx): compact theme wrapper
+      with predictable class and children rendering.
+- [app/src/ui/changes/oversized-files-warning.tsx](app/src/ui/changes/oversized-files-warning.tsx):
+      small warning surface with stable file-size copy.
+- [app/src/ui/diff/image-diffs/swipe.tsx](app/src/ui/diff/image-diffs/swipe.tsx):
+      compact image-diff view mode with bounded structural output.
+- [app/src/ui/diff/image-diffs/two-up.tsx](app/src/ui/diff/image-diffs/two-up.tsx):
+      compact image-diff comparison mode with deterministic layout.
+- [app/src/ui/editor/editor-error.tsx](app/src/ui/editor/editor-error.tsx):
+      small error renderer with deterministic message output.
+- [app/src/ui/generate-commit-message/generate-commit-message-override-warning.tsx](app/src/ui/generate-commit-message/generate-commit-message-override-warning.tsx):
+      concise warning surface with predictable override copy.
+- [app/src/ui/installing-update/installing-update.tsx](app/src/ui/installing-update/installing-update.tsx):
+      compact progress surface with stable updating text.
+- [app/src/ui/lfs/initialize-lfs.tsx](app/src/ui/lfs/initialize-lfs.tsx):
+      small initialization dialog with bounded action behavior.
+- [app/src/ui/lib/enterprise-server-entry.tsx](app/src/ui/lib/enterprise-server-entry.tsx):
+      small form entry component with deterministic validation display.
+- [app/src/ui/lib/fancy-text-box.tsx](app/src/ui/lib/fancy-text-box.tsx):
+      lightweight text box variant with predictable input behavior.
+- [app/src/ui/lib/sign-in.tsx](app/src/ui/lib/sign-in.tsx): concise sign-in
+      CTA surface with stable button and copy rendering.
+- [app/src/ui/move-to-applications-folder.tsx](app/src/ui/move-to-applications-folder.tsx):
+      small prompt surface with explicit move and cancel actions.
+- [app/src/ui/repository-rules/repo-rules-failure-list.tsx](app/src/ui/repository-rules/repo-rules-failure-list.tsx):
+      compact failure list component with deterministic item rendering.
+- [app/src/ui/saml-reauth-required/saml-reauth-required.tsx](app/src/ui/saml-reauth-required/saml-reauth-required.tsx):
+      small re-authentication prompt with clear action text.
+- [app/src/ui/shell/shell-error.tsx](app/src/ui/shell/shell-error.tsx):
+      compact shell-error surface with deterministic message content.
+- [app/src/ui/terminal.tsx](app/src/ui/terminal.tsx): small terminal output
+      surface suited to render-only assertions.
+- [app/src/ui/tutorial/tutorial-step-instruction.tsx](app/src/ui/tutorial/tutorial-step-instruction.tsx):
+      compact instructional text component with bounded copy rendering.
+- [app/src/ui/upstream-already-exists/upstream-already-exists.tsx](app/src/ui/upstream-already-exists/upstream-already-exists.tsx):
+      small warning prompt with explicit next-step messaging.
+- [app/src/ui/window/zoom-info.tsx](app/src/ui/window/zoom-info.tsx):
+      tiny info surface with stable zoom-level text.
 - [app/src/ui/app-menu/menu-list-item.tsx](app/src/ui/app-menu/menu-list-item.tsx):
       compact interactive row component with selection and keyboard behavior.
 
@@ -395,6 +435,50 @@ inventory, not remaining rollout tasks for this adoption pass.
       compact remote URL surface with simple edit and display behavior.
 - [app/src/ui/repository-settings/git-ignore.tsx](app/src/ui/repository-settings/git-ignore.tsx):
       small gitignore settings surface with stable help-link behavior.
+- [app/src/ui/branches/branch-select.tsx](app/src/ui/branches/branch-select.tsx):
+      compact branch picker with bounded popover and selection behavior.
+- [app/src/ui/changes/changed-file.tsx](app/src/ui/changes/changed-file.tsx):
+      presentational changed-file row with checkbox and status rendering.
+- [app/src/ui/choose-fork-settings/choose-fork-settings-dialog.tsx](app/src/ui/choose-fork-settings/choose-fork-settings-dialog.tsx):
+      small settings dialog with deterministic option rendering.
+- [app/src/ui/clone-repository/clone-github-repository.tsx](app/src/ui/clone-repository/clone-github-repository.tsx):
+      bounded clone form with simple submit flow.
+- [app/src/ui/delete-branch/delete-branch-dialog.tsx](app/src/ui/delete-branch/delete-branch-dialog.tsx):
+      compact delete dialog with predictable confirmation messaging.
+- [app/src/ui/diff/diff-options.tsx](app/src/ui/diff/diff-options.tsx):
+      small option surface with bounded toggles and callbacks.
+- [app/src/ui/donut.tsx](app/src/ui/donut.tsx): small visual status component
+      with deterministic class and percent rendering.
+- [app/src/ui/generic-git-auth/generic-git-auth.tsx](app/src/ui/generic-git-auth/generic-git-auth.tsx):
+      compact authentication surface with controlled inputs.
+- [app/src/ui/history/file-list.tsx](app/src/ui/history/file-list.tsx):
+      bounded file list with straightforward row rendering behavior.
+- [app/src/ui/no-repositories/create-tutorial-repository-dialog.tsx](app/src/ui/no-repositories/create-tutorial-repository-dialog.tsx):
+      focused create-tutorial dialog with simple action coverage.
+- [app/src/ui/open-pull-request/open-pull-request-header.tsx](app/src/ui/open-pull-request/open-pull-request-header.tsx):
+      compact header component with deterministic title and state output.
+- [app/src/ui/remove-repository/confirm-remove-repository.tsx](app/src/ui/remove-repository/confirm-remove-repository.tsx):
+      small confirmation dialog with bounded remove flow.
+- [app/src/ui/secret-scanning/bypass-push-protection-dialog.tsx](app/src/ui/secret-scanning/bypass-push-protection-dialog.tsx):
+      focused secret-scanning dialog with explicit decision actions.
+- [app/src/ui/secret-scanning/push-protection-error-location.tsx](app/src/ui/secret-scanning/push-protection-error-location.tsx):
+      small location renderer with deterministic secret-scanning text.
+- [app/src/ui/ssh/ssh-key-passphrase.tsx](app/src/ui/ssh/ssh-key-passphrase.tsx):
+      bounded credential dialog with controlled input behavior.
+- [app/src/ui/ssh/ssh-user-password.tsx](app/src/ui/ssh/ssh-user-password.tsx):
+      small password dialog with predictable submit and cancel flows.
+- [app/src/ui/stashing/stash-diff-header.tsx](app/src/ui/stashing/stash-diff-header.tsx):
+      compact header surface for stash diff metadata.
+- [app/src/ui/suggested-actions/menu-backed-suggested-action.tsx](app/src/ui/suggested-actions/menu-backed-suggested-action.tsx):
+      small action surface with menu-trigger behavior.
+- [app/src/ui/thank-you/thank-you.tsx](app/src/ui/thank-you/thank-you.tsx):
+      bounded thank-you surface with stable text and links.
+- [app/src/ui/tutorial/done.tsx](app/src/ui/tutorial/done.tsx):
+      compact completion surface with deterministic next-step copy.
+- [app/src/ui/window/title-bar.tsx](app/src/ui/window/title-bar.tsx):
+      small title-bar surface with bounded structural behavior.
+- [app/src/ui/window/window-controls.tsx](app/src/ui/window/window-controls.tsx):
+      compact window-control strip with predictable button output.
 - [app/src/ui/branches/branch-list-item.tsx](app/src/ui/branches/branch-list-item.tsx):
       branch row with current-branch state, relative time, and drag/drop
       affordances.
@@ -480,6 +564,26 @@ inventory, not remaining rollout tasks for this adoption pass.
       moderate warning dialog with explicit reset choices.
 - [app/src/ui/changes/continue-rebase.tsx](app/src/ui/changes/continue-rebase.tsx):
       targeted rebase continuation surface with action-state coverage.
+- [app/src/ui/account-picker.tsx](app/src/ui/account-picker.tsx):
+      moderate picker surface with filtering and account-selection behavior.
+- [app/src/ui/create-tag/create-tag-dialog.tsx](app/src/ui/create-tag/create-tag-dialog.tsx):
+      bounded dialog with controlled inputs and validation opportunities.
+- [app/src/ui/discard-changes/discard-selection-dialog.tsx](app/src/ui/discard-changes/discard-selection-dialog.tsx):
+      moderate discard dialog with explicit selection-focused messaging.
+- [app/src/ui/forks/create-fork-dialog.tsx](app/src/ui/forks/create-fork-dialog.tsx):
+      moderate create-fork dialog with option and submit-state coverage.
+- [app/src/ui/history/unreachable-commits-dialog.tsx](app/src/ui/history/unreachable-commits-dialog.tsx):
+      bounded dialog for unreachable commits with deterministic list output.
+- [app/src/ui/open-with-external-editor/open-with-external-editor.tsx](app/src/ui/open-with-external-editor/open-with-external-editor.tsx):
+      moderate action surface for external-editor flows.
+- [app/src/ui/preferences/accessibility.tsx](app/src/ui/preferences/accessibility.tsx):
+      focused settings pane with simple control coverage.
+- [app/src/ui/preferences/accounts.tsx](app/src/ui/preferences/accounts.tsx):
+      moderate account settings pane with bounded list interactions.
+- [app/src/ui/preferences/appearance.tsx](app/src/ui/preferences/appearance.tsx):
+      settings pane with theme-oriented controls and deterministic copy.
+- [app/src/ui/preferences/notifications.tsx](app/src/ui/preferences/notifications.tsx):
+      bounded settings pane with toggle-focused behavior.
 - [app/src/ui/preferences/custom-integration-form.tsx](app/src/ui/preferences/custom-integration-form.tsx):
       bounded form component with controlled input behavior.
 - [app/src/ui/repositories-list/repositories-list.tsx](app/src/ui/repositories-list/repositories-list.tsx):
