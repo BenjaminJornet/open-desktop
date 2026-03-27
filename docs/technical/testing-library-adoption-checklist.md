@@ -389,6 +389,8 @@ inventory, not remaining rollout tasks for this adoption pass.
       component with prop-driven option rendering.
 - [app/src/ui/lib/input-description/input-description.tsx](app/src/ui/lib/input-description/input-description.tsx):
       shared input-description component for caption, warning, and error states.
+- [app/src/ui/lib/popover-dropdown.tsx](app/src/ui/lib/popover-dropdown.tsx):
+      compact dropdown wrapper combining button and popover behavior.
 - [app/src/ui/changes/multiple-selection.tsx](app/src/ui/changes/multiple-selection.tsx):
       concise selection-state component with stable text output.
 - [app/src/ui/lib/row.tsx](app/src/ui/lib/row.tsx): small layout component
@@ -499,6 +501,34 @@ inventory, not remaining rollout tasks for this adoption pass.
       compact window-control strip with predictable button output.
 - [app/src/ui/rename-branch/rename-branch-dialog.tsx](app/src/ui/rename-branch/rename-branch-dialog.tsx):
       focused rename dialog with controlled input and validation copy.
+- [app/src/ui/acknowledgements/acknowledgements.tsx](app/src/ui/acknowledgements/acknowledgements.tsx):
+      bounded acknowledgements surface with deterministic section rendering.
+- [app/src/ui/changes/changes.tsx](app/src/ui/changes/changes.tsx):
+      presentational changes pane with bounded empty and populated states.
+- [app/src/ui/lib/rich-text.tsx](app/src/ui/lib/rich-text.tsx):
+      rich-text renderer with emoji, link, and overflow behavior.
+- [app/src/ui/stashing/stash-diff-viewer.tsx](app/src/ui/stashing/stash-diff-viewer.tsx):
+      bounded stash diff surface with deterministic metadata output.
+- [app/src/ui/octicons/octicon.tsx](app/src/ui/octicons/octicon.tsx):
+      small icon wrapper with stable symbol and accessibility rendering.
+- [app/src/ui/suggested-actions/dropdown-suggested-action.tsx](app/src/ui/suggested-actions/dropdown-suggested-action.tsx):
+      compact suggested-action variant with dropdown behavior.
+- [app/src/ui/lib/author-input/author-handle.tsx](app/src/ui/lib/author-input/author-handle.tsx):
+      small author-handle renderer with predictable output.
+- [app/src/ui/branches/push-branch-commits.tsx](app/src/ui/branches/push-branch-commits.tsx):
+      compact commit-push surface with bounded action states.
+- [app/src/ui/missing-repository.tsx](app/src/ui/missing-repository.tsx):
+      focused missing-repository view with explicit remediation actions.
+- [app/src/ui/diff/image-diffs/modified-image-diff.tsx](app/src/ui/diff/image-diffs/modified-image-diff.tsx):
+      image-diff variant with deterministic comparison rendering.
+- [app/src/ui/publish-repository/publish-repository.tsx](app/src/ui/publish-repository/publish-repository.tsx):
+      bounded publish dialog with clear controlled input states.
+- [app/src/ui/release-notes/release-notes-dialog.tsx](app/src/ui/release-notes/release-notes-dialog.tsx):
+      small release-notes dialog with stable content rendering.
+- [app/src/ui/check-runs/ci-check-run-list.tsx](app/src/ui/check-runs/ci-check-run-list.tsx):
+      compact list surface for check-run rows and empty states.
+- [app/src/ui/diff/submodule-diff.tsx](app/src/ui/diff/submodule-diff.tsx):
+      bounded diff surface for submodule metadata display.
 - [app/src/ui/notifications/pull-request-comment.tsx](app/src/ui/notifications/pull-request-comment.tsx):
       small notification card with bounded repository and PR actions.
 - [app/src/ui/notifications/pull-request-review.tsx](app/src/ui/notifications/pull-request-review.tsx):
@@ -650,8 +680,6 @@ inventory, not remaining rollout tasks for this adoption pass.
       moderate multi-step operation surface with bounded flow states.
 - [app/src/ui/repository-settings/git-config.tsx](app/src/ui/repository-settings/git-config.tsx):
       focused git-config settings pane with deterministic field rendering.
-- [app/src/ui/lib/popover-dropdown.tsx](app/src/ui/lib/popover-dropdown.tsx):
-      dropdown wrapper combining button, popover, and close behavior.
 - [app/src/ui/toolbar/push-pull-button-dropdown.tsx](app/src/ui/toolbar/push-pull-button-dropdown.tsx):
       interaction-heavy dropdown surface with push or pull action states.
 - [app/src/ui/undo/warn-local-changes-before-undo.tsx](app/src/ui/undo/warn-local-changes-before-undo.tsx):
