@@ -305,6 +305,27 @@ component tests in GitHub Desktop.
 - [x] [app/src/ui/check-runs/ci-check-run-no-steps.tsx](app/src/ui/check-runs/ci-check-run-no-steps.tsx)
 - [x] [app/src/ui/cli-installed/cli-installed.tsx](app/src/ui/cli-installed/cli-installed.tsx)
 
+## Phase 12: Link, Publish, and Banner Surfaces
+
+- [x] Add a sixth-wave batch focused on small link, publish, and banner
+      surfaces.
+- [x] Cover link and publish helper surfaces with deterministic href and
+      callback assertions.
+- [ ] Cover banner family behavior including focus, dismissal, and message
+      variants with timer control.
+- [x] Keep the sixth wave in `app/test/unit/ui` with shared RTL helpers only.
+- [ ] Validate the new tests with focused runs, the UI directory target, and
+      lint.
+
+### Phase 12 Targets
+
+- [x] [app/src/ui/repository-rules/repo-rulesets-for-branch-link.tsx](app/src/ui/repository-rules/repo-rulesets-for-branch-link.tsx)
+- [x] [app/src/ui/repository-settings/no-remote.tsx](app/src/ui/repository-settings/no-remote.tsx)
+- [ ] [app/src/ui/banners/banner.tsx](app/src/ui/banners/banner.tsx)
+- [ ] [app/src/ui/banners/success-banner.tsx](app/src/ui/banners/success-banner.tsx)
+- [ ] [app/src/ui/banners/branch-already-up-to-date-banner.tsx](app/src/ui/banners/branch-already-up-to-date-banner.tsx)
+- [ ] [app/src/ui/banners/cherry-pick-undone.tsx](app/src/ui/banners/cherry-pick-undone.tsx)
+
 ## Candidate Inventory
 
 These are good follow-up targets for future Testing Library coverage. They are
@@ -631,6 +652,12 @@ inventory, not remaining rollout tasks for this adoption pass.
       mid-sized instructional panel with stable step and CTA rendering.
 - [app/src/ui/clone-repository/cloneable-repository-filter-list.tsx](app/src/ui/clone-repository/cloneable-repository-filter-list.tsx):
       list-plus-filter surface with deterministic empty and populated states.
+- [app/src/ui/dropdown-select-button.tsx](app/src/ui/dropdown-select-button.tsx):
+      split-button selector with bounded option and keyboard state coverage.
+- [app/src/ui/preferences/prompts.tsx](app/src/ui/preferences/prompts.tsx):
+      settings pane with finite checkbox and radio preference branches.
+- [app/src/ui/check-runs/ci-check-run-popover.tsx](app/src/ui/check-runs/ci-check-run-popover.tsx):
+      check-run summary popover with list, rerun, and empty-state branches.
 - [app/src/ui/lib/rich-text.tsx](app/src/ui/lib/rich-text.tsx):
       rich-text renderer with emoji, link, and overflow behavior.
 - [app/src/ui/stashing/stash-diff-viewer.tsx](app/src/ui/stashing/stash-diff-viewer.tsx):
@@ -924,6 +951,8 @@ inventory, not remaining rollout tasks for this adoption pass.
 - [x] `test(ui): add branch empty-state coverage`
 - [x] `test(ui): add static status and link coverage`
 - [x] `test(ui): add small action row and cli-installed coverage`
+- [x] `test(ui): add rulesets and publish surface coverage`
+- [ ] `test(ui): add banner surface coverage`
 
 ## Commit Log
 
@@ -944,6 +973,8 @@ inventory, not remaining rollout tasks for this adoption pass.
 - [x] Commit 15: land the branch empty-state tests.
 - [x] Commit 16: land the static status and link tests.
 - [x] Commit 17: land the action row and cli-installed tests.
+- [x] Commit 18: land the rulesets and publish surface tests.
+- [ ] Commit 19: land the banner surface tests.
 
 ## Risks and Notes
 
