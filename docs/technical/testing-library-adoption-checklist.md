@@ -426,6 +426,25 @@ component tests in GitHub Desktop.
 - [x] [app/src/ui/lib/link-button.tsx](app/src/ui/lib/link-button.tsx)
 - [x] [app/src/ui/lib/password-text-box.tsx](app/src/ui/lib/password-text-box.tsx)
 
+## Phase 18: Dialog Action Wrappers
+
+- [x] Add a twelfth-wave batch focused on small dialog wrapper and button-group
+      surfaces.
+- [x] Cover dialog content and footer wrappers with deterministic structure,
+      class, and ref assertions.
+- [x] Cover ok-cancel button-group behavior with platform order, button type,
+      and destructive submit or reset dispatch assertions.
+- [x] Keep the twelfth wave in `app/test/unit/ui` with shared RTL helpers and
+      narrow DOM listeners only.
+- [x] Validate the new tests with focused runs, the UI directory target, and
+      lint.
+
+### Phase 18 Targets
+
+- [x] [app/src/ui/dialog/content.tsx](app/src/ui/dialog/content.tsx)
+- [x] [app/src/ui/dialog/footer.tsx](app/src/ui/dialog/footer.tsx)
+- [x] [app/src/ui/dialog/ok-cancel-button-group.tsx](app/src/ui/dialog/ok-cancel-button-group.tsx)
+
 ## Candidate Inventory
 
 These are good follow-up targets for future Testing Library coverage. They are
@@ -518,6 +537,21 @@ inventory, not remaining rollout tasks for this adoption pass.
       assertions.
 - [app/src/ui/dialog/content.tsx](app/src/ui/dialog/content.tsx): another very
       small structural wrapper suited to smoke-level render tests.
+- [app/src/ui/dialog/ok-cancel-button-group.tsx](app/src/ui/dialog/ok-cancel-button-group.tsx):
+      platform-aware dialog button group with bounded destructive-submit
+      behavior.
+- [app/src/ui/generate-commit-message/generate-commit-message-disclaimer.tsx](app/src/ui/generate-commit-message/generate-commit-message-disclaimer.tsx):
+      warning dialog with stable copy, a help link, and a narrow dispatcher
+      submit flow.
+- [app/src/ui/generate-commit-message/generate-commit-message-override-warning.tsx](app/src/ui/generate-commit-message/generate-commit-message-override-warning.tsx):
+      warning dialog with checkbox state and a bounded override action.
+- [app/src/ui/welcome/sign-in-enterprise.tsx](app/src/ui/welcome/sign-in-enterprise.tsx):
+      small welcome-step wrapper with a cancel flow and sign-in child slot.
+- [app/src/ui/welcome/configure-git.tsx](app/src/ui/welcome/configure-git.tsx):
+      small welcome-step wrapper around git configuration with a bounded cancel
+      path.
+- [app/src/ui/lib/sign-in.tsx](app/src/ui/lib/sign-in.tsx): multi-step sign-in
+      wrapper with a small number of state-driven render branches.
 - [app/src/ui/dialog/header.tsx](app/src/ui/dialog/header.tsx): small header
       component with title/description semantics.
 - [app/src/ui/dialog/default-dialog-footer.tsx](app/src/ui/dialog/default-dialog-footer.tsx):
@@ -1090,6 +1124,7 @@ inventory, not remaining rollout tasks for this adoption pass.
 - [x] `test(ui): add helper side-effect coverage`
 - [x] `test(ui): add path text and link button coverage`
 - [x] `test(ui): add password text box coverage`
+- [x] `test(ui): add dialog action wrapper coverage`
 
 ## Commit Log
 
@@ -1122,6 +1157,7 @@ inventory, not remaining rollout tasks for this adoption pass.
 - [x] Commit 27: land the helper side-effect tests.
 - [x] Commit 28: land the path text and link button tests.
 - [x] Commit 29: land the password text box tests.
+- [x] Commit 30: land the dialog action wrapper tests.
 
 ## Risks and Notes
 
