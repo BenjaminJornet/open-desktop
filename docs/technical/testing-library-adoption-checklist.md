@@ -290,10 +290,10 @@ component tests in GitHub Desktop.
       surfaces.
 - [x] Cover stateless render-only components with deterministic text, class,
       and href assertions.
-- [ ] Cover one small action row and one simple dialog surface without adding
+- [x] Cover one small action row and one simple dialog surface without adding
       new helper infrastructure.
 - [x] Keep the fifth wave in `app/test/unit/ui` with shared RTL helpers only.
-- [ ] Validate the new tests with focused runs, the UI directory target, and
+- [x] Validate the new tests with focused runs, the UI directory target, and
       lint.
 
 ### Phase 11 Targets
@@ -302,8 +302,8 @@ component tests in GitHub Desktop.
 - [x] [app/src/ui/repository-settings/fork-contribution-target-description.tsx](app/src/ui/repository-settings/fork-contribution-target-description.tsx)
 - [x] [app/src/ui/lib/action-status-icon.tsx](app/src/ui/lib/action-status-icon.tsx)
 - [x] [app/src/ui/lib/vertical-segmented-control/segmented-item.tsx](app/src/ui/lib/vertical-segmented-control/segmented-item.tsx)
-- [ ] [app/src/ui/check-runs/ci-check-run-no-steps.tsx](app/src/ui/check-runs/ci-check-run-no-steps.tsx)
-- [ ] [app/src/ui/cli-installed/cli-installed.tsx](app/src/ui/cli-installed/cli-installed.tsx)
+- [x] [app/src/ui/check-runs/ci-check-run-no-steps.tsx](app/src/ui/check-runs/ci-check-run-no-steps.tsx)
+- [x] [app/src/ui/cli-installed/cli-installed.tsx](app/src/ui/cli-installed/cli-installed.tsx)
 
 ## Candidate Inventory
 
@@ -923,7 +923,7 @@ inventory, not remaining rollout tasks for this adoption pass.
 - [x] `test(ui): add layout and message component coverage`
 - [x] `test(ui): add branch empty-state coverage`
 - [x] `test(ui): add static status and link coverage`
-- [ ] `test(ui): add small action row and cli-installed coverage`
+- [x] `test(ui): add small action row and cli-installed coverage`
 
 ## Commit Log
 
@@ -943,7 +943,7 @@ inventory, not remaining rollout tasks for this adoption pass.
 - [x] Commit 14: land the layout and message component tests.
 - [x] Commit 15: land the branch empty-state tests.
 - [x] Commit 16: land the static status and link tests.
-- [ ] Commit 17: land the action row and cli-installed tests.
+- [x] Commit 17: land the action row and cli-installed tests.
 
 ## Risks and Notes
 
