@@ -244,10 +244,10 @@ component tests in GitHub Desktop.
       infrastructure.
 - [x] Cover pure text and attribution surfaces with deterministic markup
       assertions.
-- [ ] Cover dialog header and default-footer composition behavior, including
+- [x] Cover dialog header and default-footer composition behavior, including
       close and loading states.
 - [x] Keep the third wave in `app/test/unit/ui` with shared RTL helpers only.
-- [ ] Validate the new tests with focused runs, the UI directory target, and
+- [x] Validate the new tests with focused runs, the UI directory target, and
       lint.
 
 ### Phase 9 Targets
@@ -258,10 +258,10 @@ component tests in GitHub Desktop.
 - [x] [app/src/ui/lib/commit-attribution.tsx](app/src/ui/lib/commit-attribution.tsx)
 - [x] [app/src/ui/lib/access-text.tsx](app/src/ui/lib/access-text.tsx)
 - [x] [app/src/ui/lib/highlight-text.tsx](app/src/ui/lib/highlight-text.tsx)
-- [ ] [app/src/ui/lib/call-to-action.tsx](app/src/ui/lib/call-to-action.tsx)
-- [ ] [app/src/ui/dialog/header.tsx](app/src/ui/dialog/header.tsx)
-- [ ] [app/src/ui/dialog/default-dialog-footer.tsx](app/src/ui/dialog/default-dialog-footer.tsx)
-- [ ] [app/src/ui/lib/toggle-button.tsx](app/src/ui/lib/toggle-button.tsx)
+- [x] [app/src/ui/lib/call-to-action.tsx](app/src/ui/lib/call-to-action.tsx)
+- [x] [app/src/ui/dialog/header.tsx](app/src/ui/dialog/header.tsx)
+- [x] [app/src/ui/dialog/default-dialog-footer.tsx](app/src/ui/dialog/default-dialog-footer.tsx)
+- [x] [app/src/ui/lib/toggle-button.tsx](app/src/ui/lib/toggle-button.tsx)
 
 ## Candidate Inventory
 
@@ -859,7 +859,7 @@ inventory, not remaining rollout tasks for this adoption pass.
 - [x] `test(ui): add second-wave primitive component coverage`
 - [x] `test(ui): add dialog and input description coverage`
 - [x] `test(ui): add structural and text component coverage`
-- [ ] `test(ui): add dialog composition and toggle coverage`
+- [x] `test(ui): add dialog composition and toggle coverage`
 
 ## Commit Log
 
@@ -875,7 +875,7 @@ inventory, not remaining rollout tasks for this adoption pass.
 - [x] Commit 10: land the second-wave primitive component tests.
 - [x] Commit 11: land the dialog and input description tests.
 - [x] Commit 12: land the structural and text component tests.
-- [ ] Commit 13: land the dialog composition and toggle tests.
+- [x] Commit 13: land the dialog composition and toggle tests.
 
 ## Risks and Notes
 
