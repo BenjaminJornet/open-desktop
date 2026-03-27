@@ -365,6 +365,20 @@ inventory, not remaining rollout tasks for this adoption pass.
       isolated popover explaining whitespace mode.
 - [app/src/ui/lib/config-lock-file-exists.tsx](app/src/ui/lib/config-lock-file-exists.tsx):
       small lock-file notice with retry and help behavior.
+- [app/src/ui/generate-commit-message/generate-commit-message-disclaimer.tsx](app/src/ui/generate-commit-message/generate-commit-message-disclaimer.tsx):
+      small disclaimer surface with deterministic copy and link behavior.
+- [app/src/ui/lib/tooltipped-commit-sha.tsx](app/src/ui/lib/tooltipped-commit-sha.tsx):
+      compact commit-SHA renderer with tooltip-backed content.
+- [app/src/ui/check-runs/ci-check-run-step-list-header.tsx](app/src/ui/check-runs/ci-check-run-step-list-header.tsx):
+      small header surface with stable check-run metadata output.
+- [app/src/ui/diff/image-diffs/image-container.tsx](app/src/ui/diff/image-diffs/image-container.tsx):
+      bounded image wrapper suited to structural render assertions.
+- [app/src/ui/diff/image-diffs/onion-skin.tsx](app/src/ui/diff/image-diffs/onion-skin.tsx):
+      small image-diff presentation variant with deterministic markup.
+- [app/src/ui/merge-conflicts/commit-conflicts-warning.tsx](app/src/ui/merge-conflicts/commit-conflicts-warning.tsx):
+      compact warning surface with predictable conflict text.
+- [app/src/ui/diff/diff-contents-warning.tsx](app/src/ui/diff/diff-contents-warning.tsx):
+      concise warning component with stable message rendering.
 - [app/src/ui/branches/pull-request-badge.tsx](app/src/ui/branches/pull-request-badge.tsx):
       compact PR status badge with bounded click behavior.
 - [app/src/ui/history/merge-call-to-action.tsx](app/src/ui/history/merge-call-to-action.tsx):
@@ -452,6 +466,20 @@ inventory, not remaining rollout tasks for this adoption pass.
       moderate history list with selection and delegation behavior.
 - [app/src/ui/changes/confirm-commit-filtered-changes-dialog.tsx](app/src/ui/changes/confirm-commit-filtered-changes-dialog.tsx):
       focused confirmation dialog with filtered-file rendering and actions.
+- [app/src/ui/multi-commit-operation/dialog/progress-dialog.tsx](app/src/ui/multi-commit-operation/dialog/progress-dialog.tsx):
+      moderate progress dialog for long-running multi-commit operations.
+- [app/src/ui/ssh/add-ssh-host.tsx](app/src/ui/ssh/add-ssh-host.tsx):
+      bounded trust dialog with clear accept and cancel flows.
+- [app/src/ui/clone-repository/clone-generic-repository.tsx](app/src/ui/clone-repository/clone-generic-repository.tsx):
+      moderate cloning form with controlled inputs and submit behavior.
+- [app/src/ui/push-needs-pull/push-needs-pull-warning.tsx](app/src/ui/push-needs-pull/push-needs-pull-warning.tsx):
+      focused warning dialog with clear remediation actions.
+- [app/src/ui/install-git/install.tsx](app/src/ui/install-git/install.tsx):
+      bounded install flow surface with deterministic button states.
+- [app/src/ui/reset/warning-before-reset.tsx](app/src/ui/reset/warning-before-reset.tsx):
+      moderate warning dialog with explicit reset choices.
+- [app/src/ui/changes/continue-rebase.tsx](app/src/ui/changes/continue-rebase.tsx):
+      targeted rebase continuation surface with action-state coverage.
 - [app/src/ui/preferences/custom-integration-form.tsx](app/src/ui/preferences/custom-integration-form.tsx):
       bounded form component with controlled input behavior.
 - [app/src/ui/repositories-list/repositories-list.tsx](app/src/ui/repositories-list/repositories-list.tsx):
@@ -469,6 +497,20 @@ inventory, not remaining rollout tasks for this adoption pass.
       small retry dialog with inline message assertions.
 - [app/src/ui/local-changes-overwritten/local-changes-overwritten-dialog.tsx](app/src/ui/local-changes-overwritten/local-changes-overwritten-dialog.tsx):
       another bounded dialog candidate once dialog helpers are established.
+- [app/src/ui/delete-branch/delete-remote-branch-dialog.tsx](app/src/ui/delete-branch/delete-remote-branch-dialog.tsx):
+      compact remote-branch confirmation dialog with bounded actions.
+- [app/src/ui/stash-changes/overwrite-stashed-changes-dialog.tsx](app/src/ui/stash-changes/overwrite-stashed-changes-dialog.tsx):
+      focused overwrite confirmation dialog with predictable copy.
+- [app/src/ui/unknown-authors/unknown-authors-dialog.tsx](app/src/ui/unknown-authors/unknown-authors-dialog.tsx):
+      bounded dialog for author attribution decisions.
+- [app/src/ui/untrusted-certificate/untrusted-certificate.tsx](app/src/ui/untrusted-certificate/untrusted-certificate.tsx):
+      trust-decision dialog with clear warning and action states.
+- [app/src/ui/change-repository-alias/change-repository-alias-dialog.tsx](app/src/ui/change-repository-alias/change-repository-alias-dialog.tsx):
+      compact alias-edit dialog with controlled input behavior.
+- [app/src/ui/rebase/confirm-force-push.tsx](app/src/ui/rebase/confirm-force-push.tsx):
+      bounded force-push confirmation dialog with explicit choices.
+- [app/src/ui/about/about-test-dialog.tsx](app/src/ui/about/about-test-dialog.tsx):
+      small dialog surface useful for smoke-level dialog render coverage.
 
 ## Recommended File Layout
 
