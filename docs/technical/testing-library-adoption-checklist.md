@@ -366,6 +366,10 @@ inventory, not remaining rollout tasks for this adoption pass.
       concise warning dialog with checkbox-driven state.
 - [app/src/ui/welcome/start.tsx](app/src/ui/welcome/start.tsx): compact
       onboarding step with clear call-to-action coverage.
+- [app/src/ui/lib/focus-container.tsx](app/src/ui/lib/focus-container.tsx):
+      compact focus wrapper with deterministic `focus-within` state behavior.
+- [app/src/ui/dialog/ok-cancel-button-group.tsx](app/src/ui/dialog/ok-cancel-button-group.tsx):
+      small dialog-button group with platform-specific ordering behavior.
 - [app/src/ui/app-menu/menu-list-item.tsx](app/src/ui/app-menu/menu-list-item.tsx):
       compact interactive row component with selection and keyboard behavior.
 
@@ -375,12 +379,16 @@ inventory, not remaining rollout tasks for this adoption pass.
       small switch-style control with checked-state assertions.
 - [app/src/ui/lib/tooltipped-content.tsx](app/src/ui/lib/tooltipped-content.tsx):
       compact wrapper for tooltip-backed content and accessible markup.
+- [app/src/ui/lib/toggletipped-content.tsx](app/src/ui/lib/toggletipped-content.tsx):
+      compact toggletip wrapper with tooltip visibility and aria-live behavior.
 - [app/src/ui/lib/text-box.tsx](app/src/ui/lib/text-box.tsx): shared text
       input wrapper with validation and focus behavior.
 - [app/src/ui/lib/text-area.tsx](app/src/ui/lib/text-area.tsx): small textarea
       control with predictable input and styling behavior.
 - [app/src/ui/lib/select.tsx](app/src/ui/lib/select.tsx): bounded select
       component with prop-driven option rendering.
+- [app/src/ui/lib/input-description/input-description.tsx](app/src/ui/lib/input-description/input-description.tsx):
+      shared input-description component for caption, warning, and error states.
 - [app/src/ui/changes/multiple-selection.tsx](app/src/ui/changes/multiple-selection.tsx):
       concise selection-state component with stable text output.
 - [app/src/ui/lib/row.tsx](app/src/ui/lib/row.tsx): small layout component
@@ -499,6 +507,34 @@ inventory, not remaining rollout tasks for this adoption pass.
       small transient info surface with deterministic copy.
 - [app/src/ui/banners/update-available.tsx](app/src/ui/banners/update-available.tsx):
       concise update banner with release and download actions.
+- [app/src/ui/acknowledgements/acknowledgements.tsx](app/src/ui/acknowledgements/acknowledgements.tsx):
+      bounded acknowledgements surface with deterministic section rendering.
+- [app/src/ui/changes/changes.tsx](app/src/ui/changes/changes.tsx):
+      presentational changes pane with bounded empty and populated states.
+- [app/src/ui/lib/rich-text.tsx](app/src/ui/lib/rich-text.tsx):
+      rich-text renderer with emoji, link, and overflow behavior.
+- [app/src/ui/stashing/stash-diff-viewer.tsx](app/src/ui/stashing/stash-diff-viewer.tsx):
+      bounded stash diff surface with deterministic metadata output.
+- [app/src/ui/octicons/octicon.tsx](app/src/ui/octicons/octicon.tsx):
+      small icon wrapper with stable symbol and accessibility rendering.
+- [app/src/ui/suggested-actions/dropdown-suggested-action.tsx](app/src/ui/suggested-actions/dropdown-suggested-action.tsx):
+      compact suggested-action variant with dropdown behavior.
+- [app/src/ui/lib/author-input/author-handle.tsx](app/src/ui/lib/author-input/author-handle.tsx):
+      small author-handle renderer with predictable output.
+- [app/src/ui/branches/push-branch-commits.tsx](app/src/ui/branches/push-branch-commits.tsx):
+      compact commit-push surface with bounded action states.
+- [app/src/ui/missing-repository.tsx](app/src/ui/missing-repository.tsx):
+      focused missing-repository view with explicit remediation actions.
+- [app/src/ui/diff/image-diffs/modified-image-diff.tsx](app/src/ui/diff/image-diffs/modified-image-diff.tsx):
+      image-diff variant with deterministic comparison rendering.
+- [app/src/ui/publish-repository/publish-repository.tsx](app/src/ui/publish-repository/publish-repository.tsx):
+      bounded publish dialog with clear controlled input states.
+- [app/src/ui/release-notes/release-notes-dialog.tsx](app/src/ui/release-notes/release-notes-dialog.tsx):
+      small release-notes dialog with stable content rendering.
+- [app/src/ui/check-runs/ci-check-run-list.tsx](app/src/ui/check-runs/ci-check-run-list.tsx):
+      compact list surface for check-run rows and empty states.
+- [app/src/ui/diff/submodule-diff.tsx](app/src/ui/diff/submodule-diff.tsx):
+      bounded diff surface for submodule metadata display.
 - [app/src/ui/discard-changes/discard-changes-dialog.tsx](app/src/ui/discard-changes/discard-changes-dialog.tsx):
       destructive-confirm dialog with bounded state transitions.
 - [app/src/ui/secret-scanning/push-protection-error-dialog.tsx](app/src/ui/secret-scanning/push-protection-error-dialog.tsx):
@@ -610,6 +646,16 @@ inventory, not remaining rollout tasks for this adoption pass.
       bounded settings pane with toggle-focused behavior.
 - [app/src/ui/check-runs/ci-check-run-rerun-dialog.tsx](app/src/ui/check-runs/ci-check-run-rerun-dialog.tsx):
       rerun dialog with rerunnable and non-rerunnable state coverage.
+- [app/src/ui/multi-commit-operation/multi-commit-operation.tsx](app/src/ui/multi-commit-operation/multi-commit-operation.tsx):
+      moderate multi-step operation surface with bounded flow states.
+- [app/src/ui/repository-settings/git-config.tsx](app/src/ui/repository-settings/git-config.tsx):
+      focused git-config settings pane with deterministic field rendering.
+- [app/src/ui/lib/popover-dropdown.tsx](app/src/ui/lib/popover-dropdown.tsx):
+      dropdown wrapper combining button, popover, and close behavior.
+- [app/src/ui/toolbar/push-pull-button-dropdown.tsx](app/src/ui/toolbar/push-pull-button-dropdown.tsx):
+      interaction-heavy dropdown surface with push or pull action states.
+- [app/src/ui/undo/warn-local-changes-before-undo.tsx](app/src/ui/undo/warn-local-changes-before-undo.tsx):
+      focused warning dialog for undo flows with explicit choices.
 - [app/src/ui/sign-in/sign-in.tsx](app/src/ui/sign-in/sign-in.tsx):
       moderate sign-in surface with browser and enterprise branches.
 - [app/src/ui/open-pull-request/open-pull-request-dialog.tsx](app/src/ui/open-pull-request/open-pull-request-dialog.tsx):
@@ -618,6 +664,18 @@ inventory, not remaining rollout tasks for this adoption pass.
       conflict-aware merge CTA surface with option-state behavior.
 - [app/src/ui/no-repositories/no-repositories-view.tsx](app/src/ui/no-repositories/no-repositories-view.tsx):
       empty-state screen with onboarding and create-repository actions.
+- [app/src/ui/preferences/advanced.tsx](app/src/ui/preferences/advanced.tsx):
+      settings pane with bounded advanced-option control coverage.
+- [app/src/ui/drag-elements/commit-drag-element.tsx](app/src/ui/drag-elements/commit-drag-element.tsx):
+      drag-preview surface with deterministic commit metadata rendering.
+- [app/src/ui/lib/draggable.tsx](app/src/ui/lib/draggable.tsx):
+      reusable draggable wrapper with bounded drag-state behavior.
+- [app/src/ui/lib/ref-name-text-box.tsx](app/src/ui/lib/ref-name-text-box.tsx):
+      shared ref-name input with validation and controlled text behavior.
+- [app/src/ui/preferences/git.tsx](app/src/ui/preferences/git.tsx):
+      moderate settings pane with bounded git configuration controls.
+- [app/src/ui/multi-commit-operation/choose-branch/rebase-choose-branch-dialog.tsx](app/src/ui/multi-commit-operation/choose-branch/rebase-choose-branch-dialog.tsx):
+      focused choose-branch dialog for rebase flows.
 - [app/src/ui/preferences/custom-integration-form.tsx](app/src/ui/preferences/custom-integration-form.tsx):
       bounded form component with controlled input behavior.
 - [app/src/ui/repositories-list/repositories-list.tsx](app/src/ui/repositories-list/repositories-list.tsx):
