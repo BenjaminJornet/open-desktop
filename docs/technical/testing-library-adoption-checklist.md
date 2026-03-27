@@ -269,10 +269,10 @@ component tests in GitHub Desktop.
       message/layout surfaces.
 - [x] Cover deterministic layout and message primitives without introducing
       new helper infrastructure.
-- [ ] Cover empty-state branching and callback flows for the branches and pull
+- [x] Cover empty-state branching and callback flows for the branches and pull
       request placeholders.
 - [x] Keep the fourth wave in `app/test/unit/ui` with shared RTL helpers only.
-- [ ] Validate the new tests with focused runs, the UI directory target, and
+- [x] Validate the new tests with focused runs, the UI directory target, and
       lint.
 
 ### Phase 10 Targets
@@ -281,8 +281,8 @@ component tests in GitHub Desktop.
 - [x] [app/src/ui/keyboard-shortcut/keyboard-shortcut.tsx](app/src/ui/keyboard-shortcut/keyboard-shortcut.tsx)
 - [x] [app/src/ui/lib/errors.tsx](app/src/ui/lib/errors.tsx)
 - [x] [app/src/ui/changes/commit-warning.tsx](app/src/ui/changes/commit-warning.tsx)
-- [ ] [app/src/ui/branches/no-branches.tsx](app/src/ui/branches/no-branches.tsx)
-- [ ] [app/src/ui/branches/no-pull-requests.tsx](app/src/ui/branches/no-pull-requests.tsx)
+- [x] [app/src/ui/branches/no-branches.tsx](app/src/ui/branches/no-branches.tsx)
+- [x] [app/src/ui/branches/no-pull-requests.tsx](app/src/ui/branches/no-pull-requests.tsx)
 
 ## Candidate Inventory
 
@@ -894,7 +894,7 @@ inventory, not remaining rollout tasks for this adoption pass.
 - [x] `test(ui): add structural and text component coverage`
 - [x] `test(ui): add dialog composition and toggle coverage`
 - [x] `test(ui): add layout and message component coverage`
-- [ ] `test(ui): add branch empty-state coverage`
+- [x] `test(ui): add branch empty-state coverage`
 
 ## Commit Log
 
@@ -912,7 +912,7 @@ inventory, not remaining rollout tasks for this adoption pass.
 - [x] Commit 12: land the structural and text component tests.
 - [x] Commit 13: land the dialog composition and toggle tests.
 - [x] Commit 14: land the layout and message component tests.
-- [ ] Commit 15: land the branch empty-state tests.
+- [x] Commit 15: land the branch empty-state tests.
 
 ## Risks and Notes
 
