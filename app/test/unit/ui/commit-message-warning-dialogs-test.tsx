@@ -17,6 +17,7 @@ import { fireEvent, render, screen, waitFor } from '../../helpers/ui/render'
 
 const originalEvent = globalThis.Event
 let restoreIpcSend: (() => void) | null = null
+const fixtureRepositoryPath = '/tmp/desktop-fixture'
 
 class TestDispatcher {
   public disclaimerSeenCount = 0
@@ -52,12 +53,7 @@ function createRepository() {
     'https://github.com/octocat/desktop'
   )
 
-  return new Repository(
-    '/Users/sergiou87/Developer/GitHub/desktop-fixture',
-    123,
-    gitHubRepository,
-    false
-  )
+  return new Repository(fixtureRepositoryPath, 123, gitHubRepository, false)
 }
 
 function createSelectedFile(path: string) {

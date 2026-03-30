@@ -15,13 +15,14 @@ import {
 } from '../../helpers/ui/timers'
 
 const noMatches: IMatches = { title: [], subtitle: [] }
+const fixtureRepositoryPath = '/tmp/desktop-fixture'
 
 function createRepository(alias: string | null = null) {
   const owner = new Owner('octocat', 'https://api.github.com', 1)
   const gitHubRepository = new GitHubRepository('desktop', owner, 99)
 
   return new Repository(
-    '/Users/sergiou87/Developer/GitHub/desktop-fixture',
+    fixtureRepositoryPath,
     123,
     gitHubRepository,
     false,
@@ -107,9 +108,7 @@ describe('RepositoryListItem', () => {
 
     await waitFor(() => {
       assert.ok(screen.getByText('octocat/desktop', { selector: 'strong' }))
-      assert.ok(
-        screen.getByText('/Users/sergiou87/Developer/GitHub/desktop-fixture')
-      )
+      assert.ok(screen.getByText(fixtureRepositoryPath))
     })
   })
 })
