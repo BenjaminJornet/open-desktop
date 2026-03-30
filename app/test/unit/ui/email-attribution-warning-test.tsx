@@ -33,12 +33,18 @@ describe('GitEmailNotFoundWarning', () => {
     const view = render(
       <>
         <GitEmailNotFoundWarning accounts={[]} email="person@example.com" />
-        <GitEmailNotFoundWarning accounts={[createAccount('mona@example.com')]} email=" " />
+        <GitEmailNotFoundWarning
+          accounts={[createAccount('mona@example.com')]}
+          email=" "
+        />
       </>
     )
 
     assert.equal(view.container.textContent, '')
-    assert.equal(view.container.querySelector('.git-email-not-found-warning'), null)
+    assert.equal(
+      view.container.querySelector('.git-email-not-found-warning'),
+      null
+    )
   })
 
   it('renders a mismatch warning, learn-more link, and screen-reader message', () => {
@@ -58,7 +64,9 @@ describe('GitEmailNotFoundWarning', () => {
     })
 
     assert.notEqual(warning, null)
-    assert.ok(warning?.textContent?.includes('does not match your GitHub account'))
+    assert.ok(
+      warning?.textContent?.includes('does not match your GitHub account')
+    )
     assert.equal(
       link.getAttribute('href'),
       'https://docs.github.com/en/github/committing-changes-to-your-project/why-are-my-commits-linked-to-the-wrong-user'

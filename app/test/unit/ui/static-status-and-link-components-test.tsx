@@ -73,8 +73,8 @@ describe('static status and link components', () => {
       />
     )
 
-    const items = Array.from(view.container.querySelectorAll('li')).map(
-      item => item.textContent?.trim()
+    const items = Array.from(view.container.querySelectorAll('li')).map(item =>
+      item.textContent?.trim()
     )
 
     assert.equal(items.length, 5)
@@ -87,9 +87,9 @@ describe('static status and link components', () => {
       />
     )
 
-    const rerenderedItems = Array.from(view.container.querySelectorAll('li')).map(
-      item => item.textContent?.trim()
-    )
+    const rerenderedItems = Array.from(
+      view.container.querySelectorAll('li')
+    ).map(item => item.textContent?.trim())
 
     assert.ok(rerenderedItems.every(item => item?.includes('github/desktop')))
   })
@@ -117,7 +117,10 @@ describe('static status and link components', () => {
       </>
     )
 
-    assert.equal(view.container.querySelectorAll('.merge-icon-container').length, 4)
+    assert.equal(
+      view.container.querySelectorAll('.merge-icon-container').length,
+      4
+    )
     assert.notEqual(view.container.querySelector('.merge-loading'), null)
     assert.notEqual(view.container.querySelector('.merge-clean'), null)
     assert.notEqual(view.container.querySelector('.merge-conflicts'), null)
@@ -127,7 +130,10 @@ describe('static status and link components', () => {
   it('renders segmented item titles and optional descriptions', () => {
     const view = render(
       <>
-        <SegmentedItem title="Keep changes" description="Stash them on this branch." />
+        <SegmentedItem
+          title="Keep changes"
+          description="Stash them on this branch."
+        />
         <SegmentedItem title="Move changes" />
       </>
     )

@@ -113,9 +113,7 @@ describe('welcome and sign-in wrappers', () => {
       )
     )
 
-    assert.ok(
-      screen.getByText("You're already signed in to", { exact: false })
-    )
+    assert.ok(screen.getByText("You're already signed in to", { exact: false }))
     assert.ok(screen.getByText('github.com', { exact: false }))
     assert.ok(screen.getByText('mona'))
 

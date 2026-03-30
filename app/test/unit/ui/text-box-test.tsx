@@ -48,12 +48,21 @@ describe('TextBox', () => {
       })
     )
 
-    const input = screen.getByRole('textbox', { name: 'Branch name' }) as HTMLInputElement
+    const input = screen.getByRole('textbox', {
+      name: 'Branch name',
+    }) as HTMLInputElement
 
     assert.equal(input.value, 'main')
     assert.equal(input.getAttribute('aria-describedby'), 'branch-help')
-    assert.notEqual(view.container.querySelector('.prefixed-icon.octicon'), null)
-    assert.ok(view.container.querySelector('.text-box-component')?.classList.contains('display-prefixed-icon'))
+    assert.notEqual(
+      view.container.querySelector('.prefixed-icon.octicon'),
+      null
+    )
+    assert.ok(
+      view.container
+        .querySelector('.text-box-component')
+        ?.classList.contains('display-prefixed-icon')
+    )
 
     fireEvent.focus(input)
     fireEvent.change(input, { target: { value: 'release' } })

@@ -34,8 +34,12 @@ describe('input description and textarea surfaces', () => {
       </>
     )
 
-    const caption = view.container.querySelector('#caption-id.input-description-caption')
-    const warning = view.container.querySelector('#warning-id.input-description-warning')
+    const caption = view.container.querySelector(
+      '#caption-id.input-description-caption'
+    )
+    const warning = view.container.querySelector(
+      '#warning-id.input-description-warning'
+    )
     const error = screen.getByRole('alert')
 
     assert.notEqual(caption, null)
@@ -71,8 +75,12 @@ describe('input description and textarea surfaces', () => {
     )
 
     const liveRegions = Array.from(view.container.querySelectorAll('.sr-only'))
-    const warnings = Array.from(view.container.querySelectorAll('.input-description-warning'))
-    const errors = Array.from(view.container.querySelectorAll('.input-description-error'))
+    const warnings = Array.from(
+      view.container.querySelectorAll('.input-description-warning')
+    )
+    const errors = Array.from(
+      view.container.querySelectorAll('.input-description-error')
+    )
 
     assert.equal(liveRegions.length, 2)
     assert.equal(warnings.length, 1)

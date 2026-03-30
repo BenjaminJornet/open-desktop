@@ -75,7 +75,9 @@ describe('dialog composition and toggle components', () => {
 
     assert.equal(closed, 1)
 
-    view.rerender(<DialogHeader title="Rename Branch" showCloseButton={false} />)
+    view.rerender(
+      <DialogHeader title="Rename Branch" showCloseButton={false} />
+    )
 
     assert.equal(screen.queryByRole('button', { name: 'Close' }), null)
   })
@@ -107,7 +109,11 @@ describe('dialog composition and toggle components', () => {
       React.createElement(
         React.Fragment,
         null,
-        React.createElement(ToggleButton, { onClick: onToggle }, 'Toggle whitespace'),
+        React.createElement(
+          ToggleButton,
+          { onClick: onToggle },
+          'Toggle whitespace'
+        ),
         React.createElement(ToggleButton, { checked: true }, 'Keep checked')
       )
     )

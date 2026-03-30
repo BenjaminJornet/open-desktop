@@ -22,7 +22,9 @@ describe('layout and message components', () => {
       </>
     )
 
-    const row = view.container.querySelector('#branch-row.row-component.spaced-row')
+    const row = view.container.querySelector(
+      '#branch-row.row-component.spaced-row'
+    )
     const error = screen.getByRole('alert')
 
     assert.notEqual(row, null)
@@ -44,7 +46,10 @@ describe('layout and message components', () => {
       key => key.textContent
     )
 
-    assert.deepEqual(keys, __DARWIN__ ? ['⌘', '⇧', 'N'] : ['Ctrl', 'Shift', 'N'])
+    assert.deepEqual(
+      keys,
+      __DARWIN__ ? ['⌘', '⇧', 'N'] : ['Ctrl', 'Shift', 'N']
+    )
     assert.equal(
       view.container.textContent,
       __DARWIN__ ? '⌘⇧N' : 'Ctrl+Shift+N'
@@ -54,7 +59,9 @@ describe('layout and message components', () => {
   it('renders warning variants with the expected icon styling and suppresses context menus', () => {
     const view = render(
       <>
-        <CommitWarning icon={CommitWarningIcon.Warning}>Watch out.</CommitWarning>
+        <CommitWarning icon={CommitWarningIcon.Warning}>
+          Watch out.
+        </CommitWarning>
         <CommitWarning icon={CommitWarningIcon.Information}>FYI.</CommitWarning>
         <CommitWarning icon={CommitWarningIcon.Error}>Blocked.</CommitWarning>
       </>

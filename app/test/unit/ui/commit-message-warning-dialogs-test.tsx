@@ -139,7 +139,10 @@ describe('commit message warning dialogs', () => {
     assert.notEqual(submitButton, null)
     assert.equal(dialog?.getAttribute('role'), 'alertdialog')
     assert.ok(screen.getByText('GitHub Copilot'))
-    assertAnnouncementIncludes(dialog!, 'generate-commit-message-disclaimer-body')
+    assertAnnouncementIncludes(
+      dialog!,
+      'generate-commit-message-disclaimer-body'
+    )
     assert.equal(
       learnMore.getAttribute('href'),
       'https://gh.io/copilot-for-desktop-transparency'
@@ -197,8 +200,14 @@ describe('commit message warning dialogs', () => {
     assert.notEqual(overrideButton, null)
     assert.equal(dialog?.getAttribute('role'), 'alertdialog')
     assert.ok(screen.getByText('Commit message override'))
-    assertAnnouncementIncludes(dialog!, 'generate-commit-message-override-warning-body')
-    assertAnnouncementIncludes(dialog!, 'generate-commit-message-override-warning-tip')
+    assertAnnouncementIncludes(
+      dialog!,
+      'generate-commit-message-override-warning-body'
+    )
+    assertAnnouncementIncludes(
+      dialog!,
+      'generate-commit-message-override-warning-tip'
+    )
     assert.equal(
       tipLink.getAttribute('href'),
       'https://gh.io/desktop-copilot-custom-instructions'
@@ -240,7 +249,10 @@ describe('commit message warning dialogs', () => {
 
     assert.notEqual(dialog, null)
     assert.equal(dialog?.getAttribute('role'), 'alertdialog')
-    assertAnnouncementIncludes(dialog!, 'generate-commit-message-override-warning-body')
+    assertAnnouncementIncludes(
+      dialog!,
+      'generate-commit-message-override-warning-body'
+    )
     assert.equal(
       screen.queryByRole('link', { name: 'Copilot Instructions' }),
       null

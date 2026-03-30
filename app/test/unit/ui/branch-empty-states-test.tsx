@@ -43,7 +43,9 @@ describe('branch empty states', () => {
     assert.notEqual(image, null)
     assert.ok(screen.getByText("Sorry, I can't find that branch"))
     assert.ok(screen.getByText('Do you want to create a new branch instead?'))
-    assert.ok(protip?.textContent?.includes(__DARWIN__ ? '⌘⇧N' : 'Ctrl+Shift+N'))
+    assert.ok(
+      protip?.textContent?.includes(__DARWIN__ ? '⌘⇧N' : 'Ctrl+Shift+N')
+    )
 
     fireEvent.click(button)
 

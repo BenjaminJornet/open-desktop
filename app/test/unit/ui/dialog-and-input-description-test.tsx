@@ -19,8 +19,12 @@ describe('dialog and input descriptions', () => {
     )
 
     const alerts = screen.getAllByRole('alert')
-    const errorBanner = view.container.querySelector('.dialog-banner.dialog-error')
-    const successBanner = view.container.querySelector('.dialog-banner.dialog-success')
+    const errorBanner = view.container.querySelector(
+      '.dialog-banner.dialog-error'
+    )
+    const successBanner = view.container.querySelector(
+      '.dialog-banner.dialog-success'
+    )
 
     assert.equal(alerts.length, 2)
     assert.notEqual(errorBanner?.querySelector('svg.octicon'), null)
@@ -34,7 +38,9 @@ describe('dialog and input descriptions', () => {
       <Caption id="branch-caption">Branch names may include slashes.</Caption>
     )
 
-    const description = view.container.querySelector('.input-description-caption')
+    const description = view.container.querySelector(
+      '.input-description-caption'
+    )
 
     assert.notEqual(description, null)
     assert.equal(description?.getAttribute('role'), null)
@@ -47,7 +53,9 @@ describe('dialog and input descriptions', () => {
 
   it('renders input errors as alerts when they are not tied to tracked input', () => {
     render(
-      <InputError id="branch-error">A branch with that name already exists.</InputError>
+      <InputError id="branch-error">
+        A branch with that name already exists.
+      </InputError>
     )
 
     const alert = screen.getByRole('alert')
@@ -82,6 +90,10 @@ describe('dialog and input descriptions', () => {
       'This branch name already exists on the remote.'
     )
     assert.equal(ariaLive?.getAttribute('aria-live'), 'polite')
-    assert.ok(ariaLive?.textContent?.startsWith('This branch name already exists on the remote.'))
+    assert.ok(
+      ariaLive?.textContent?.startsWith(
+        'This branch name already exists on the remote.'
+      )
+    )
   })
 })

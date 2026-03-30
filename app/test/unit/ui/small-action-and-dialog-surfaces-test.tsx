@@ -54,14 +54,14 @@ describe('small action and dialog surfaces', () => {
     const previousSend = electron.ipcRenderer.send
     electron.ipcRenderer.send = () => {}
 
-    const { CLIInstalled } = await import('../../../src/ui/cli-installed/cli-installed')
+    const { CLIInstalled } = await import(
+      '../../../src/ui/cli-installed/cli-installed'
+    )
 
     render(React.createElement(CLIInstalled, { onDismissed }))
 
     const title = screen.getByText(
-      __DARWIN__
-        ? 'Command Line Tool Installed'
-        : 'Command line tool installed'
+      __DARWIN__ ? 'Command Line Tool Installed' : 'Command line tool installed'
     )
     const okButton = screen.getByRole('button', { name: 'Ok', hidden: true })
 

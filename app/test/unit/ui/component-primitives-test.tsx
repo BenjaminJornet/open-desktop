@@ -48,7 +48,10 @@ describe('component primitives', () => {
     const toolbar = view.container.querySelector('#main-toolbar.toolbar')
 
     assert.notEqual(footer, null)
-    assert.equal(screen.getByRole('button', { name: 'Confirm' }).textContent, 'Confirm')
+    assert.equal(
+      screen.getByRole('button', { name: 'Confirm' }).textContent,
+      'Confirm'
+    )
     assert.equal(ref?.textContent, 'refs/heads/main')
     assert.equal(toolbar?.textContent?.trim(), 'Toolbar contents')
   })

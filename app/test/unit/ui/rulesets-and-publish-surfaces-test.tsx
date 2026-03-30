@@ -77,7 +77,11 @@ describe('rulesets and publish surfaces', () => {
     })
 
     assert.notEqual(dialogContent, null)
-    assert.ok(screen.getByText('Publish your repository to GitHub. Need help?', { exact: false }))
+    assert.ok(
+      screen.getByText('Publish your repository to GitHub. Need help?', {
+        exact: false,
+      })
+    )
     assert.equal(
       helpLink.getAttribute('href'),
       'https://help.github.com/articles/about-remote-repositories/'

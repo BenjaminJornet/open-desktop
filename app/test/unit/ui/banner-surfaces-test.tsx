@@ -6,7 +6,11 @@ import { BranchAlreadyUpToDate } from '../../../src/ui/banners/branch-already-up
 import { Banner } from '../../../src/ui/banners/banner'
 import { CherryPickUndone } from '../../../src/ui/banners/cherry-pick-undone'
 import { SuccessBanner } from '../../../src/ui/banners/success-banner'
-import { advanceTimersBy, enableTestTimers, resetTestTimers } from '../../helpers/ui/timers'
+import {
+  advanceTimersBy,
+  enableTestTimers,
+  resetTestTimers,
+} from '../../helpers/ui/timers'
 import { fireEvent, render, screen } from '../../helpers/ui/render'
 
 describe('banner surfaces', () => {
@@ -29,7 +33,11 @@ describe('banner surfaces', () => {
       React.createElement(
         Banner,
         { id: 'test-banner', timeout: 500, onDismissed },
-        React.createElement('a', { href: 'https://example.com/help' }, 'Learn more')
+        React.createElement(
+          'a',
+          { href: 'https://example.com/help' },
+          'Learn more'
+        )
       )
     )
 

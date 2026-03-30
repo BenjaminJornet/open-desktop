@@ -96,9 +96,9 @@ describe('structural and text components', () => {
       ['Mona', 'Mona, Hubot', '3 people']
     )
 
-    const authorNames = Array.from(view.container.querySelectorAll('.author')).map(
-      author => author.textContent
-    )
+    const authorNames = Array.from(
+      view.container.querySelectorAll('.author')
+    ).map(author => author.textContent)
 
     assert.deepEqual(authorNames, ['Mona', 'Mona', 'Hubot'])
   })

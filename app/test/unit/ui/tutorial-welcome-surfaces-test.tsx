@@ -94,7 +94,11 @@ describe('tutorial welcome surfaces', () => {
           sectionId: TutorialStep.CreateBranch,
           isNextStepTodo,
           currentlyOpenSectionId: TutorialStep.CreateBranch,
-          skipLinkButton: React.createElement('button', { type: 'button' }, 'Skip'),
+          skipLinkButton: React.createElement(
+            'button',
+            { type: 'button' },
+            'Skip'
+          ),
           onSummaryClick,
         },
         React.createElement('p', null, 'Create a branch to isolate your work.')
@@ -161,10 +165,10 @@ describe('tutorial welcome surfaces', () => {
 
     const heading = screen.getByRole('heading', { name: "You're done!" })
     const openExploreLabel = __DARWIN__ ? 'Open in Browser' : 'Open in browser'
-    const createRepositoryLabel =
-      __DARWIN__ ? 'Create Repository' : 'Create repository'
-    const addRepositoryLabel =
-      __DARWIN__ ? 'Add Repository' : 'Add repository'
+    const createRepositoryLabel = __DARWIN__
+      ? 'Create Repository'
+      : 'Create repository'
+    const addRepositoryLabel = __DARWIN__ ? 'Add Repository' : 'Add repository'
 
     assert.equal(document.activeElement, heading)
     assert.equal(announcements, 1)

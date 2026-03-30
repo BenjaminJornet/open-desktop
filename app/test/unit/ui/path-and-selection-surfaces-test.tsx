@@ -2,7 +2,10 @@ import assert from 'node:assert'
 import { describe, it } from 'node:test'
 import * as React from 'react'
 
-import { AppFileStatusKind, type AppFileStatus } from '../../../src/models/status'
+import {
+  AppFileStatusKind,
+  type AppFileStatus,
+} from '../../../src/models/status'
 import { MultipleSelection } from '../../../src/ui/changes/multiple-selection'
 import { PathLabel } from '../../../src/ui/lib/path-label'
 import { render } from '../../helpers/ui/render'
@@ -38,10 +41,16 @@ describe('path and selection surfaces', () => {
     }
 
     const view = render(
-      <PathLabel path="src/ui/new-name.tsx" status={status} availableWidth={420} />
+      <PathLabel
+        path="src/ui/new-name.tsx"
+        status={status}
+        availableWidth={420}
+      />
     )
 
-    const labels = Array.from(view.container.querySelectorAll('.path-text-component'))
+    const labels = Array.from(
+      view.container.querySelectorAll('.path-text-component')
+    )
     const renameArrow = view.container.querySelector('.rename-arrow.octicon')
 
     assert.equal(labels.length, 2)

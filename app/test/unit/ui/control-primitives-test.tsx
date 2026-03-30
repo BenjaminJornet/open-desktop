@@ -131,7 +131,9 @@ describe('control primitives', () => {
       })
     )
 
-    const checkbox = screen.getByRole('checkbox', { name: 'Enable feature' }) as HTMLInputElement
+    const checkbox = screen.getByRole('checkbox', {
+      name: 'Enable feature',
+    }) as HTMLInputElement
 
     assert.equal(checkbox.checked, true)
     assert.equal(checkbox.indeterminate, true)
@@ -191,7 +193,7 @@ describe('control primitives', () => {
 
     render(
       React.createElement(
-        RadioButton<string>,
+        RadioButton,
         {
           checked: false,
           value: 'stash',
@@ -228,7 +230,7 @@ describe('control primitives', () => {
     }
 
     render(
-      React.createElement(RadioGroup<string>, {
+      React.createElement(RadioGroup, {
         ariaLabelledBy: 'switch-heading',
         selectedKey: 'ask',
         radioButtonKeys: ['ask', 'move'],
@@ -270,7 +272,9 @@ describe('control primitives', () => {
       )
     )
 
-    const select = screen.getByRole('combobox', { name: 'Default branch' }) as HTMLSelectElement
+    const select = screen.getByRole('combobox', {
+      name: 'Default branch',
+    }) as HTMLSelectElement
 
     assert.equal(select.value, 'main')
 

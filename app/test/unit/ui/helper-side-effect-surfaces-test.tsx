@@ -48,7 +48,9 @@ describe('helper side-effect surfaces', () => {
 
     assert.ok(document.body.classList.contains('theme-dark'))
     assert.equal(document.documentElement.style.colorScheme, 'dark')
-    assert.deepEqual(sends, [['update-window-background-color', 'rgb(1, 2, 3)']])
+    assert.deepEqual(sends, [
+      ['update-window-background-color', 'rgb(1, 2, 3)'],
+    ])
 
     view.rerender(
       React.createElement(AppTheme, {
@@ -59,7 +61,10 @@ describe('helper side-effect surfaces', () => {
     assert.equal(document.body.classList.contains('theme-dark'), false)
     assert.ok(document.body.classList.contains('theme-light'))
     assert.equal(document.documentElement.style.colorScheme, 'light')
-    assert.deepEqual(sends.at(-1), ['update-window-background-color', 'rgb(1, 2, 3)'])
+    assert.deepEqual(sends.at(-1), [
+      'update-window-background-color',
+      'rgb(1, 2, 3)',
+    ])
 
     view.unmount()
 
