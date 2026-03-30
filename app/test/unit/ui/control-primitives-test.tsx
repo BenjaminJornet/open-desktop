@@ -180,14 +180,14 @@ describe('control primitives', () => {
   })
 
   it('renders radio buttons and forwards selection plus double-click values', () => {
-    const selections: Array<string> = []
-    const doubleClicks: Array<string> = []
+    const selections: Array<React.Key> = []
+    const doubleClicks: Array<React.Key> = []
 
-    function onSelected(value: string) {
+    function onSelected(value: React.Key) {
       selections.push(value)
     }
 
-    function onDoubleClick(value: string) {
+    function onDoubleClick(value: React.Key) {
       doubleClicks.push(value)
     }
 
@@ -219,13 +219,13 @@ describe('control primitives', () => {
   })
 
   it('renders radio groups with one tabbable selected option and selection callbacks', () => {
-    const selectedKeys: Array<string> = []
+    const selectedKeys: Array<React.Key> = []
 
-    function onSelectionChanged(key: string) {
+    function onSelectionChanged(key: React.Key) {
       selectedKeys.push(key)
     }
 
-    function renderLabel(key: string) {
+    function renderLabel(key: React.Key) {
       return key === 'ask' ? 'Ask every time' : 'Move changes'
     }
 

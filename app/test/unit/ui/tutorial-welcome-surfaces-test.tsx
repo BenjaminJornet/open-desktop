@@ -27,7 +27,7 @@ class TestDispatcher {
 }
 
 function toDispatcher(dispatcher: TestDispatcher): Dispatcher {
-  return dispatcher as Dispatcher
+  return dispatcher as unknown as Dispatcher
 }
 
 function createRepository() {
@@ -40,12 +40,7 @@ function createRepository() {
     'https://github.com/octocat/desktop'
   )
 
-  return new Repository(
-    '/Users/sergiou87/Developer/GitHub/tutorial-fixture',
-    5,
-    gitHubRepository,
-    false
-  )
+  return new Repository('/tmp/tutorial-fixture', 5, gitHubRepository, false)
 }
 
 describe('tutorial welcome surfaces', () => {

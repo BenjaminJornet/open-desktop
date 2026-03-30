@@ -70,8 +70,15 @@ describe('dialog action wrappers', () => {
       names,
       __DARWIN__ ? ['Dismiss', 'Apply'] : ['Apply', 'Dismiss']
     )
-    assert.equal(screen.getByRole('button', { name: 'Apply' }).type, 'submit')
-    assert.equal(screen.getByRole('button', { name: 'Dismiss' }).type, 'reset')
+    assert.equal(
+      (screen.getByRole('button', { name: 'Apply' }) as HTMLButtonElement).type,
+      'submit'
+    )
+    assert.equal(
+      (screen.getByRole('button', { name: 'Dismiss' }) as HTMLButtonElement)
+        .type,
+      'reset'
+    )
     assert.equal(
       screen
         .getByRole('button', { name: 'Apply' })
@@ -125,8 +132,8 @@ describe('dialog action wrappers', () => {
     const group = view.container.querySelector('.button-group.destructive')
 
     assert.notEqual(group, null)
-    assert.equal(deleteButton.type, 'button')
-    assert.equal(keepButton.type, 'submit')
+    assert.equal((deleteButton as HTMLButtonElement).type, 'button')
+    assert.equal((keepButton as HTMLButtonElement).type, 'submit')
 
     fireEvent.click(deleteButton)
     fireEvent.click(keepButton)

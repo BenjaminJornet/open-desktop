@@ -8,6 +8,7 @@ import type {
   IEndpointEntryState,
   IExistingAccountWarning,
 } from '../../../src/lib/stores/sign-in-store'
+import { SignInStep } from '../../../src/lib/stores/sign-in-store'
 import type { Dispatcher } from '../../../src/ui/dispatcher'
 import { ConfigureGit } from '../../../src/ui/welcome/configure-git'
 import { SignInEnterprise } from '../../../src/ui/welcome/sign-in-enterprise'
@@ -30,12 +31,12 @@ class TestDispatcher {
 }
 
 function toDispatcher(dispatcher: TestDispatcher): Dispatcher {
-  return dispatcher as Dispatcher
+  return dispatcher as unknown as Dispatcher
 }
 
 function createEndpointState(): IEndpointEntryState {
   return {
-    kind: 'EndpointEntry',
+    kind: SignInStep.EndpointEntry,
     error: null,
     loading: false,
     resultCallback: noopResultCallback,
@@ -44,7 +45,7 @@ function createEndpointState(): IEndpointEntryState {
 
 function createAuthenticationState(endpoint: string): IAuthenticationState {
   return {
-    kind: 'Authentication',
+    kind: SignInStep.Authentication,
     endpoint,
     error: null,
     loading: false,
@@ -54,7 +55,7 @@ function createAuthenticationState(endpoint: string): IAuthenticationState {
 
 function createExistingAccountWarningState(): IExistingAccountWarning {
   return {
-    kind: 'ExistingAccountWarning',
+    kind: SignInStep.ExistingAccountWarning,
     endpoint: 'https://api.github.com',
     existingAccount: new Account(
       'mona',
@@ -128,7 +129,7 @@ describe('welcome and sign-in wrappers', () => {
     view.rerender(
       React.createElement(SignIn, {
         signInState: {
-          kind: 'Success',
+          kind: SignInStep.Success,
           resultCallback: noopResultCallback,
         },
         dispatcher: toDispatcher(dispatcher),

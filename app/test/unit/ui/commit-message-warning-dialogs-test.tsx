@@ -65,7 +65,7 @@ function createSelectedFile(path: string) {
 }
 
 function toDispatcher(dispatcher: TestDispatcher): Dispatcher {
-  return dispatcher as Dispatcher
+  return dispatcher as unknown as Dispatcher
 }
 
 function clickUsingWindowEvent(element: Element) {
@@ -140,11 +140,11 @@ describe('commit message warning dialogs', () => {
       'generate-commit-message-disclaimer-body'
     )
     assert.equal(
-      learnMore.getAttribute('href'),
+      learnMore!.getAttribute('href'),
       'https://gh.io/copilot-for-desktop-transparency'
     )
 
-    clickUsingWindowEvent(submitButton)
+    clickUsingWindowEvent(submitButton!)
 
     await waitFor(() => {
       assert.equal(dispatcher.disclaimerSeenCount, 1)
@@ -205,13 +205,13 @@ describe('commit message warning dialogs', () => {
       'generate-commit-message-override-warning-tip'
     )
     assert.equal(
-      tipLink.getAttribute('href'),
+      tipLink!.getAttribute('href'),
       'https://gh.io/desktop-copilot-custom-instructions'
     )
     assert.equal(checkbox?.checked, false)
 
     fireEvent.click(checkbox!)
-    clickUsingWindowEvent(overrideButton)
+    clickUsingWindowEvent(overrideButton!)
 
     await waitFor(() => {
       assert.deepEqual(dispatcher.confirmOverrideValues, [false])

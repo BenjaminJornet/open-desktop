@@ -12,10 +12,13 @@ import {
 } from '../../../src/ui/lib/path-text'
 import { fireEvent, render, screen } from '../../helpers/ui/render'
 
-const originalOpenExternal = shell.openExternal
+const mutableShell = shell as {
+  openExternal: (path: string) => Promise<boolean>
+}
+const originalOpenExternal = mutableShell.openExternal
 
 afterEach(() => {
-  shell.openExternal = originalOpenExternal
+  mutableShell.openExternal = originalOpenExternal
 })
 
 describe('path text and link button surfaces', () => {
@@ -47,7 +50,7 @@ describe('path text and link button surfaces', () => {
     let callbackClicks = 0
     let hoverCount = 0
 
-    shell.openExternal = async (url: string) => {
+    mutableShell.openExternal = async (url: string) => {
       openedUrls.push(url)
       return true
     }

@@ -5,7 +5,10 @@ import * as React from 'react'
 import { ComputedAction } from '../../../src/models/computed-action'
 import { GitHubRepository } from '../../../src/models/github-repository'
 import { Owner } from '../../../src/models/owner'
-import { Repository } from '../../../src/models/repository'
+import {
+  isRepositoryWithForkedGitHubRepository,
+  Repository,
+} from '../../../src/models/repository'
 import { ForkContributionTarget } from '../../../src/models/workflow-preferences'
 import { ActionStatusIcon } from '../../../src/ui/lib/action-status-icon'
 import { SegmentedItem } from '../../../src/ui/lib/vertical-segmented-control/segmented-item'
@@ -66,6 +69,10 @@ describe('static status and link components', () => {
 
   it('renders fork settings descriptions for self and parent contribution targets', () => {
     const repository = createForkRepository()
+
+    if (!isRepositoryWithForkedGitHubRepository(repository)) {
+      throw new Error('Expected fork repository')
+    }
     const view = render(
       <ForkSettingsDescription
         repository={repository}
