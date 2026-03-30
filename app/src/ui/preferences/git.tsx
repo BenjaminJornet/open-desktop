@@ -143,9 +143,7 @@ export class Git extends React.Component<IGitProps> {
         >
           <span>Author</span>
           <span>Default branch</span>
-          <span>
-            Hooks
-          </span>
+          <span>Hooks</span>
         </TabBar>
         <div className="git-preferences-content">{this.renderCurrentTab()}</div>
       </DialogContent>
