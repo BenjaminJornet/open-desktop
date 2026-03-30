@@ -16,6 +16,28 @@ async function getSHA(repo: Repository): Promise<string> {
   return result.stdout.trim()
 }
 
+async function waitForAheadBehind(
+  store: AheadBehindStore,
+  repo: Repository,
+  from: string,
+  to: string
+): Promise<IAheadBehind> {
+  return new Promise((resolve, reject) => {
+    const timeout = setTimeout(() => {
+      reject(
+        new Error(
+          `Timed out waiting for ahead/behind result for range ${from}...${to}`
+        )
+      )
+    }, 5_000)
+
+    store.getAheadBehind(repo, from, to, aheadBehind => {
+      clearTimeout(timeout)
+      resolve(aheadBehind)
+    })
+  })
+}
+
 describe('AheadBehindStore', () => {
   let store: AheadBehindStore
 
@@ -59,11 +81,7 @@ describe('AheadBehindStore', () => {
       const mainSHA = await getSHA(repo)
 
       // Now get the ahead/behind count
-      const result = await new Promise<IAheadBehind | undefined>(resolve => {
-        store.getAheadBehind(repo, mainSHA, featureSHA, aheadBehind => {
-          resolve(aheadBehind)
-        })
-      })
+      const result = await waitForAheadBehind(store, repo, mainSHA, featureSHA)
 
       assert.notEqual(result, undefined)
       // master is 1 ahead (its own commit) and 1 behind (the feature commit)
@@ -91,9 +109,7 @@ describe('AheadBehindStore', () => {
       const mainSHA = await getSHA(repo)
 
       // First call — populates cache
-      await new Promise<void>(resolve => {
-        store.getAheadBehind(repo, mainSHA, featureSHA, () => resolve())
-      })
+      await waitForAheadBehind(store, repo, mainSHA, featureSHA)
 
       // Second call — should return cached result synchronously
       const cached = store.tryGetAheadBehind(repo, mainSHA, featureSHA)
@@ -130,8 +146,8 @@ describe('AheadBehindStore', () => {
       // Immediately dispose — should prevent callback
       disposable.dispose()
 
-      // Give time for the async operation to complete
-      await new Promise(resolve => setTimeout(resolve, 200))
+      // Confirm the underlying worker completed and cached its result.
+      await waitForAheadBehind(store, repo, mainSHA, featureSHA)
 
       assert.equal(callbackCalled, false)
     })
