@@ -38,39 +38,41 @@ describe('helper side-effect surfaces', () => {
       sends.push([channel, value])
     }
 
-    document.body.style.setProperty('--background-color', 'rgb(1, 2, 3)')
+    try {
+      document.body.style.setProperty('--background-color', 'rgb(1, 2, 3)')
 
-    const view = render(
-      React.createElement(AppTheme, {
-        theme: ApplicationTheme.Dark,
-      })
-    )
+      const view = render(
+        React.createElement(AppTheme, {
+          theme: ApplicationTheme.Dark,
+        })
+      )
 
-    assert.ok(document.body.classList.contains('theme-dark'))
-    assert.equal(document.documentElement.style.colorScheme, 'dark')
-    assert.deepEqual(sends, [
-      ['update-window-background-color', 'rgb(1, 2, 3)'],
-    ])
+      assert.ok(document.body.classList.contains('theme-dark'))
+      assert.equal(document.documentElement.style.colorScheme, 'dark')
+      assert.deepEqual(sends, [
+        ['update-window-background-color', 'rgb(1, 2, 3)'],
+      ])
 
-    view.rerender(
-      React.createElement(AppTheme, {
-        theme: ApplicationTheme.Light,
-      })
-    )
+      view.rerender(
+        React.createElement(AppTheme, {
+          theme: ApplicationTheme.Light,
+        })
+      )
 
-    assert.equal(document.body.classList.contains('theme-dark'), false)
-    assert.ok(document.body.classList.contains('theme-light'))
-    assert.equal(document.documentElement.style.colorScheme, 'light')
-    assert.deepEqual(sends.at(-1), [
-      'update-window-background-color',
-      'rgb(1, 2, 3)',
-    ])
+      assert.equal(document.body.classList.contains('theme-dark'), false)
+      assert.ok(document.body.classList.contains('theme-light'))
+      assert.equal(document.documentElement.style.colorScheme, 'light')
+      assert.deepEqual(sends.at(-1), [
+        'update-window-background-color',
+        'rgb(1, 2, 3)',
+      ])
 
-    view.unmount()
+      view.unmount()
 
-    assert.equal(document.body.classList.contains('theme-light'), false)
-
-    electron.ipcRenderer.send = previousSend
+      assert.equal(document.body.classList.contains('theme-light'), false)
+    } finally {
+      electron.ipcRenderer.send = previousSend
+    }
   })
 
   it('deletes the config lock file and retries when deletion succeeds or file is already gone', async () => {
