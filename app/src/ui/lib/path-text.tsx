@@ -117,7 +117,7 @@ export function truncatePath(path: string, length: number) {
     return '…'
   }
 
-  const lastSeparator = path.lastIndexOf('/')
+  const lastSeparator = path.lastIndexOf(Path.sep)
 
   // No directory prefix, fall back to middle ellipsis
   if (lastSeparator === -1) {
@@ -138,11 +138,6 @@ export function truncatePath(path: string, length: number) {
   return `${pre}…${post}`
 }
 
-/** Normalize a path to use forward slashes, as Git paths always do. */
-function normalizeGitPath(path: string) {
-  return Path.posix.normalize(path.replace(/\\/g, '/'))
-}
-
 /**
  * Extract the filename and directory from a given normalized path
  *
@@ -155,11 +150,11 @@ export function extract(normalizedPath: string): {
   // for untracked submodules the status entry is returned as a path with a
   // trailing path separator which causes the directory to be trimmed in a weird
   // way below. let's try to resolve this here
-  normalizedPath = normalizedPath.endsWith('/')
+  normalizedPath = normalizedPath.endsWith(Path.sep)
     ? normalizedPath.substring(0, normalizedPath.length - 1)
     : normalizedPath
 
-  const normalizedFileName = Path.posix.basename(normalizedPath)
+  const normalizedFileName = Path.basename(normalizedPath)
   const normalizedDirectory = normalizedPath.substring(
     0,
     normalizedPath.length - normalizedFileName.length
@@ -217,7 +212,7 @@ function createPathDisplayState(
 
         // Do we have one more character to read? Is is a path separator?
         if (truncatedPath.length > nextTruncatedIx) {
-          if (truncatedPath[nextTruncatedIx] === '/') {
+          if (truncatedPath[nextTruncatedIx] === Path.sep) {
             directoryLength++
           }
         }
@@ -233,7 +228,7 @@ function createPathDisplayState(
 }
 
 function createState(path: string, length?: number): IPathTextState {
-  const normalizedPath = normalizeGitPath(path)
+  const normalizedPath = Path.normalize(path)
   return {
     longestFit: 0,
     shortestNonFit: undefined,
