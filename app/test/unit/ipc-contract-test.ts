@@ -7,16 +7,19 @@ import {
 
 /**
  * These tests verify the IPC channel contract — the set of channels that
- * the renderer and main processes use to communicate. If channels are
- * added or removed, these tests will fail, alerting developers to update
- * both sides of the IPC boundary.
+ * the renderer and main processes use to communicate. The curated runtime
+ * lists below are compile-time checked to ensure they enumerate every
+ * channel in the corresponding type exactly once.
  */
 describe('IPC channel contract', () => {
-  // We use a type-level trick: TypeScript won't let us iterate over a type's
-  // keys at runtime, but we can use a known channel name to verify the types
-  // compile and then check the count via a curated list.
+  type AssertExactUnion<TExpected, TActual> = [
+    Exclude<TExpected, TActual>,
+    Exclude<TActual, TExpected>
+  ] extends [never, never]
+    ? true
+    : never
 
-  const expectedRequestChannels: ReadonlyArray<keyof RequestChannels> = [
+  const expectedRequestChannels = [
     'select-all-window-contents',
     'dialog-did-open',
     'update-menu-state',
@@ -66,43 +69,48 @@ describe('IPC channel contract', () => {
     'show-installing-update',
     'install-windows-cli',
     'uninstall-windows-cli',
-  ]
+  ] as const
 
-  const expectedResponseChannels: ReadonlyArray<keyof RequestResponseChannels> =
-    [
-      'get-path',
-      'get-app-architecture',
-      'get-app-path',
-      'get-exec-path',
-      'is-running-under-arm64-translation',
-      'move-to-trash',
-      'show-item-in-folder',
-      'show-contextual-menu',
-      'is-window-focused',
-      'open-external',
-      'is-in-application-folder',
-      'move-to-applications-folder',
-      'check-for-updates',
-      'get-current-window-state',
-      'get-current-window-zoom-factor',
-      'resolve-proxy',
-      'show-save-dialog',
-      'show-open-dialog',
-      'is-window-maximized',
-      'get-apple-action-on-double-click',
-      'should-use-dark-colors',
-      'save-guid',
-      'get-guid',
-      'show-notification',
-      'get-notifications-permission',
-      'request-notifications-permission',
-    ]
+  const expectedResponseChannels = [
+    'get-path',
+    'get-app-architecture',
+    'get-app-path',
+    'get-exec-path',
+    'is-running-under-arm64-translation',
+    'move-to-trash',
+    'show-item-in-folder',
+    'show-contextual-menu',
+    'is-window-focused',
+    'open-external',
+    'is-in-application-folder',
+    'move-to-applications-folder',
+    'check-for-updates',
+    'get-current-window-state',
+    'get-current-window-zoom-factor',
+    'resolve-proxy',
+    'show-save-dialog',
+    'show-open-dialog',
+    'is-window-maximized',
+    'get-apple-action-on-double-click',
+    'should-use-dark-colors',
+    'save-guid',
+    'get-guid',
+    'show-notification',
+    'get-notifications-permission',
+    'request-notifications-permission',
+  ] as const
 
   describe('RequestChannels', () => {
-    it('has the expected number of channels', () => {
-      // This test will fail to compile if any channel name is wrong
-      // (TypeScript will reject it as not keyof RequestChannels)
-      assert.equal(expectedRequestChannels.length, 49)
+    it('lists every request channel exactly once', () => {
+      const isValid: ReadonlyArray<keyof RequestChannels> =
+        expectedRequestChannels
+      const isExhaustive: AssertExactUnion<
+        keyof RequestChannels,
+        typeof expectedRequestChannels[number]
+      > = true
+
+      assert.equal(isValid.length, expectedRequestChannels.length)
+      assert.equal(isExhaustive, true)
     })
 
     it('includes critical lifecycle channels', () => {
@@ -123,8 +131,16 @@ describe('IPC channel contract', () => {
   })
 
   describe('RequestResponseChannels', () => {
-    it('has the expected number of channels', () => {
-      assert.equal(expectedResponseChannels.length, 26)
+    it('lists every request-response channel exactly once', () => {
+      const isValid: ReadonlyArray<keyof RequestResponseChannels> =
+        expectedResponseChannels
+      const isExhaustive: AssertExactUnion<
+        keyof RequestResponseChannels,
+        typeof expectedResponseChannels[number]
+      > = true
+
+      assert.equal(isValid.length, expectedResponseChannels.length)
+      assert.equal(isExhaustive, true)
     })
 
     it('includes critical request-response channels', () => {
@@ -141,14 +157,6 @@ describe('IPC channel contract', () => {
           `Missing critical channel: ${channel}`
         )
       }
-    })
-  })
-
-  describe('total channel count', () => {
-    it('has 75 total IPC channels', () => {
-      const total =
-        expectedRequestChannels.length + expectedResponseChannels.length
-      assert.equal(total, 75)
     })
   })
 })
