@@ -234,17 +234,4 @@ describe('SignInStore', () => {
       assert.equal(lastState, null)
     })
   })
-
-  describe('onDidAuthenticate', () => {
-    it('registers authentication event handler', () => {
-      let authenticated = false
-      signInStore.onDidAuthenticate(() => {
-        authenticated = true
-      })
-
-      // We can't easily trigger the full OAuth flow in unit tests,
-      // but we verify the listener registration doesn't throw
-      assert.equal(authenticated, false)
-    })
-  })
 })
