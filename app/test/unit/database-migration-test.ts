@@ -8,8 +8,6 @@ let dbCounter = 0
  * A concrete test database that exposes conditionalVersion for testing.
  */
 class TestDatabase extends BaseDatabase {
-  public registeredVersions: number[] = []
-
   public constructor(schemaVersion: number | undefined) {
     super(`TestDatabase-${++dbCounter}`, schemaVersion)
   }
