@@ -14,7 +14,10 @@ describe('mock-api', () => {
   })
 
   it('uses provided method overrides', async () => {
-    const repository = createMockAPIRepository({ name: 'mocked-repo' })
+    const repository = {
+      ...createMockAPIRepository({ name: 'mocked-repo' }),
+      parent: undefined,
+    }
     const api = createMockAPI({
       fetchRepository: async () => repository,
     })
