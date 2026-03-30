@@ -15,9 +15,26 @@ import {
   filesNotTrackedByLFS,
 } from '../../../src/lib/git/lfs'
 
+async function ensureGitLFSAvailable(
+  t: import('node:test').TestContext
+): Promise<boolean> {
+  const result = await exec(['lfs', 'version'], process.cwd()).catch(() => null)
+
+  if (result === null || result.exitCode !== 0) {
+    t.skip('git-lfs is not installed in this environment')
+    return false
+  }
+
+  return true
+}
+
 describe('git-lfs', () => {
   describe('isUsingLFS', () => {
     it('returns false for repository not using LFS', async t => {
+      if (!(await ensureGitLFSAvailable(t))) {
+        return
+      }
+
       const path = await setupFixtureRepository(t, 'test-repo')
       const repository = new Repository(path, -1, null, false)
 
@@ -26,6 +43,10 @@ describe('git-lfs', () => {
     })
 
     it('returns true if LFS is tracking a path', async t => {
+      if (!(await ensureGitLFSAvailable(t))) {
+        return
+      }
+
       const path = await setupFixtureRepository(t, 'test-repo')
       const repository = new Repository(path, -1, null, false)
 
@@ -38,6 +59,10 @@ describe('git-lfs', () => {
 
   describe('isTrackedByLFS', () => {
     it('returns false for repository not using LFS', async t => {
+      if (!(await ensureGitLFSAvailable(t))) {
+        return
+      }
+
       const repository = await setupEmptyRepository(t)
 
       const file = 'README.md'
@@ -49,6 +74,10 @@ describe('git-lfs', () => {
     })
 
     it('returns true after tracking file in Git LFS', async t => {
+      if (!(await ensureGitLFSAvailable(t))) {
+        return
+      }
+
       const repository = await setupEmptyRepository(t)
 
       const file = 'README.md'
@@ -62,6 +91,10 @@ describe('git-lfs', () => {
     })
 
     it('returns true after tracking file with character issues in Git LFS', async t => {
+      if (!(await ensureGitLFSAvailable(t))) {
+        return
+      }
+
       const repository = await setupEmptyRepository(t)
 
       const file =
@@ -78,6 +111,10 @@ describe('git-lfs', () => {
 
   describe('filesNotTrackedByLFS', () => {
     it('returns files not listed in Git LFS', async t => {
+      if (!(await ensureGitLFSAvailable(t))) {
+        return
+      }
+
       const repository = await setupEmptyRepository(t)
       await exec(['lfs', 'track', '*.md'], repository.path)
 
@@ -90,6 +127,10 @@ describe('git-lfs', () => {
     })
 
     it('skips files that are tracked by Git LFS', async t => {
+      if (!(await ensureGitLFSAvailable(t))) {
+        return
+      }
+
       const repository = await setupEmptyRepository(t)
       await exec(['lfs', 'track', '*.png'], repository.path)
 
@@ -101,6 +142,10 @@ describe('git-lfs', () => {
     })
 
     it('skips files in a subfolder that are tracked', async t => {
+      if (!(await ensureGitLFSAvailable(t))) {
+        return
+      }
+
       const repository = await setupEmptyRepository(t)
       await exec(['lfs', 'track', '*.png'], repository.path)
 
@@ -113,6 +158,10 @@ describe('git-lfs', () => {
     })
 
     it('skips files in a subfolder where the rule only covers the subdirectory', async t => {
+      if (!(await ensureGitLFSAvailable(t))) {
+        return
+      }
+
       const repository = await setupEmptyRepository(t)
       await exec(['lfs', 'track', 'app/src/*.png'], repository.path)
 
