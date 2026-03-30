@@ -12,7 +12,7 @@ import {
 import { CopyButton } from '../../../src/ui/copy-button'
 
 describe('CopyButton', () => {
-  let clipboardCapture = captureClipboardWrites()
+  let clipboardCapture: ReturnType<typeof captureClipboardWrites>
 
   beforeEach(() => {
     enableTestTimers(['setTimeout'])
