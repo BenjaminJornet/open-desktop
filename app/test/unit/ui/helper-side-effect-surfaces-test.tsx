@@ -42,9 +42,7 @@ describe('helper side-effect surfaces', () => {
       document.body.style.setProperty('--background-color', 'rgb(1, 2, 3)')
 
       const view = render(
-        React.createElement(AppTheme, {
-          theme: ApplicationTheme.Dark,
-        })
+        <AppTheme theme={ApplicationTheme.Dark} />
       )
 
       assert.ok(document.body.classList.contains('theme-dark'))
@@ -54,9 +52,7 @@ describe('helper side-effect surfaces', () => {
       ])
 
       view.rerender(
-        React.createElement(AppTheme, {
-          theme: ApplicationTheme.Light,
-        })
+        <AppTheme theme={ApplicationTheme.Light} />
       )
 
       assert.equal(document.body.classList.contains('theme-dark'), false)
@@ -90,30 +86,30 @@ describe('helper side-effect surfaces', () => {
 
     const ConfigLockFileExists = await getConfigLockFileExists()
     const view = render(
-      React.createElement(ConfigLockFileExists, {
-        lockFilePath: '/tmp/repo.lock',
-        onLockFileDeleted: () => {
+      <ConfigLockFileExists
+        lockFilePath="/tmp/repo.lock"
+        onLockFileDeleted={() => {
           deletedCount++
-        },
-        onError: (error: Error) => {
+        }}
+        onError={(error: Error) => {
           errors.push(error.message)
-        },
-      })
+        }}
+      />
     )
 
     fireEvent.click(view.container.querySelector('.link-button-component')!)
     await Promise.resolve()
 
     view.rerender(
-      React.createElement(ConfigLockFileExists, {
-        lockFilePath: '/tmp/repo.missing.lock',
-        onLockFileDeleted: () => {
+      <ConfigLockFileExists
+        lockFilePath="/tmp/repo.missing.lock"
+        onLockFileDeleted={() => {
           deletedCount++
-        },
-        onError: (error: Error) => {
+        }}
+        onError={(error: Error) => {
           errors.push(error.message)
-        },
-      })
+        }}
+      />
     )
 
     fireEvent.click(view.container.querySelector('.link-button-component')!)
@@ -137,15 +133,15 @@ describe('helper side-effect surfaces', () => {
 
     const ConfigLockFileExists = await getConfigLockFileExists()
     const view = render(
-      React.createElement(ConfigLockFileExists, {
-        lockFilePath: '/tmp/repo.lock',
-        onLockFileDeleted: () => {
+      <ConfigLockFileExists
+        lockFilePath="/tmp/repo.lock"
+        onLockFileDeleted={() => {
           deletedCount++
-        },
-        onError: (error: Error) => {
+        }}
+        onError={(error: Error) => {
           errors.push(error.message)
-        },
-      })
+        }}
+      />
     )
 
     fireEvent.click(view.container.querySelector('.link-button-component')!)

@@ -77,14 +77,12 @@ describe('welcome and sign-in wrappers', () => {
     const dispatcher = new TestDispatcher()
 
     render(
-      React.createElement(
-        SignIn,
-        {
-          signInState: createEndpointState(),
-          dispatcher: toDispatcher(dispatcher),
-        },
-        React.createElement('button', { type: 'button' }, 'Cancel')
-      )
+      <SignIn
+        signInState={createEndpointState()}
+        dispatcher={toDispatcher(dispatcher)}
+      >
+        <button type="button">Cancel</button>
+      </SignIn>
     )
 
     const input = screen.getByLabelText('Enterprise or AE address')
@@ -104,14 +102,12 @@ describe('welcome and sign-in wrappers', () => {
   it('renders warning and browser-authentication states in the shared sign-in wrapper', () => {
     const dispatcher = new TestDispatcher()
     const view = render(
-      React.createElement(
-        SignIn,
-        {
-          signInState: createExistingAccountWarningState(),
-          dispatcher: toDispatcher(dispatcher),
-        },
-        React.createElement('button', { type: 'button' }, 'Cancel')
-      )
+      <SignIn
+        signInState={createExistingAccountWarningState()}
+        dispatcher={toDispatcher(dispatcher)}
+      >
+        <button type="button">Cancel</button>
+      </SignIn>
     )
 
     assert.ok(screen.getByText("You're already signed in to", { exact: false }))
@@ -127,13 +123,13 @@ describe('welcome and sign-in wrappers', () => {
     assert.equal(dispatcher.browserSignInCount, 1)
 
     view.rerender(
-      React.createElement(SignIn, {
-        signInState: {
+      <SignIn
+        signInState={{
           kind: SignInStep.Success,
           resultCallback: noopResultCallback,
-        },
-        dispatcher: toDispatcher(dispatcher),
-      })
+        }}
+        dispatcher={toDispatcher(dispatcher)}
+      />
     )
 
     assert.equal(view.container.textContent, '')
@@ -148,21 +144,21 @@ describe('welcome and sign-in wrappers', () => {
     }
 
     const view = render(
-      React.createElement(SignInEnterprise, {
-        dispatcher: toDispatcher(dispatcher),
-        advance,
-        signInState: null,
-      })
+      <SignInEnterprise
+        dispatcher={toDispatcher(dispatcher)}
+        advance={advance}
+        signInState={null}
+      />
     )
 
     assert.equal(view.container.textContent, '')
 
     view.rerender(
-      React.createElement(SignInEnterprise, {
-        dispatcher: toDispatcher(dispatcher),
-        advance,
-        signInState: createAuthenticationState('https://api.github.com'),
-      })
+      <SignInEnterprise
+        dispatcher={toDispatcher(dispatcher)}
+        advance={advance}
+        signInState={createAuthenticationState('https://api.github.com')}
+      />
     )
 
     assert.ok(screen.getByText('Sign in to your GitHub Enterprise'))
@@ -184,13 +180,13 @@ describe('welcome and sign-in wrappers', () => {
     }
 
     render(
-      React.createElement(ConfigureGit, {
-        accounts: [],
-        advance,
-        done,
-        globalUserName: undefined,
-        globalUserEmail: undefined,
-      })
+      <ConfigureGit
+        accounts={[]}
+        advance={advance}
+        done={done}
+        globalUserName={undefined}
+        globalUserEmail={undefined}
+      />
     )
 
     assert.ok(screen.getByText('Configure Git'))

@@ -20,11 +20,11 @@ function renderNoBranches(
   }
 
   render(
-    React.createElement(NoBranches, {
-      onCreateNewBranch,
-      canCreateNewBranch: true,
-      ...props,
-    })
+    <NoBranches
+      onCreateNewBranch={onCreateNewBranch}
+      canCreateNewBranch={true}
+      {...props}
+    />
   )
 
   return { createCalls }
@@ -69,27 +69,27 @@ describe('branch empty states', () => {
 
   it('renders the search and loading pull-request placeholders', () => {
     const view = render(
-      React.createElement(NoPullRequests, {
-        repositoryName: 'desktop',
-        isOnDefaultBranch: true,
-        isSearch: true,
-        isLoadingPullRequests: false,
-        onCreateBranch() {},
-        onCreatePullRequest() {},
-      })
+      <NoPullRequests
+        repositoryName="desktop"
+        isOnDefaultBranch={true}
+        isSearch={true}
+        isLoadingPullRequests={false}
+        onCreateBranch={() => {}}
+        onCreatePullRequest={() => {}}
+      />
     )
 
     assert.ok(screen.getByText("Sorry, I can't find that pull request!"))
 
     view.rerender(
-      React.createElement(NoPullRequests, {
-        repositoryName: 'desktop',
-        isOnDefaultBranch: true,
-        isSearch: false,
-        isLoadingPullRequests: true,
-        onCreateBranch() {},
-        onCreatePullRequest() {},
-      })
+      <NoPullRequests
+        repositoryName="desktop"
+        isOnDefaultBranch={true}
+        isSearch={false}
+        isLoadingPullRequests={true}
+        onCreateBranch={() => {}}
+        onCreatePullRequest={() => {}}
+      />
     )
 
     assert.ok(screen.getByText('Hang tight'))
@@ -109,14 +109,14 @@ describe('branch empty states', () => {
     }
 
     const view = render(
-      React.createElement(NoPullRequests, {
-        repositoryName: 'desktop',
-        isOnDefaultBranch: true,
-        isSearch: false,
-        isLoadingPullRequests: false,
-        onCreateBranch,
-        onCreatePullRequest,
-      })
+      <NoPullRequests
+        repositoryName="desktop"
+        isOnDefaultBranch={true}
+        isSearch={false}
+        isLoadingPullRequests={false}
+        onCreateBranch={onCreateBranch}
+        onCreatePullRequest={onCreatePullRequest}
+      />
     )
 
     assert.ok(screen.getByText("You're all set!"))
@@ -136,14 +136,14 @@ describe('branch empty states', () => {
     assert.equal(createBranchCalls.count, 1)
 
     view.rerender(
-      React.createElement(NoPullRequests, {
-        repositoryName: 'desktop',
-        isOnDefaultBranch: false,
-        isSearch: false,
-        isLoadingPullRequests: false,
-        onCreateBranch,
-        onCreatePullRequest,
-      })
+      <NoPullRequests
+        repositoryName="desktop"
+        isOnDefaultBranch={false}
+        isSearch={false}
+        isLoadingPullRequests={false}
+        onCreateBranch={onCreateBranch}
+        onCreatePullRequest={onCreatePullRequest}
+      />
     )
 
     const createPullRequestButton = screen.getByRole('button', {

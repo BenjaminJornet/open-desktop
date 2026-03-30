@@ -33,25 +33,23 @@ describe('control primitives', () => {
     }
 
     render(
-      React.createElement(
-        Button,
-        {
-          className: 'launch-button',
-          size: 'small',
-          role: 'switch',
-          ariaExpanded: true,
-          ariaHaspopup: 'menu',
-          ariaPressed: true,
-          ariaControls: 'details-panel',
-          ariaLabel: 'Launch',
-          ariaDescribedBy: 'launch-help',
-          onClick,
-          onContextMenu,
-          onMouseEnter,
-          onButtonRef,
-        },
-        'Open'
-      )
+      <Button
+        className="launch-button"
+        size="small"
+        role="switch"
+        ariaExpanded={true}
+        ariaHaspopup="menu"
+        ariaPressed={true}
+        ariaControls="details-panel"
+        ariaLabel="Launch"
+        ariaDescribedBy="launch-help"
+        onClick={onClick}
+        onContextMenu={onContextMenu}
+        onMouseEnter={onMouseEnter}
+        onButtonRef={onButtonRef}
+      >
+        Open
+      </Button>
     )
 
     const button = screen.getByRole('switch', { name: 'Launch' })
@@ -92,16 +90,14 @@ describe('control primitives', () => {
     }
 
     render(
-      React.createElement(
-        Button,
-        {
-          disabled: true,
-          onClick,
-          onContextMenu,
-          onMouseEnter,
-        },
-        'Disabled action'
-      )
+      <Button
+        disabled={true}
+        onClick={onClick}
+        onContextMenu={onContextMenu}
+        onMouseEnter={onMouseEnter}
+      >
+        Disabled action
+      </Button>
     )
 
     const button = screen.getByRole('button', { name: 'Disabled action' })
@@ -124,11 +120,11 @@ describe('control primitives', () => {
     }
 
     const view = render(
-      React.createElement(Checkbox, {
-        label: 'Enable feature',
-        value: CheckboxValue.Mixed,
-        onChange,
-      })
+      <Checkbox
+        label="Enable feature"
+        value={CheckboxValue.Mixed}
+        onChange={onChange}
+      />
     )
 
     const checkbox = screen.getByRole('checkbox', {
@@ -143,11 +139,11 @@ describe('control primitives', () => {
     assert.equal(changed, 1)
 
     view.rerender(
-      React.createElement(Checkbox, {
-        label: 'Enable feature',
-        value: CheckboxValue.Off,
-        onChange,
-      })
+      <Checkbox
+        label="Enable feature"
+        value={CheckboxValue.Off}
+        onChange={onChange}
+      />
     )
 
     assert.equal(checkbox.checked, false)
@@ -162,14 +158,9 @@ describe('control primitives', () => {
     }
 
     render(
-      React.createElement(
-        'div',
-        { onDoubleClick: onParentDoubleClick },
-        React.createElement(Checkbox, {
-          label: 'Stage file',
-          value: CheckboxValue.On,
-        })
-      )
+      <div onDoubleClick={onParentDoubleClick}>
+        <Checkbox label="Stage file" value={CheckboxValue.On} />
+      </div>
     )
 
     const checkbox = screen.getByRole('checkbox', { name: 'Stage file' })
@@ -192,17 +183,15 @@ describe('control primitives', () => {
     }
 
     render(
-      React.createElement(
-        RadioButton,
-        {
-          checked: false,
-          value: 'stash',
-          tabIndex: 0,
-          onSelected,
-          onDoubleClick,
-        },
-        'Stash changes'
-      )
+      <RadioButton
+        checked={false}
+        value="stash"
+        tabIndex={0}
+        onSelected={onSelected}
+        onDoubleClick={onDoubleClick}
+      >
+        Stash changes
+      </RadioButton>
     )
 
     const radio = screen.getByRole('radio', { name: 'Stash changes' })
@@ -230,13 +219,13 @@ describe('control primitives', () => {
     }
 
     render(
-      React.createElement(RadioGroup, {
-        ariaLabelledBy: 'switch-heading',
-        selectedKey: 'ask',
-        radioButtonKeys: ['ask', 'move'],
-        onSelectionChanged,
-        renderRadioButtonLabelContents: renderLabel,
-      })
+      <RadioGroup
+        ariaLabelledBy="switch-heading"
+        selectedKey="ask"
+        radioButtonKeys={['ask', 'move']}
+        onSelectionChanged={onSelectionChanged}
+        renderRadioButtonLabelContents={renderLabel}
+      />
     )
 
     const group = screen.getByRole('radiogroup')
@@ -260,16 +249,10 @@ describe('control primitives', () => {
     }
 
     render(
-      React.createElement(
-        Select,
-        {
-          label: 'Default branch',
-          value: 'main',
-          onChange,
-        },
-        React.createElement('option', { value: 'main' }, 'main'),
-        React.createElement('option', { value: 'release' }, 'release')
-      )
+      <Select label="Default branch" value="main" onChange={onChange}>
+        <option value="main">main</option>
+        <option value="release">release</option>
+      </Select>
     )
 
     const select = screen.getByRole('combobox', {

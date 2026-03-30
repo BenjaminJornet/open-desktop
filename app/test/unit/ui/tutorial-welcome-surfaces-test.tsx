@@ -45,7 +45,7 @@ function createRepository() {
 
 describe('tutorial welcome surfaces', () => {
   it('renders the tutorial welcome definitions and images', () => {
-    const view = render(React.createElement(TutorialWelcome))
+    const view = render(<TutorialWelcome />)
     const definitions = Array.from(view.container.querySelectorAll('li'))
     const images = Array.from(view.container.querySelectorAll('img')).map(
       image => image.getAttribute('alt')
@@ -81,23 +81,17 @@ describe('tutorial welcome surfaces', () => {
     }
 
     const view = render(
-      React.createElement(
-        TutorialStepInstructions,
-        {
-          summaryText: 'Create a branch',
-          isComplete,
-          sectionId: TutorialStep.CreateBranch,
-          isNextStepTodo,
-          currentlyOpenSectionId: TutorialStep.CreateBranch,
-          skipLinkButton: React.createElement(
-            'button',
-            { type: 'button' },
-            'Skip'
-          ),
-          onSummaryClick,
-        },
-        React.createElement('p', null, 'Create a branch to isolate your work.')
-      )
+      <TutorialStepInstructions
+        summaryText="Create a branch"
+        isComplete={isComplete}
+        sectionId={TutorialStep.CreateBranch}
+        isNextStepTodo={isNextStepTodo}
+        currentlyOpenSectionId={TutorialStep.CreateBranch}
+        skipLinkButton={<button type="button">Skip</button>}
+        onSummaryClick={onSummaryClick}
+      >
+        <p>Create a branch to isolate your work.</p>
+      </TutorialStepInstructions>
     )
 
     const details = view.container.querySelector('details')
@@ -123,18 +117,16 @@ describe('tutorial welcome surfaces', () => {
     assert.ok(openedSections.every(step => step === TutorialStep.CreateBranch))
 
     view.rerender(
-      React.createElement(
-        TutorialStepInstructions,
-        {
-          summaryText: 'Pick your editor',
-          isComplete,
-          sectionId: TutorialStep.PickEditor,
-          isNextStepTodo,
-          currentlyOpenSectionId: TutorialStep.CreateBranch,
-          onSummaryClick,
-        },
-        React.createElement('p', null, 'Pick an editor.')
-      )
+      <TutorialStepInstructions
+        summaryText="Pick your editor"
+        isComplete={isComplete}
+        sectionId={TutorialStep.PickEditor}
+        isNextStepTodo={isNextStepTodo}
+        currentlyOpenSectionId={TutorialStep.CreateBranch}
+        onSummaryClick={onSummaryClick}
+      >
+        <p>Pick an editor.</p>
+      </TutorialStepInstructions>
     )
 
     assert.notEqual(view.container.querySelector('.green-circle svg'), null)
@@ -150,12 +142,12 @@ describe('tutorial welcome surfaces', () => {
     }
 
     render(
-      React.createElement(TutorialDone, {
-        dispatcher: toDispatcher(dispatcher),
-        repository,
-        tutorialCompletionAnnounced: false,
-        onTutorialCompletionAnnounced,
-      })
+      <TutorialDone
+        dispatcher={toDispatcher(dispatcher)}
+        repository={repository}
+        tutorialCompletionAnnounced={false}
+        onTutorialCompletionAnnounced={onTutorialCompletionAnnounced}
+      />
     )
 
     const heading = screen.getByRole('heading', { name: "You're done!" })

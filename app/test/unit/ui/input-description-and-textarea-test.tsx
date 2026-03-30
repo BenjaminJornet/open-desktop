@@ -110,14 +110,14 @@ describe('input description and textarea surfaces', () => {
     }
 
     render(
-      React.createElement(TextArea, {
-        label: 'Commit description',
-        rows: 5,
-        value: 'Initial body',
-        ariaDescribedBy: 'commit-help',
-        onValueChanged,
-        onTextAreaRef,
-      })
+      <TextArea
+        label="Commit description"
+        rows={5}
+        value="Initial body"
+        ariaDescribedBy="commit-help"
+        onValueChanged={onValueChanged}
+        onTextAreaRef={onTextAreaRef}
+      />
     )
 
     const textarea = screen.getByRole('textbox', {
@@ -145,11 +145,7 @@ describe('input description and textarea surfaces', () => {
     }
 
     render(
-      React.createElement(TextArea, {
-        label: 'Message',
-        onChange,
-        onValueChanged,
-      })
+      <TextArea label="Message" onChange={onChange} onValueChanged={onValueChanged} />
     )
 
     const textarea = screen.getByRole('textbox', { name: 'Message' })

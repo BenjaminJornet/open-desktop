@@ -34,20 +34,14 @@ describe('structural and text components', () => {
     }
 
     const view = render(
-      React.createElement(
-        UiView,
-        { id: 'history-view', className: 'visible' },
-        React.createElement(
-          Form,
-          { className: 'branch-form', onSubmit },
-          React.createElement(
-            DialogContent,
-            { className: 'body', onRef },
-            React.createElement('button', { type: 'submit' }, 'Save'),
-            React.createElement('span', null, 'Dialog body copy')
-          )
-        )
-      )
+      <UiView id="history-view" className="visible">
+        <Form className="branch-form" onSubmit={onSubmit}>
+          <DialogContent className="body" onRef={onRef}>
+            <button type="submit">Save</button>
+            <span>Dialog body copy</span>
+          </DialogContent>
+        </Form>
+      </UiView>
     )
 
     const uiView = view.container.querySelector('#history-view.ui-view.visible')

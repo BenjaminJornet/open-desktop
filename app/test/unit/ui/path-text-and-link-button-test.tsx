@@ -64,34 +64,17 @@ describe('path text and link button surfaces', () => {
     }
 
     render(
-      React.createElement(
-        React.Fragment,
-        null,
-        React.createElement(
-          LinkButton,
-          {
-            uri: 'https://example.com/docs',
-            onMouseOver,
-          },
-          'Documentation'
-        ),
-        React.createElement(
-          LinkButton,
-          {
-            onClick,
-            ariaLabel: 'Retry action',
-          },
-          'Retry'
-        ),
-        React.createElement(
-          LinkButton,
-          {
-            uri: 'https://example.com/disabled',
-            disabled: true,
-          },
-          'Disabled link'
-        )
-      )
+      <>
+        <LinkButton uri="https://example.com/docs" onMouseOver={onMouseOver}>
+          Documentation
+        </LinkButton>
+        <LinkButton onClick={onClick} ariaLabel="Retry action">
+          Retry
+        </LinkButton>
+        <LinkButton uri="https://example.com/disabled" disabled={true}>
+          Disabled link
+        </LinkButton>
+      </>
     )
 
     const link = screen.getByRole('link', { name: 'Documentation' })

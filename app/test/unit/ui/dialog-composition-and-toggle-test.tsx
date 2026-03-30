@@ -17,15 +17,13 @@ describe('dialog composition and toggle components', () => {
     }
 
     const view = render(
-      React.createElement(
-        CallToAction,
-        {
-          actionTitle: 'Retry',
-          buttonClassName: 'retry-now',
-          onAction,
-        },
-        'Unable to reach the remote.'
-      )
+      <CallToAction
+        actionTitle="Retry"
+        buttonClassName="retry-now"
+        onAction={onAction}
+      >
+        Unable to reach the remote.
+      </CallToAction>
     )
 
     const row = view.container.querySelector('.row-component.call-to-action')
@@ -54,13 +52,13 @@ describe('dialog composition and toggle components', () => {
     }
 
     const view = render(
-      React.createElement(DialogHeader, {
-        title: 'Rename Branch',
-        titleId: 'rename-branch-title',
-        loading: true,
-        onCloseButtonClick,
-        renderAccessory,
-      })
+      <DialogHeader
+        title="Rename Branch"
+        titleId="rename-branch-title"
+        loading={true}
+        onCloseButtonClick={onCloseButtonClick}
+        renderAccessory={renderAccessory}
+      />
     )
 
     const title = view.container.querySelector('h1#rename-branch-title')
@@ -106,16 +104,10 @@ describe('dialog composition and toggle components', () => {
     }
 
     render(
-      React.createElement(
-        React.Fragment,
-        null,
-        React.createElement(
-          ToggleButton,
-          { onClick: onToggle },
-          'Toggle whitespace'
-        ),
-        React.createElement(ToggleButton, { checked: true }, 'Keep checked')
-      )
+      <>
+        <ToggleButton onClick={onToggle}>Toggle whitespace</ToggleButton>
+        <ToggleButton checked={true}>Keep checked</ToggleButton>
+      </>
     )
 
     const toggle = screen.getByRole('button', { name: 'Toggle whitespace' })

@@ -51,13 +51,13 @@ describe('BranchListItem', () => {
     dragAndDropManager.dragStarted()
 
     const view = render(
-      React.createElement(BranchListItem, {
-        name: 'release',
-        isCurrentBranch: false,
-        matches: noMatches,
-        authorDate: undefined,
-        onDropOntoBranch,
-      })
+      <BranchListItem
+        name="release"
+        isCurrentBranch={false}
+        matches={noMatches}
+        authorDate={undefined}
+        onDropOntoBranch={onDropOntoBranch}
+      />
     )
 
     const item = view.container.querySelector('.branches-list-item')
@@ -90,13 +90,13 @@ describe('BranchListItem', () => {
     dragAndDropManager.dragStarted()
 
     const view = render(
-      React.createElement(BranchListItem, {
-        name: 'main',
-        isCurrentBranch: true,
-        matches: noMatches,
-        authorDate: undefined,
-        onDropOntoCurrentBranch,
-      })
+      <BranchListItem
+        name="main"
+        isCurrentBranch={true}
+        matches={noMatches}
+        authorDate={undefined}
+        onDropOntoCurrentBranch={onDropOntoCurrentBranch}
+      />
     )
 
     const item = view.container.querySelector('.branches-list-item')

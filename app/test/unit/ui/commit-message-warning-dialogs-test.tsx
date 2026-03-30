@@ -112,12 +112,12 @@ describe('commit message warning dialogs', () => {
     }
 
     const view = render(
-      React.createElement(GenerateCommitMessageDisclaimer, {
-        dispatcher: toDispatcher(dispatcher),
-        repository,
-        filesSelected,
-        onDismissed,
-      })
+      <GenerateCommitMessageDisclaimer
+        dispatcher={toDispatcher(dispatcher)}
+        repository={repository}
+        filesSelected={filesSelected}
+        onDismissed={onDismissed}
+      />
     )
 
     const dialog = view.container.querySelector(
@@ -168,13 +168,13 @@ describe('commit message warning dialogs', () => {
     }
 
     const view = render(
-      React.createElement(GenerateCommitMessageOverrideWarning, {
-        dispatcher: toDispatcher(dispatcher),
-        repository,
-        filesSelected,
-        showCopilotInstructionsTip: true,
-        onDismissed,
-      })
+      <GenerateCommitMessageOverrideWarning
+        dispatcher={toDispatcher(dispatcher)}
+        repository={repository}
+        filesSelected={filesSelected}
+        showCopilotInstructionsTip={true}
+        onDismissed={onDismissed}
+      />
     )
 
     const dialog = view.container.querySelector(
@@ -230,13 +230,13 @@ describe('commit message warning dialogs', () => {
     await stubIpcSend()
 
     const view = render(
-      React.createElement(GenerateCommitMessageOverrideWarning, {
-        dispatcher: toDispatcher(dispatcher),
-        repository,
-        filesSelected,
-        showCopilotInstructionsTip: false,
-        onDismissed() {},
-      })
+      <GenerateCommitMessageOverrideWarning
+        dispatcher={toDispatcher(dispatcher)}
+        repository={repository}
+        filesSelected={filesSelected}
+        showCopilotInstructionsTip={false}
+        onDismissed={() => {}}
+      />
     )
 
     const dialog = view.container.querySelector(

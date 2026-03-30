@@ -14,11 +14,11 @@ describe('PasswordTextBox', () => {
     }
 
     render(
-      React.createElement(PasswordTextBox, {
-        label: 'Password',
-        value: 'hunter2',
-        onValueChanged,
-      })
+      <PasswordTextBox
+        label="Password"
+        value="hunter2"
+        onValueChanged={onValueChanged}
+      />
     )
 
     const input = screen.getByLabelText('Password') as HTMLInputElement

@@ -30,15 +30,9 @@ describe('banner surfaces', () => {
     }
 
     const view = render(
-      React.createElement(
-        Banner,
-        { id: 'test-banner', timeout: 500, onDismissed },
-        React.createElement(
-          'a',
-          { href: 'https://example.com/help' },
-          'Learn more'
-        )
-      )
+      <Banner id="test-banner" timeout={500} onDismissed={onDismissed}>
+        <a href="https://example.com/help">Learn more</a>
+      </Banner>
     )
 
     const banner = view.container.querySelector('#test-banner.banner')
@@ -74,11 +68,9 @@ describe('banner surfaces', () => {
     }
 
     render(
-      React.createElement(
-        SuccessBanner,
-        { timeout: 750, onDismissed, onUndo },
-        'Branch renamed successfully.'
-      )
+      <SuccessBanner timeout={750} onDismissed={onDismissed} onUndo={onUndo}>
+        Branch renamed successfully.
+      </SuccessBanner>
     )
 
     const undoButton = screen.getByRole('button', { name: 'Undo' })
@@ -97,11 +89,11 @@ describe('banner surfaces', () => {
     function onDismissed() {}
 
     const view = render(
-      React.createElement(BranchAlreadyUpToDate, {
-        ourBranch: 'main',
-        theirBranch: 'origin/main',
-        onDismissed,
-      })
+      <BranchAlreadyUpToDate
+        ourBranch="main"
+        theirBranch="origin/main"
+        onDismissed={onDismissed}
+      />
     )
 
     assert.ok(screen.getByText('main'))
@@ -111,10 +103,7 @@ describe('banner surfaces', () => {
     )
 
     view.rerender(
-      React.createElement(BranchAlreadyUpToDate, {
-        ourBranch: 'release',
-        onDismissed,
-      })
+      <BranchAlreadyUpToDate ourBranch="release" onDismissed={onDismissed} />
     )
 
     assert.ok(screen.getByText('release'))
@@ -125,11 +114,11 @@ describe('banner surfaces', () => {
     function onDismissed() {}
 
     const view = render(
-      React.createElement(CherryPickUndone, {
-        countCherryPicked: 1,
-        targetBranchName: 'main',
-        onDismissed,
-      })
+      <CherryPickUndone
+        countCherryPicked={1}
+        targetBranchName="main"
+        onDismissed={onDismissed}
+      />
     )
 
     assert.ok(
@@ -140,11 +129,11 @@ describe('banner surfaces', () => {
     assert.ok(screen.getByText('main'))
 
     view.rerender(
-      React.createElement(CherryPickUndone, {
-        countCherryPicked: 3,
-        targetBranchName: 'release',
-        onDismissed,
-      })
+      <CherryPickUndone
+        countCherryPicked={3}
+        targetBranchName="release"
+        onDismissed={onDismissed}
+      />
     )
 
     assert.ok(

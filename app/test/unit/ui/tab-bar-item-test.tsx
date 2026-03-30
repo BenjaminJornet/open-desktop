@@ -50,20 +50,18 @@ function renderTabBarItem(
   }
 
   render(
-    React.createElement(
-      TabBarItem,
-      {
-        index: 2,
-        selected: false,
-        onClick,
-        onMouseEnter,
-        onMouseLeave,
-        onSelectAdjacent,
-        onButtonRef,
-        ...props,
-      },
-      'General'
-    )
+    <TabBarItem
+      index={2}
+      selected={false}
+      onClick={onClick}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+      onSelectAdjacent={onSelectAdjacent}
+      onButtonRef={onButtonRef}
+      {...props}
+    >
+      General
+    </TabBarItem>
   )
 
   return {

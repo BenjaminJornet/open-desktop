@@ -25,17 +25,11 @@ function renderTabBar(
   }
 
   render(
-    React.createElement(
-      TabBar,
-      {
-        selectedIndex: 0,
-        onTabClicked,
-        ...props,
-      },
-      'General',
-      'Integrations',
-      'Advanced'
-    )
+    <TabBar selectedIndex={0} onTabClicked={onTabClicked} {...props}>
+      {'General'}
+      {'Integrations'}
+      {'Advanced'}
+    </TabBar>
   )
 
   return { clicks }

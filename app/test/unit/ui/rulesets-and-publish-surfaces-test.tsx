@@ -68,7 +68,7 @@ describe('rulesets and publish surfaces', () => {
       publishCount++
     }
 
-    const view = render(React.createElement(NoRemote, { onPublish }))
+    const view = render(<NoRemote onPublish={onPublish} />)
 
     const dialogContent = view.container.querySelector('.dialog-content')
     const publishButton = screen.getByRole('button', { name: 'Publish' })

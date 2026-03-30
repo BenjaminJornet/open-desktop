@@ -35,17 +35,17 @@ describe('TextBox', () => {
     }
 
     const view = render(
-      React.createElement(TextBox, {
-        label: 'Branch name',
-        value: 'main',
-        ariaDescribedBy: 'branch-help',
-        prefixedIcon: octicons.search,
-        onValueChanged,
-        onKeyDown,
-        onEnterPressed,
-        onFocus,
-        onBlur,
-      })
+      <TextBox
+        label="Branch name"
+        value="main"
+        ariaDescribedBy="branch-help"
+        prefixedIcon={octicons.search}
+        onValueChanged={onValueChanged}
+        onKeyDown={onKeyDown}
+        onEnterPressed={onEnterPressed}
+        onFocus={onFocus}
+        onBlur={onBlur}
+      />
     )
 
     const input = screen.getByRole('textbox', {
@@ -89,14 +89,14 @@ describe('TextBox', () => {
     }
 
     const view = render(
-      React.createElement(TextBox, {
-        label: 'Filter branches',
-        type: 'search',
-        value: 'topic',
-        displayClearButton: true,
-        onValueChanged,
-        onSearchCleared,
-      })
+      <TextBox
+        label="Filter branches"
+        type="search"
+        value="topic"
+        displayClearButton={true}
+        onValueChanged={onValueChanged}
+        onSearchCleared={onSearchCleared}
+      />
     )
 
     const input = screen.getByRole('searchbox', {
@@ -126,13 +126,13 @@ describe('TextBox', () => {
     }
 
     const view = render(
-      React.createElement(TextBox, {
-        label: 'Search branches',
-        type: 'search',
-        value: 'feature',
-        onValueChanged,
-        onBlur,
-      })
+      <TextBox
+        label="Search branches"
+        type="search"
+        value="feature"
+        onValueChanged={onValueChanged}
+        onBlur={onBlur}
+      />
     )
 
     const input = screen.getByRole('searchbox', {
@@ -145,13 +145,13 @@ describe('TextBox', () => {
     assert.deepEqual(changedValues, [''])
 
     view.rerender(
-      React.createElement(TextBox, {
-        label: 'Search branches',
-        type: 'search',
-        value: '',
-        onValueChanged,
-        onBlur,
-      })
+      <TextBox
+        label="Search branches"
+        type="search"
+        value=""
+        onValueChanged={onValueChanged}
+        onBlur={onBlur}
+      />
     )
 
     input.focus()

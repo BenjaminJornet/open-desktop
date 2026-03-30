@@ -16,11 +16,9 @@ describe('dialog action wrappers', () => {
     }
 
     const view = render(
-      React.createElement(
-        DialogContent,
-        { className: 'wide-content', onRef },
-        React.createElement('p', null, 'Dialog body')
-      )
+      <DialogContent className="wide-content" onRef={onRef}>
+        <p>Dialog body</p>
+      </DialogContent>
     )
 
     const content = view.container.querySelector(
@@ -103,17 +101,15 @@ describe('dialog action wrappers', () => {
     }
 
     const view = render(
-      React.createElement(
-        'form',
-        null,
-        React.createElement(OkCancelButtonGroup, {
-          destructive: true,
-          okButtonText: 'Delete',
-          cancelButtonText: 'Keep',
-          onOkButtonClick,
-          onCancelButtonClick,
-        })
-      )
+      <form>
+        <OkCancelButtonGroup
+          destructive={true}
+          okButtonText="Delete"
+          cancelButtonText="Keep"
+          onOkButtonClick={onOkButtonClick}
+          onCancelButtonClick={onCancelButtonClick}
+        />
+      </form>
     )
 
     const form = view.container.querySelector('form') as HTMLFormElement

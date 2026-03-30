@@ -14,9 +14,7 @@ describe('small action and dialog surfaces', () => {
     }
 
     const view = render(
-      React.createElement(CICheckRunNoStepItem, {
-        onViewCheckExternally,
-      })
+      <CICheckRunNoStepItem onViewCheckExternally={onViewCheckExternally} />
     )
 
     const button = screen.getByRole('link', { name: 'View check details' })
@@ -58,7 +56,7 @@ describe('small action and dialog surfaces', () => {
       '../../../src/ui/cli-installed/cli-installed'
     )
 
-    render(React.createElement(CLIInstalled, { onDismissed }))
+    render(<CLIInstalled onDismissed={onDismissed} />)
 
     const title = screen.getByText(
       __DARWIN__ ? 'Command Line Tool Installed' : 'Command line tool installed'
