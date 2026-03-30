@@ -84,7 +84,7 @@ export class Git extends React.Component<IGitProps> {
           }
           onChange={this.onEnableGitHookEnvChanged}
         />
-        <p className="git-hooks-env-description">
+        <p id="git-hooks-env-description" className="git-settings-description">
           When enabled, GitHub Desktop will attempt to load environment
           variables from your shell when executing Git hooks. This is useful if
           your Git hooks depend on environment variables set in your shell
@@ -124,7 +124,10 @@ export class Git extends React.Component<IGitProps> {
               }
             />
 
-            <div className="git-hooks-cache-description">
+            <div
+              id="git-hooks-cache-description"
+              className="git-settings-description"
+            >
               Cache hook environment variables to improve performance. Disable
               if your hooks rely on frequently changing environment variables.
             </div>
