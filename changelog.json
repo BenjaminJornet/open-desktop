@@ -1,5 +1,8 @@
 {
   "releases": {
+    "3.5.7-beta3": [
+      "[Added] Rename branch dialog now validates branch names against repository rulesets - #21822"
+    ],
     "3.5.7-beta2": [
       "[Added] Allow empty commits via the commit options menu - #21771"
     ],
