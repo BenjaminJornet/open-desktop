@@ -75,4 +75,20 @@ export async function clone(
   args.push('--', url, path)
 
   await git(args, __dirname, 'clone', opts)
+
+  if (options.branch === undefined) {
+    const { stdout } = await git(
+      ['rev-list', '--count', '--all'],
+      path,
+      'cloneCheckForCommits'
+    )
+
+    if (stdout.trim() === '0') {
+      await git(
+        ['symbolic-ref', 'HEAD', `refs/heads/${defaultBranch}`],
+        path,
+        'cloneSetDefaultBranch'
+      )
+    }
+  }
 }

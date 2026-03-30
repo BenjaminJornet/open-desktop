@@ -8,6 +8,7 @@ import { IRemote } from '../../../src/models/remote'
 import { exec } from 'dugite'
 import { Repository } from '../../../src/models/repository'
 import { createTempDirectory } from '../../helpers/temp'
+import { writeFile } from 'fs/promises'
 
 /**
  * Creates a bare clone of a repository to use as an upstream remote.
@@ -73,6 +74,12 @@ describe('git/push', () => {
     // Verify the branch exists on the bare upstream
     const result = await exec(['rev-parse', '--verify', 'new-branch'], barePath)
     assert.equal(result.exitCode, 0)
+
+    const upstream = await exec(
+      ['rev-parse', '--abbrev-ref', '--symbolic-full-name', '@{upstream}'],
+      repo.path
+    )
+    assert.equal(upstream.stdout.trim(), 'origin/new-branch')
   })
 
   it('pushes with force-with-lease', async t => {
@@ -82,26 +89,31 @@ describe('git/push', () => {
       commitMessage: 'initial commit',
     })
 
+    await makeCommit(repo, {
+      entries: [{ path: 'README.md', contents: 'before rewrite' }],
+      commitMessage: 'commit before rewrite',
+    })
+
     const barePath = await createBareUpstream(t, repo)
     await exec(['remote', 'add', 'origin', barePath], repo.path)
 
-    // First push to establish remote tracking
     const remote: IRemote = { name: 'origin', url: barePath }
     await push(repo, remote, 'master', 'master', null)
 
-    // Now amend and force push
-    await makeCommit(repo, {
-      entries: [{ path: 'README.md', contents: 'amended content' }],
-      commitMessage: 'amended commit',
-    })
+    await exec(['reset', '--hard', 'HEAD~1'], repo.path)
+    await writeFile(`${repo.path}/README.md`, 'rewritten history')
+    await exec(['add', 'README.md'], repo.path)
+    await exec(['commit', '-m', 'rewritten commit'], repo.path)
+
+    await assert.rejects(push(repo, remote, 'master', 'master', null))
 
     await push(repo, remote, 'master', 'master', null, {
       forceWithLease: true,
     })
 
-    // Verify the bare upstream has the amended commit
+    // Verify the bare upstream has the rewritten commit
     const result = await exec(['log', '--oneline', '-1'], barePath)
-    assert.ok(result.stdout.includes('amended commit'))
+    assert.ok(result.stdout.includes('rewritten commit'))
   })
 
   it('reports progress when callback is provided', async t => {

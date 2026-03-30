@@ -1,5 +1,7 @@
 import { describe, it } from 'node:test'
 import assert from 'node:assert'
+import { existsSync } from 'fs'
+import { readFile } from 'fs/promises'
 
 import { revertCommit } from '../../../src/lib/git/revert'
 import { getCommits } from '../../../src/lib/git'
@@ -34,6 +36,10 @@ describe('git/revert', () => {
       const commits = await getCommits(repo, 'HEAD', 3)
       assert.equal(commits.length, 3)
       assert.ok(commits[0].summary.startsWith('Revert'))
+      assert.equal(
+        await readFile(`${repo.path}/file.txt`, 'utf8'),
+        'initial content'
+      )
     })
 
     it('reverts a commit that adds a new file', async t => {
@@ -61,6 +67,7 @@ describe('git/revert', () => {
       const commits = await getCommits(repo, 'HEAD', 3)
       assert.equal(commits.length, 3)
       assert.ok(commits[0].summary.startsWith('Revert'))
+      assert.equal(existsSync(`${repo.path}/new-file.txt`), false)
     })
   })
 })

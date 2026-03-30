@@ -4,8 +4,10 @@ import * as path from 'path'
 import { existsSync } from 'fs'
 
 import { initGitRepository } from '../../../src/lib/git/init'
+import { getDefaultBranch } from '../../../src/lib/helpers/default-branch'
 import { getStatus } from '../../../src/lib/git'
 import { createTempDirectory } from '../../helpers/temp'
+import { exec } from 'dugite'
 
 describe('git/init', () => {
   it('creates a new git repository', async t => {
@@ -25,5 +27,8 @@ describe('git/init', () => {
     const status = await getStatus(repo)
     assert.notEqual(status, null)
     assert.equal(status!.exists, true)
+
+    const head = await exec(['symbolic-ref', '--short', 'HEAD'], tempDir)
+    assert.equal(head.stdout.trim(), await getDefaultBranch())
   })
 })
