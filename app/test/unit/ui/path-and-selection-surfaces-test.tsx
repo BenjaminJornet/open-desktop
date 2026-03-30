@@ -28,7 +28,9 @@ describe('path and selection surfaces', () => {
     assert.notEqual(label, null)
     assert.equal(label?.getAttribute('aria-hidden'), 'true')
     assert.notEqual(pathText, null)
-    assert.ok(view.container.textContent?.includes('src/ui/'))
+    assert.ok(
+      view.container.textContent?.includes(__WIN32__ ? 'src\\ui\\' : 'src/ui/')
+    )
     assert.ok(view.container.textContent?.includes('branch.tsx'))
     assert.equal(view.container.querySelector('.rename-arrow'), null)
   })

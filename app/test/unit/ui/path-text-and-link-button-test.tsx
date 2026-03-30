@@ -25,22 +25,43 @@ describe('path text and link button surfaces', () => {
   it('truncates text and paths using the exported helpers', () => {
     assert.equal(truncateMid('abcdef', 4), 'a…ef')
     assert.equal(truncateMid('abcdef', 1), '…')
-    assert.equal(truncatePath('src/components/file.tsx', 12), 'sr…/file.tsx')
-    assert.deepEqual(extract('src/components/file.tsx'), {
-      normalizedFileName: 'file.tsx',
-      normalizedDirectory: 'src/components/',
-    })
+    assert.equal(
+      truncatePath(
+        __WIN32__ ? 'src\\components\\file.tsx' : 'src/components/file.tsx',
+        12
+      ),
+      __WIN32__ ? 'sr…\\file.tsx' : 'sr…/file.tsx'
+    )
+    assert.deepEqual(
+      extract(
+        __WIN32__ ? 'src\\components\\file.tsx' : 'src/components/file.tsx'
+      ),
+      {
+        normalizedFileName: 'file.tsx',
+        normalizedDirectory: __WIN32__
+          ? 'src\\components\\'
+          : 'src/components/',
+      }
+    )
   })
 
   it('renders path text without a tooltip when the full path fits', () => {
     const view = render(
-      <PathText path="src/components/file.tsx" availableWidth={500} />
+      <PathText
+        path={
+          __WIN32__ ? 'src\\components\\file.tsx' : 'src/components/file.tsx'
+        }
+        availableWidth={500}
+      />
     )
 
     const dirname = view.container.querySelector('.dirname')
     const filename = view.container.querySelector('.filename')
 
-    assert.equal(dirname?.textContent, 'src/components/')
+    assert.equal(
+      dirname?.textContent,
+      __WIN32__ ? 'src\\components\\' : 'src/components/'
+    )
     assert.equal(filename?.textContent, 'file.tsx')
     assert.equal(view.container.querySelector('[role="tooltip"]'), null)
   })
