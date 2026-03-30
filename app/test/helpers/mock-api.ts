@@ -23,12 +23,30 @@ type APIMethodOverrides = {
  */
 export function createMockAPI(overrides: APIMethodOverrides = {}): API {
   const api = new API('https://api.github.com', 'mock-token-for-testing')
+  const mockedMethods = new Set(Object.keys(overrides))
 
   for (const [method, impl] of Object.entries(overrides)) {
     ;(api as any)[method] = impl
   }
 
-  return api
+  return new Proxy(api, {
+    get(target, property, receiver) {
+      const value = Reflect.get(target, property, receiver)
+
+      if (
+        typeof property !== 'string' ||
+        typeof value !== 'function' ||
+        mockedMethods.has(property)
+      ) {
+        return value
+      }
+
+      return () =>
+        Promise.reject(
+          new Error(`No mock implementation registered for API.${property}`)
+        )
+    },
+  })
 }
 
 /**
