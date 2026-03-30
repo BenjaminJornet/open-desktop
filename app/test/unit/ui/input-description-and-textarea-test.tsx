@@ -145,7 +145,11 @@ describe('input description and textarea surfaces', () => {
     }
 
     render(
-      <TextArea label="Message" onChange={onChange} onValueChanged={onValueChanged} />
+      <TextArea
+        label="Message"
+        onChange={onChange}
+        onValueChanged={onValueChanged}
+      />
     )
 
     const textarea = screen.getByRole('textbox', { name: 'Message' })
