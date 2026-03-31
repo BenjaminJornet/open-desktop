@@ -10,6 +10,14 @@ interface ICopilotErrorOptions {
   readonly retryAfter?: string
 }
 
+export interface ICopilotErrorDisplayInfo {
+  readonly title: string
+  readonly message: string
+  readonly retryAfterMessage?: string
+  readonly actionText?: string
+  readonly actionURL?: string
+}
+
 const knownPaymentRequiredErrorCodes: ReadonlyArray<CopilotPaymentRequiredErrorCode> =
   ['quota_exceeded', 'session_quota_exceeded', 'billing_not_configured']
 
@@ -30,7 +38,7 @@ function isPaymentRequiredErrorCode(
 ): value is CopilotPaymentRequiredErrorCode {
   return (
     typeof value === 'string' &&
-    knownPaymentRequiredErrorCodes.includes(value as CopilotPaymentRequiredErrorCode)
+    knownPaymentRequiredErrorCodes.some(code => code === value)
   )
 }
 
@@ -100,6 +108,60 @@ export function parseCopilotPaymentRequiredError(
     paymentRequiredErrorCode,
     retryAfter: retryAfter ?? undefined,
   })
+}
+
+function getRetryAfterMessage(retryAfter: string) {
+  if (/^\d+$/.test(retryAfter)) {
+    const seconds = Number(retryAfter)
+    const unit = seconds === 1 ? 'second' : 'seconds'
+    return `You can try again in ${seconds} ${unit}.`
+  }
+
+  return `You can try again after ${retryAfter}.`
+}
+
+export function getCopilotErrorDisplayInfo(
+  error: CopilotError
+): ICopilotErrorDisplayInfo | null {
+  if (!error.isPaymentRequiredError) {
+    return null
+  }
+
+  switch (error.code) {
+    case 'quota_exceeded':
+      return {
+        title: 'Quota exceeded',
+        message: error.message,
+        retryAfterMessage:
+          error.retryAfter !== undefined
+            ? getRetryAfterMessage(error.retryAfter)
+            : undefined,
+      }
+
+    case 'session_quota_exceeded':
+      return {
+        title: 'Session quota exceeded',
+        message: error.message,
+        retryAfterMessage:
+          error.retryAfter !== undefined
+            ? getRetryAfterMessage(error.retryAfter)
+            : undefined,
+      }
+
+    case 'billing_not_configured':
+      return {
+        title: 'Copilot billing not configured',
+        message: error.message,
+        actionText: 'Open GitHub Copilot settings',
+        actionURL: 'https://github.com/settings/copilot',
+      }
+
+    default:
+      return {
+        title: 'Copilot billing issue',
+        message: error.message,
+      }
+  }
 }
 
 /** An error which contains additional metadata. */
