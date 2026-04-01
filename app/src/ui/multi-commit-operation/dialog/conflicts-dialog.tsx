@@ -100,7 +100,6 @@ export class ConflictsDialog extends React.Component<
     }
   }
 
-
   /**
    *  Invokes submit callback and dismisses modal
    */
