@@ -10,7 +10,8 @@
  * Commands:
  *   version <channel>
  *     Discovers the previous release tag and computes the next version.
- *     Outputs GitHub Actions `::set-output` lines:
+ *     Writes GitHub Actions outputs to $GITHUB_OUTPUT when running in Actions
+ *     and logs key=value pairs to stdout:
  *       previous, next, latest-beta (production only)
  *
  *   changelog-entries <previous-version>
@@ -92,9 +93,14 @@ async function commandVersion(channel: Channel): Promise<void> {
 
     const sortedBetas = semverSort(allTags.filter(Boolean))
     const latestBeta = sortedBetas.at(-1)
-    if (latestBeta) {
-      outputs['latest-beta'] = latestBeta as string
+
+    if (!latestBeta) {
+      throw new Error(
+        'Unable to determine the latest beta release tag for a production release.'
+      )
     }
+
+    outputs['latest-beta'] = String(latestBeta)
   }
 
   console.log(`📦 Previous: ${previous} → Next: ${next}`)

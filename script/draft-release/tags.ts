@@ -10,8 +10,8 @@ import { sh } from '../sh'
  * Returns the latest release tag, according to git and semver
  * (ignores test releases)
  *
- * @param options there's only one option `excludeBetaReleases`,
- *                which is a boolean
+ * @param options.excludeBetaReleases - when true, filters out beta release tags
+ * @param options.excludeTestReleases - when true, filters out test release tags
  */
 export async function getLatestRelease(options: {
   excludeBetaReleases: boolean

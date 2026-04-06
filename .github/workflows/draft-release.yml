@@ -146,6 +146,10 @@ jobs:
             echo "🔧 Hotfix: branched from $REF_OVERRIDE"
           elif [ "$CHANNEL" = "production" ]; then
             # Production: branch from the latest beta tag
+            if [ -z "$LATEST_BETA" ]; then
+              echo "::error::Cannot create a production release branch because no latest beta version was found."
+              exit 1
+            fi
             git checkout -b "$BRANCH" "release-$LATEST_BETA"
           else
             # Beta: already on development from checkout step
