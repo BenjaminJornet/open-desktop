@@ -1,4 +1,5 @@
 import { mock } from 'node:test'
+import { act } from 'react-dom/test-utils'
 
 type TimerApi = 'Date' | 'setTimeout'
 
@@ -11,7 +12,9 @@ export function enableTestTimers(apis: ReadonlyArray<TimerApi>, now?: number) {
 }
 
 export function advanceTimersBy(ms: number) {
-  mock.timers.tick(ms)
+  act(() => {
+    mock.timers.tick(ms)
+  })
 }
 
 export function resetTestTimers() {
