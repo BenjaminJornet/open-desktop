@@ -1,11 +1,18 @@
 import assert from 'node:assert'
-import { describe, it, mock } from 'node:test'
+import { afterEach, describe, it, mock } from 'node:test'
 import * as React from 'react'
 
 import { CICheckRunNoStepItem } from '../../../src/ui/check-runs/ci-check-run-no-steps'
 import { fireEvent, render, screen } from '../../helpers/ui/render'
 
+let restoreIpcSend: (() => void) | null = null
+
 describe('small action and dialog surfaces', () => {
+  afterEach(() => {
+    restoreIpcSend?.()
+    restoreIpcSend = null
+  })
+
   it('renders the no-step check-run state and invokes the external-view callback', () => {
     let externalViewCount = 0
 
@@ -51,6 +58,9 @@ describe('small action and dialog surfaces', () => {
     const electron = await import('electron')
     const previousSend = electron.ipcRenderer.send
     electron.ipcRenderer.send = () => {}
+    restoreIpcSend = () => {
+      electron.ipcRenderer.send = previousSend
+    }
 
     const { CLIInstalled } = await import(
       '../../../src/ui/cli-installed/cli-installed'
@@ -69,7 +79,5 @@ describe('small action and dialog surfaces', () => {
     fireEvent.click(okButton)
 
     assert.equal(dismissedCount, 1)
-
-    electron.ipcRenderer.send = previousSend
   })
 })
