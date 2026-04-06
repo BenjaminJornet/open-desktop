@@ -1,7 +1,6 @@
 import assert from 'node:assert'
 import { afterEach, beforeEach, describe, it } from 'node:test'
 import * as React from 'react'
-import { act } from 'react-dom/test-utils'
 
 import { AriaLiveContainer } from '../../../src/ui/accessibility/aria-live-container'
 import {
@@ -38,36 +37,31 @@ describe('AriaLiveContainer', () => {
   })
 
   it('rebuilds the message after tracked user input changes', () => {
-    const liveRegionRef = React.createRef<AriaLiveContainer>()
     const view = render(
       <AriaLiveContainer
-        ref={liveRegionRef}
         message="1 result"
         trackedUserInput="m"
       />
     )
 
     const container = view.container.querySelector('.sr-only')
-    const initialMessage = liveRegionRef.current?.state.message
+
+    // Initial render toggles suffix from '' → '\u00A0\u00A0'
+    assert.equal(container?.textContent, '1 result\u00A0\u00A0')
 
     view.rerender(
       <AriaLiveContainer
-        ref={liveRegionRef}
         message="1 result"
         trackedUserInput="ma"
       />
     )
 
-    assert.equal(liveRegionRef.current?.state.message, initialMessage)
+    // Debounce hasn't fired yet, so the message is unchanged
+    assert.equal(container?.textContent, '1 result\u00A0\u00A0')
 
-    act(() => {
-      advanceTimersBy(1001)
-    })
+    advanceTimersBy(1001)
 
-    const updatedMessage = liveRegionRef.current?.state.message
-    const updatedText = container?.textContent ?? ''
-
-    assert.notEqual(updatedMessage, initialMessage)
-    assert.ok(updatedText.startsWith('1 result'))
+    // After debounce, suffix toggles to '\u00A0'
+    assert.equal(container?.textContent, '1 result\u00A0')
   })
 })
