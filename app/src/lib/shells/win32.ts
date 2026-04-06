@@ -552,7 +552,7 @@ export function launchCustomShell(
   const argv = parseCustomIntegrationArguments(customShell.arguments)
   const args = expandTargetPathArgument(argv, path)
   return spawnCustomIntegration(`"${customShell.path}"`, args, {
-    cwd: path,
     shell: true,
+    cwd: path,
   })
 }
