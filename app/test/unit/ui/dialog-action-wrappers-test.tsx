@@ -113,8 +113,6 @@ describe('dialog action wrappers', () => {
     )
 
     const form = view.container.querySelector('form') as HTMLFormElement
-    const previousEvent = globalThis.Event
-    globalThis.Event = window.Event
     form.addEventListener('submit', event => {
       event.preventDefault()
       submitted.push('submit')
@@ -133,8 +131,6 @@ describe('dialog action wrappers', () => {
 
     fireEvent.click(deleteButton)
     fireEvent.click(keepButton)
-
-    globalThis.Event = previousEvent
 
     assert.deepEqual(okClicks, ['ok'])
     assert.deepEqual(cancelClicks, ['cancel'])

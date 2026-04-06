@@ -21,6 +21,7 @@ if (
 ) {
   Object.assign(globalThis, {
     CustomEvent: window.CustomEvent,
+    Event: window.Event,
   })
 }
 

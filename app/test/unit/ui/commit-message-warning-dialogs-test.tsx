@@ -68,13 +68,6 @@ function toDispatcher(dispatcher: TestDispatcher): Dispatcher {
   return dispatcher as unknown as Dispatcher
 }
 
-function clickUsingWindowEvent(element: Element) {
-  const previousEvent = globalThis.Event
-  globalThis.Event = window.Event
-  fireEvent.click(element)
-  globalThis.Event = previousEvent
-}
-
 async function stubIpcSend() {
   const electron = await import('electron')
   const previousSend = electron.ipcRenderer.send
@@ -144,7 +137,7 @@ describe('commit message warning dialogs', () => {
       'https://gh.io/copilot-for-desktop-transparency'
     )
 
-    clickUsingWindowEvent(submitButton!)
+    fireEvent.click(submitButton!)
 
     await waitFor(() => {
       assert.equal(dispatcher.disclaimerSeenCount, 1)
@@ -211,7 +204,7 @@ describe('commit message warning dialogs', () => {
     assert.equal(checkbox?.checked, false)
 
     fireEvent.click(checkbox!)
-    clickUsingWindowEvent(overrideButton!)
+    fireEvent.click(overrideButton!)
 
     await waitFor(() => {
       assert.deepEqual(dispatcher.confirmOverrideValues, [false])
