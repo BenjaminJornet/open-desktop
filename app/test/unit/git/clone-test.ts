@@ -84,6 +84,21 @@ describe('git/clone', () => {
   })
 
   it('clones with a custom default branch name', async t => {
+    // init.defaultBranch only takes effect when the remote's unborn HEAD
+    // branch name is not advertised (protocol v0/v1). Force protocol v0
+    // so we can verify the option actually drives the result, rather than
+    // having the remote's initial-branch setting do the work.
+    const savedGitConfigParams = process.env['GIT_CONFIG_PARAMETERS']
+    process.env['GIT_CONFIG_PARAMETERS'] = "'protocol.version=0'"
+    t.after(() => {
+      if (savedGitConfigParams === undefined) {
+        delete process.env['GIT_CONFIG_PARAMETERS']
+      } else {
+        process.env['GIT_CONFIG_PARAMETERS'] = savedGitConfigParams
+      }
+    })
+
+    // Bare repo defaults to 'master' — clone must use defaultBranch to get 'trunk'
     const source = await createEmptyBareRepository(t)
 
     const destPath = await createTempDirectory(t)
@@ -92,5 +107,8 @@ describe('git/clone', () => {
     await clone(source, clonePath, { defaultBranch: 'trunk' })
 
     assert.equal(existsSync(path.join(clonePath, '.git')), true)
+
+    const result = await exec(['symbolic-ref', 'HEAD'], clonePath)
+    assert.equal(result.stdout.trim(), 'refs/heads/trunk')
   })
 })
