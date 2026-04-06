@@ -8,7 +8,6 @@ import {
   waitFor,
   within,
 } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
 
 type UIErrorRenderOptions = Omit<RenderOptions, 'queries'>
 
@@ -17,10 +16,6 @@ export function render(
   options?: UIErrorRenderOptions
 ) {
   return rtlRender(element, options)
-}
-
-export function createUserEvent() {
-  return userEvent.setup()
 }
 
 export { fireEvent, screen, waitFor, within }
