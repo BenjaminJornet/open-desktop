@@ -76,11 +76,21 @@ If any tests fail:
    new correct behavior.
 4. Re-run the suite until everything passes.
 
-Then run the linter:
+Then verify linting:
+
+```bash
+yarn lint
+```
+
+If lint errors are reported and you want to auto-fix them:
 
 ```bash
 yarn lint:fix
 ```
+
+> **Note:** `yarn lint:fix` rewrites files across the repository (Prettier +
+> ESLint `--fix`). Only run it when you intend to apply those edits — do not
+> use it as a read-only check.
 
 ---
 
@@ -595,6 +605,6 @@ When you are done implementing a feature or bugfix, verify:
 - [ ] Wrote UI component tests for new or changed React components.
 - [ ] Existing tests updated if behavior intentionally changed.
 - [ ] `yarn test` passes with no failures.
-- [ ] `yarn lint:fix` passes.
+- [ ] `yarn lint` passes (run `yarn lint:fix` to auto-fix if needed).
 - [ ] (If applicable) Ran ad-hoc E2E test and captured screenshots/video.
 - [ ] (If applicable) Attached screenshots and video to the PR.
