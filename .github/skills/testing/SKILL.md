@@ -117,17 +117,19 @@ Use `node:assert` for all assertions — never Jest or Chai matchers.
 
 ### Test structure
 
+Synchronous tests are fine for pure logic:
+
 ```ts
 describe('MyFeature', () => {
-  it('does something useful', async () => {
+  it('does something useful', () => {
     const result = myFunction('input')
     assert.equal(result, 'expected')
   })
 })
 ```
 
-Always use `async` test functions. Pass the test context `t` when using helpers
-that need cleanup:
+Use `async` when the test or its helpers need it. Pass the test context `t`
+when using helpers that register cleanup via `t.after()`:
 
 ```ts
 it('creates a repo', async t => {
