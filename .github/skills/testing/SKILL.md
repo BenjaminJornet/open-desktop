@@ -142,12 +142,20 @@ it('creates a repo', async t => {
 
 | Pattern | Use |
 |---------|-----|
-| `assert.equal(a, b)` | Strict equality |
+| `assert.equal(a, b)` | Abstract equality (`==`) — use when coercion is intentional |
+| `assert.strictEqual(a, b)` | Strict equality (`===`) — preferred; catches type mismatches |
 | `assert.deepEqual(a, b)` | Deep structural equality |
-| `assert.notEqual(a, b)` | Not equal |
+| `assert.notEqual(a, b)` | Abstract inequality (`!=`) |
+| `assert.notStrictEqual(a, b)` | Strict inequality (`!==`) |
 | `assert.ok(value)` | Truthy check |
 | `assert.rejects(asyncFn, /pattern/)` | Async rejection with message |
 | `assert.throws(fn, /pattern/)` | Sync throw |
+
+> **`assert.equal` vs `assert.strictEqual`**: `assert.equal(a, b)` uses the `==` operator
+> (abstract equality), so `assert.equal(42, '42')` passes. `assert.strictEqual(a, b)` uses
+> `===`, so it also checks that types match. **Prefer `assert.strictEqual`** in most cases
+> to avoid silent type-coercion surprises. Use `assert.equal` only when you explicitly
+> want coercion semantics.
 
 ### Existing helpers — reuse them
 
