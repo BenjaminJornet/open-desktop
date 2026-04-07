@@ -383,6 +383,11 @@ suite (`app-launch.e2e.ts`) unless explicitly asked.
 - File name: `*.e2e.ts` (Playwright config matches this pattern).
 - Do **not** modify `app-launch.e2e.ts` unless explicitly asked.
 
+> ⚠️ **Delete ad-hoc specs before opening your PR.** Playwright's config
+> matches every `*.e2e.ts` file in `app/test/e2e/`, so any file you create
+> there will run in CI. Ad-hoc specs are for local validation only — stage and
+> run them locally, then `git rm` them before committing.
+
 ### Imports
 
 ```ts
