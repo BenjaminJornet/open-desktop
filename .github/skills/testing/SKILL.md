@@ -450,8 +450,12 @@ await button.waitFor({ state: 'visible', timeout: 15000 })
 
 ### Setting React controlled inputs
 
-React controlled inputs ignore direct `.fill()` because React manages the
-value via its synthetic event system. Use this pattern:
+For most inputs, Playwright's `.fill()` works fine. However, some React
+controlled inputs ignore `.fill()` because they rely on React's synthetic
+event system rather than native DOM events. If `.fill()` doesn't update
+the React state (i.e., the value appears empty after filling), use this
+workaround that fires both `input` and `change` events through React's
+internal value setter:
 
 ```ts
 await input.evaluate((el, value) => {
@@ -462,6 +466,9 @@ await input.evaluate((el, value) => {
   inp.dispatchEvent(new Event('change', { bubbles: true }))
 }, 'my-value')
 ```
+
+Use `.fill()` first — only fall back to the workaround when `.fill()` does
+not produce the expected state change in React.
 
 ### Assertions
 
