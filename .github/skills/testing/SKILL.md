@@ -337,17 +337,31 @@ describe('auto-dismissing banner', () => {
 
 ### Clipboard testing
 
+Register `restore()` in `afterEach` so the mock is always torn down even when
+an assertion throws:
+
 ```tsx
+import { afterEach, it } from 'node:test'
 import { captureClipboardWrites } from '../../helpers/ui/electron'
 
-it('copies text to clipboard', () => {
-  const { writes, restore } = captureClipboardWrites()
-  render(<CopyButton text="hello" />)
-  fireEvent.click(screen.getByRole('button'))
-  assert.deepEqual(writes, ['hello'])
-  restore()
+describe('CopyButton', () => {
+  let restore: () => void
+  let writes: string[]
+
+  afterEach(() => restore?.())
+
+  it('copies text to clipboard', () => {
+    ;({ writes, restore } = captureClipboardWrites())
+    render(<CopyButton text="hello" />)
+    fireEvent.click(screen.getByRole('button'))
+    assert.deepEqual(writes, ['hello'])
+  })
 })
 ```
+
+Calling `restore()` inline at the end of the test body is **not** safe — if
+any assertion before it throws, the global `clipboard.writeText` mock stays
+patched and will silently contaminate subsequent tests.
 
 ### ESLint note
 
