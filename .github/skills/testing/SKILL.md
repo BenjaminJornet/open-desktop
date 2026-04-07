@@ -171,7 +171,7 @@ it('creates a repo', async t => {
 
 | Helper file | Key exports | Purpose |
 |-------------|------------|---------|
-| `app/test/helpers/repositories.ts` | `setupEmptyRepository(t)`, `setupFixtureRepository(t, name)`, `setupConflictedRepo()` | Create temporary git repos with automatic cleanup |
+| `app/test/helpers/repositories.ts` | `setupEmptyRepository(t)`, `setupFixtureRepository(t, name)`, `setupConflictedRepo(t)` | Create temporary git repos with automatic cleanup |
 | `app/test/helpers/repository-scaffolding.ts` | `makeCommit()`, `createBranch()`, `switchTo()`, `cloneRepository()` | Build git state (commits, branches) |
 | `app/test/helpers/temp.ts` | `createTempDirectory(t)` | Temporary directory with auto-cleanup via `t.after()` |
 | `app/test/helpers/mock-api.ts` | `createMockAPI(overrides)`, `createMockAPIRepository()`, `createMockAPIIdentity()` | Proxy-based mock API — rejects unmocked methods to prevent real HTTP requests |
