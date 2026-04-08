@@ -52,7 +52,7 @@
     "primer-support": "^4.0.0",
     "prop-types": "^15.7.2",
     "quick-lru": "^3.0.0",
-    "re2js": "^0.3.0",
+    "re2js": "^2.0.1",
     "react": "^16.8.4",
     "react-confetti": "^6.1.0",
     "react-css-transition-replace": "^3.0.3",
