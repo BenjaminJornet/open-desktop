@@ -540,6 +540,17 @@ DESKTOP_E2E_APP_MODE=unpackaged npx playwright test \
   app/test/e2e/my-feature.e2e.ts
 ```
 
+> ⚠️ **Do NOT use `yarn build:dev` for E2E tests.** The development build
+> produces an `index.html` that loads the renderer bundle from
+> `http://localhost:3000/build/renderer.js` (the webpack dev server). Without
+> the dev server running, the React app never mounts and the Playwright
+> `waitForFunction` on `desktop-app-container` will time out silently.
+>
+> Always use `yarn test:e2e:build:unpackaged` (or the combined
+> `yarn test:e2e:unpackaged`) which runs a **production** build with
+> `DESKTOP_SKIP_PACKAGE=1`. This bundles `renderer.js` directly into `out/`
+> so the app is self-contained.
+
 ### Handling the welcome flow and macOS dialogs
 
 If your test launches from a fresh state, you will encounter the welcome flow.
