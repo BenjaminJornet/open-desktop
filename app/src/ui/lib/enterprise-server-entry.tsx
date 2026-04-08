@@ -58,7 +58,7 @@ export class EnterpriseServerEntry extends React.Component<
           autoFocus={true}
           disabled={disableEntry}
           onValueChanged={this.onServerAddressChanged}
-          placeholder="https://example.ghe.com"
+          placeholder="https://example.ghe.com or your GitHub Enterprise Server URL"
         />
 
         {this.props.error ? <Errors>{this.props.error.message}</Errors> : null}
