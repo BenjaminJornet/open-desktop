@@ -634,9 +634,10 @@ copilotModels: this.copilotModels,
 copilotAvailable: this.copilotStore.isAvailable,
 
 // With:
-copilotModels: this.copilotModels.length > 0
-  ? this.copilotModels
-  : fakeModels,       // defined as a const above the class
+copilotModels:
+  this.copilotModels !== null && this.copilotModels.length > 0
+    ? this.copilotModels
+    : fakeModels,       // defined as a const above the class
 copilotAvailable: true,
 ```
 
