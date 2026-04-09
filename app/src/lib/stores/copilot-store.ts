@@ -8,6 +8,7 @@ import {
 import { Emitter, Disposable } from 'event-kit'
 import * as ipcRenderer from '../ipc-renderer'
 import { join } from 'path'
+import { pathToFileURL } from 'url'
 
 /**
  * Returns the path of the executable (Electron/Node) used to run the Copilot CLI.
@@ -118,11 +119,8 @@ export class CopilotStore {
     let importPath = join(cliDir, 'index.js')
 
     if (__WIN32__) {
-      // On Windows, we need the import path to be a valid file:// URL with the
-      // path properly escaped.
-      // Build importPath string from a URL
-      const importURL = new URL(`file://${join(cliDir, 'index.js')}`)
-      importPath = importURL.href
+      // On Windows, we need the import path to be a valid file:// URL.
+      importPath = pathToFileURL(importPath).href
     }
 
     return new CopilotClient({
