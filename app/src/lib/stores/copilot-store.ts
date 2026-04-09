@@ -120,6 +120,7 @@ export class CopilotStore {
       cliArgs: ['--eval', `import '${join(cliDir, 'index.js')}'`, '--'],
       env: {
         ELECTRON_RUN_AS_NODE: '1',
+        COPILOT_RUN_APP: '1',
       },
       cwd: repositoryPath,
       autoStart: true,
