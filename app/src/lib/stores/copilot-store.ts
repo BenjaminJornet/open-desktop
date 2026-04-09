@@ -115,9 +115,19 @@ export class CopilotStore {
     // CLI fails to parse the arguments correctly, so we ended up using --eval
     // and just importing the index.js from the CLI as a workaround.
     const cliDir = getCopilotCLIDir()
+    let importPath = join(cliDir, 'index.js')
+
+    if (__WIN32__) {
+      // On Windows, we need the import path to be a valid file:// URL with the
+      // path properly escaped.
+      // Build importPath string from a URL
+      const importURL = new URL(`file://${join(cliDir, 'index.js')}`)
+      importPath = importURL.href
+    }
+
     return new CopilotClient({
       cliPath: await getCopilotCLIPath(),
-      cliArgs: ['--eval', `import '${join(cliDir, 'index.js')}'`, '--'],
+      cliArgs: ['--eval', `import '${importPath}'`, '--'],
       env: {
         ELECTRON_RUN_AS_NODE: '1',
         COPILOT_RUN_APP: '1',
