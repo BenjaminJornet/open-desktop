@@ -78,13 +78,21 @@ async function commandVersion(channel: Channel): Promise<void> {
   if (channel === 'production') {
     // For production releases, discover the latest beta tag so the
     // workflow can branch from it (avoids shipping untested code).
-    const latestBeta = await getLatestRelease({
-      excludeBetaReleases: false,
-      excludeTestReleases: true,
-      onlyBetaReleases: true,
-    })
+    try {
+      const latestBeta = await getLatestRelease({
+        excludeBetaReleases: false,
+        excludeTestReleases: true,
+        onlyBetaReleases: true,
+      })
 
-    outputs['latest-beta'] = latestBeta
+      outputs['latest-beta'] = latestBeta
+    } catch (e) {
+      throw new Error(
+        'Unable to determine the latest beta release tag for a production release. ' +
+          'Production releases must be based on a beta tag. ' +
+          `(${e instanceof Error ? e.message : e})`
+      )
+    }
   } else if (channel === 'beta') {
     // For beta releases, use the latest beta tag as the comparison base
     // for release notes generation. This ensures notes reflect changes
@@ -96,9 +104,14 @@ async function commandVersion(channel: Channel): Promise<void> {
         onlyBetaReleases: true,
       })
       outputs['compare-base'] = latestBeta
-    } catch {
-      // No beta tags exist yet — fall back to previous (production tag)
-      console.log('ℹ️ No beta tags found, using previous release as compare base')
+    } catch (e) {
+      const message = e instanceof Error ? e.message : String(e)
+      if (message.includes('No matching release tags found')) {
+        // No beta tags exist yet — fall back to previous (production tag)
+        console.log('ℹ️ No beta tags found, using previous release as compare base')
+      } else {
+        throw e
+      }
     }
   }
 
