@@ -8605,7 +8605,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
       }
     }
   }
-  
+
   /** This shouldn't be called directly. See 'Dispatcher'. */
   public async _fetchCopilotModels(): Promise<void> {
     const models = await this.copilotStore.listModels()
@@ -8618,8 +8618,8 @@ export class AppStore extends TypedBaseStore<IAppState> {
       this.preferAbsoluteDates = value
       setPreferAbsoluteDates(value)
       this.emitUpdate()
-    }  
-  }  
+    }
+  }
 
   public _updateFileListFilter(
     repository: Repository,

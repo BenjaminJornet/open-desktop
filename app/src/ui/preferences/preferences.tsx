@@ -1004,7 +1004,7 @@ export class Preferences extends React.Component<
     dispatcher.setDiffCheckMarksSetting(this.state.showDiffCheckMarks)
 
     dispatcher.setSelectedCopilotModel(this.state.selectedCopilotModel)
-    
+
     if (enableFormattingPreferences()) {
       if (this.state.selectedDateFormat !== undefined) {
         setDateFormatPreference(this.state.selectedDateFormat)
