@@ -171,10 +171,10 @@ jobs:
       - name: Generate token for push
         id: generate-token
         if: ${{ inputs.dry-run == false }}
-        uses: tibdex/github-app-token@v2
+        uses: actions/create-github-app-token@v1
         with:
-          app_id: ${{ secrets.DESKTOP_RELEASES_APP_ID }}
-          private_key: ${{ secrets.DESKTOP_RELEASES_APP_PRIVATE_KEY }}
+          app-id: ${{ secrets.DESKTOP_RELEASES_APP_ID }}
+          private-key: ${{ secrets.DESKTOP_RELEASES_APP_PRIVATE_KEY }}
 
       - name: Push release branch
         if: ${{ inputs.dry-run == false }}
