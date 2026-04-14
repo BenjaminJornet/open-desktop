@@ -168,11 +168,21 @@ jobs:
           git add app/package.json changelog.json
           git commit -m "Draft release $NEXT_VERSION"
 
+      - name: Generate token for push
+        id: generate-token
+        if: ${{ inputs.dry-run == false }}
+        uses: tibdex/github-app-token@v2
+        with:
+          app_id: ${{ secrets.DESKTOP_RELEASES_APP_ID }}
+          private_key: ${{ secrets.DESKTOP_RELEASES_APP_PRIVATE_KEY }}
+
       - name: Push release branch
         if: ${{ inputs.dry-run == false }}
         env:
           NEXT_VERSION: ${{ steps.version.outputs.next }}
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          # Use the app token so the push triggers the create event
+          # for release-pr.yml (GITHUB_TOKEN cannot trigger other workflows)
+          git remote set-url origin "https://x-access-token:${{ steps.generate-token.outputs.token }}@github.com/${{ github.repository }}.git"
           git push origin "releases/$NEXT_VERSION"
           echo "✅ Pushed releases/$NEXT_VERSION — release-pr.yml will create the draft PR"
