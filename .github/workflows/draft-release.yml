@@ -173,6 +173,10 @@ jobs:
           yarn --silent ts-node -P script/tsconfig.json \
             script/draft-release/ci.ts prepare "$NEXT_VERSION" "$ENTRIES"
 
+          # Ensure changelog.json passes Prettier (ci.ts writes with
+          # JSON.stringify which differs from Prettier's formatting)
+          yarn prettier --write changelog.json
+
           git add app/package.json changelog.json
           git commit -m "Draft release $NEXT_VERSION"
           git push origin "$BRANCH"
