@@ -261,10 +261,9 @@ export class EditCopilotBYOKProviderDialog extends React.Component<
   private renderAuthenticationSection(isEditing: boolean) {
     return (
       <fieldset className="copilot-byok-fieldset">
-        <legend>Authentication</legend>
         <Row>
           <Select
-            label={__DARWIN__ ? 'Authentication' : 'Authentication'}
+            label="Authentication"
             value={this.state.authKind}
             onChange={this.onAuthKindChanged}
           >
