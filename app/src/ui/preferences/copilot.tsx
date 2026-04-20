@@ -55,7 +55,7 @@ export class CopilotPreferences extends React.Component<ICopilotPreferencesProps
   public render() {
     const showBYOK = this.props.showBYOKSettings && this.props.copilotAvailable
     return (
-      <DialogContent>
+      <DialogContent className="copilot-tab">
         <div className="copilot-section">
           <h2 id="copilot-model-heading">
             {__DARWIN__ ? 'Language Models' : 'Language models'}
@@ -170,7 +170,7 @@ export class CopilotPreferences extends React.Component<ICopilotPreferencesProps
             like Ollama.
           </p>
         ) : (
-          <ul className="copilot-byok-providers">
+          <ul className="copilot-byok-entry-list">
             {byokProviders.map(this.renderBYOKProvider)}
             {byokProviders.map(this.renderBYOKProvider)}
             {byokProviders.map(this.renderBYOKProvider)}
@@ -226,19 +226,19 @@ export class CopilotPreferences extends React.Component<ICopilotPreferencesProps
     const modelLabel = modelCount === 1 ? '1 model' : `${modelCount} models`
     const isLocal = isLocalBaseUrl(provider.baseUrl)
     return (
-      <li key={provider.id} className="copilot-byok-provider">
-        <div className="copilot-byok-provider-info">
-          <div className="copilot-byok-provider-title">
+      <li key={provider.id} className="copilot-byok-entry">
+        <div className="copilot-byok-entry-info">
+          <div className="copilot-byok-entry-title">
             <span>{provider.name}</span>
             {isLocal && (
               <span className="copilot-byok-provider-badge">Local</span>
             )}
           </div>
-          <span className="copilot-byok-provider-meta">
+          <span className="copilot-byok-entry-meta">
             {this.formatProviderType(provider)} · {modelLabel}
           </span>
         </div>
-        <div className="copilot-byok-provider-actions">
+        <div className="copilot-byok-entry-actions">
           <Button
             onClick={this.onEditBYOKProviderClick(provider)}
             ariaLabel={`Edit ${provider.name}`}

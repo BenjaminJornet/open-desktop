@@ -526,6 +526,11 @@ dialog {
         max-height: $default-tab-height;
         overflow: auto;
       }
+
+      &.copilot-tab {
+        max-height: $default-tab-height;
+        overflow: auto;
+      }
     }
   }
 

@@ -75,17 +75,17 @@ class ModelRow extends React.Component<IModelRowProps> {
         ? `Reasoning: ${formatReasoningEffort(model.reasoningEffort)}`
         : null
     return (
-      <li className="copilot-byok-provider">
-        <div className="copilot-byok-provider-info">
-          <div className="copilot-byok-provider-title">
+      <li className="copilot-byok-entry">
+        <div className="copilot-byok-entry-info">
+          <div className="copilot-byok-entry-title">
             <span>{heading}</span>
           </div>
-          <span className="copilot-byok-provider-meta">
+          <span className="copilot-byok-entry-meta">
             <code>{model.id || '—'}</code>
             {reasoningLabel !== null ? ` · ${reasoningLabel}` : ''}
           </span>
         </div>
-        <div className="copilot-byok-provider-actions">
+        <div className="copilot-byok-entry-actions">
           <Button onClick={this.onEdit} ariaLabel={`Edit ${heading}`}>
             <Octicon symbol={octicons.pencil} />
           </Button>
@@ -307,7 +307,7 @@ export class EditCopilotBYOKProviderDialog extends React.Component<
             No models yet. Add at least one to use this provider.
           </p>
         ) : (
-          <ul className="copilot-byok-providers">
+          <ul className="copilot-byok-entry-list">
             {this.state.models.map((m, i) => (
               <ModelRow
                 key={i}
