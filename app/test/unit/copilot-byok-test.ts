@@ -5,6 +5,7 @@ import {
   loadBYOKProviders,
   parseModelKey,
   saveBYOKProviders,
+  type IBYOKModel,
   type IBYOKProvider,
 } from '../../src/lib/copilot/byok'
 
@@ -66,7 +67,7 @@ describe('byok storage', () => {
               id: 'gpt-4o',
               name: 'GPT-4o',
               supportsReasoningEffort: true,
-            },
+            } as unknown as IBYOKModel,
           ],
         },
       ])

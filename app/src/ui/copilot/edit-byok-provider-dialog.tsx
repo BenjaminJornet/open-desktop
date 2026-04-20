@@ -4,6 +4,7 @@ import { OkCancelButtonGroup } from '../dialog/ok-cancel-button-group'
 import { TextBox } from '../lib/text-box'
 import { Select } from '../lib/select'
 import { Button } from '../lib/button'
+import { Row } from '../lib/row'
 import { Octicon } from '../octicons'
 import * as octicons from '../octicons/octicons.generated'
 import {
@@ -13,10 +14,12 @@ import {
   BYOKAuthKind,
   BYOKWireApi,
 } from '../../lib/copilot/byok'
-import { EditCopilotBYOKModelDialog } from './edit-byok-model-dialog'
 import { ReasoningEffort } from '../../lib/stores/copilot-store'
+import { Dispatcher } from '../dispatcher'
+import { PopupType } from '../../models/popup'
 
 interface IEditCopilotBYOKProviderDialogProps {
+  readonly dispatcher: Dispatcher
   /** Provider to edit, or `null` when adding a new one. */
   readonly provider: IBYOKProvider | null
   readonly onSave: (
@@ -45,11 +48,6 @@ interface IEditCopilotBYOKProviderDialogState {
   readonly requestTimeoutSeconds: string
   readonly models: ReadonlyArray<IBYOKModel>
   readonly errorMessage: string | null
-  /**
-   * State of the nested 'add/edit model' dialog. `null` means it is closed.
-   * `index === null` indicates the dialog is in 'add' mode.
-   */
-  readonly editingModel: { readonly index: number | null } | null
 }
 
 /**
@@ -153,7 +151,6 @@ export class EditCopilotBYOKProviderDialog extends React.Component<
           : '',
       models: provider ? [...provider.models] : [],
       errorMessage: null,
-      editingModel: null,
     }
   }
 
@@ -168,48 +165,24 @@ export class EditCopilotBYOKProviderDialog extends React.Component<
       : 'Add custom provider'
 
     return (
-      <>
-        <Dialog
-          id="edit-copilot-byok-provider"
-          title={title}
-          onSubmit={this.onSubmit}
-          onDismissed={this.props.onDismissed}
-        >
-          {this.state.errorMessage !== null && (
-            <DialogError>{this.state.errorMessage}</DialogError>
-          )}
-          <DialogContent>
-            {this.renderProviderSection()}
-            {this.renderAuthenticationSection(isEditing)}
-            {this.renderModelsSection()}
-          </DialogContent>
-          <DialogFooter>
-            <OkCancelButtonGroup okButtonText={isEditing ? 'Save' : 'Add'} />
-          </DialogFooter>
-        </Dialog>
-        {this.renderModelDialog()}
-      </>
-    )
-  }
-
-  private renderModelDialog() {
-    const editing = this.state.editingModel
-    if (editing === null) {
-      return null
-    }
-    const model =
-      editing.index !== null ? this.state.models[editing.index] : null
-    const otherModelIds = this.state.models
-      .filter((_, i) => i !== editing.index)
-      .map(m => m.id.trim())
-      .filter(id => id !== '')
-    return (
-      <EditCopilotBYOKModelDialog
-        model={model}
-        otherModelIds={otherModelIds}
-        onSave={this.onModelDialogSaved}
-        onDismissed={this.onModelDialogDismissed}
-      />
+      <Dialog
+        id="edit-copilot-byok-provider"
+        title={title}
+        onSubmit={this.onSubmit}
+        onDismissed={this.props.onDismissed}
+      >
+        {this.state.errorMessage !== null && (
+          <DialogError>{this.state.errorMessage}</DialogError>
+        )}
+        <DialogContent>
+          {this.renderProviderSection()}
+          {this.renderAuthenticationSection(isEditing)}
+          {this.renderModelsSection()}
+        </DialogContent>
+        <DialogFooter>
+          <OkCancelButtonGroup okButtonText={isEditing ? 'Save' : 'Add'} />
+        </DialogFooter>
+      </Dialog>
     )
   }
 
@@ -217,58 +190,70 @@ export class EditCopilotBYOKProviderDialog extends React.Component<
     return (
       <fieldset className="copilot-byok-fieldset">
         <legend>Provider</legend>
-        <TextBox
-          label="Name"
-          value={this.state.name}
-          onValueChanged={this.onNameChanged}
-          placeholder="My provider"
-          required={true}
-          autoFocus={true}
-        />
-        <Select
-          label="Type"
-          value={this.state.type}
-          onChange={this.onTypeChanged}
-        >
-          <option value="openai">OpenAI / OpenAI-compatible</option>
-          <option value="azure">Azure</option>
-          <option value="anthropic">Anthropic</option>
-        </Select>
-        <TextBox
-          label={__DARWIN__ ? 'Base URL' : 'Base URL'}
-          value={this.state.baseUrl}
-          onValueChanged={this.onBaseUrlChanged}
-          placeholder={getBaseUrlPlaceholder(this.state.type)}
-          required={true}
-        />
-        {this.state.type === 'openai' && (
+        <Row>
+          <TextBox
+            label="Name"
+            value={this.state.name}
+            onValueChanged={this.onNameChanged}
+            placeholder="My provider"
+            required={true}
+            autoFocus={true}
+          />
+        </Row>
+        <Row>
           <Select
-            label={__DARWIN__ ? 'API Format' : 'API format'}
-            value={this.state.wireApi}
-            onChange={this.onWireApiChanged}
+            label="Type"
+            value={this.state.type}
+            onChange={this.onTypeChanged}
           >
-            <option value="completions">Chat completions (default)</option>
-            <option value="responses">Responses (GPT-5 series)</option>
+            <option value="openai">OpenAI / OpenAI-compatible</option>
+            <option value="azure">Azure</option>
+            <option value="anthropic">Anthropic</option>
           </Select>
+        </Row>
+        <Row>
+          <TextBox
+            label={__DARWIN__ ? 'Base URL' : 'Base URL'}
+            value={this.state.baseUrl}
+            onValueChanged={this.onBaseUrlChanged}
+            placeholder={getBaseUrlPlaceholder(this.state.type)}
+            required={true}
+          />
+        </Row>
+        {this.state.type === 'openai' && (
+          <Row>
+            <Select
+              label={__DARWIN__ ? 'API Format' : 'API format'}
+              value={this.state.wireApi}
+              onChange={this.onWireApiChanged}
+            >
+              <option value="completions">Chat completions (default)</option>
+              <option value="responses">Responses (GPT-5 series)</option>
+            </Select>
+          </Row>
         )}
         {this.state.type === 'azure' && (
-          <TextBox
-            label={__DARWIN__ ? 'Azure API Version' : 'Azure API version'}
-            value={this.state.azureApiVersion}
-            onValueChanged={this.onAzureApiVersionChanged}
-            placeholder="2024-10-21"
-          />
+          <Row>
+            <TextBox
+              label={__DARWIN__ ? 'Azure API Version' : 'Azure API version'}
+              value={this.state.azureApiVersion}
+              onValueChanged={this.onAzureApiVersionChanged}
+              placeholder="2024-10-21"
+            />
+          </Row>
         )}
-        <TextBox
-          label={
-            __DARWIN__
-              ? 'Request Timeout (seconds)'
-              : 'Request timeout (seconds)'
-          }
-          value={this.state.requestTimeoutSeconds}
-          onValueChanged={this.onRequestTimeoutChanged}
-          placeholder="60"
-        />
+        <Row>
+          <TextBox
+            label={
+              __DARWIN__
+                ? 'Request Timeout (seconds)'
+                : 'Request timeout (seconds)'
+            }
+            value={this.state.requestTimeoutSeconds}
+            onValueChanged={this.onRequestTimeoutChanged}
+            placeholder="60"
+          />
+        </Row>
       </fieldset>
     )
   }
@@ -277,25 +262,29 @@ export class EditCopilotBYOKProviderDialog extends React.Component<
     return (
       <fieldset className="copilot-byok-fieldset">
         <legend>Authentication</legend>
-        <Select
-          label={__DARWIN__ ? 'Authentication' : 'Authentication'}
-          value={this.state.authKind}
-          onChange={this.onAuthKindChanged}
-        >
-          <option value="apiKey">API key</option>
-          <option value="bearer">Bearer token</option>
-          <option value="none">None (local provider)</option>
-        </Select>
+        <Row>
+          <Select
+            label={__DARWIN__ ? 'Authentication' : 'Authentication'}
+            value={this.state.authKind}
+            onChange={this.onAuthKindChanged}
+          >
+            <option value="apiKey">API key</option>
+            <option value="bearer">Bearer token</option>
+            <option value="none">None (local provider)</option>
+          </Select>
+        </Row>
         {this.state.authKind !== 'none' && (
-          <TextBox
-            label={
-              this.state.authKind === 'bearer' ? 'Bearer token' : 'API key'
-            }
-            type="password"
-            value={this.state.secret}
-            onValueChanged={this.onSecretChanged}
-            placeholder={isEditing ? '(unchanged)' : ''}
-          />
+          <Row>
+            <TextBox
+              label={
+                this.state.authKind === 'bearer' ? 'Bearer token' : 'API key'
+              }
+              type="password"
+              value={this.state.secret}
+              onValueChanged={this.onSecretChanged}
+              placeholder={isEditing ? '(unchanged)' : ''}
+            />
+          </Row>
         )}
         {this.state.authKind === 'none' && (
           <p className="copilot-byok-section-hint">
@@ -368,35 +357,41 @@ export class EditCopilotBYOKProviderDialog extends React.Component<
     this.setState({ requestTimeoutSeconds })
 
   private onAddModel = () => {
-    this.setState({ editingModel: { index: null } })
+    this.openModelDialog(null)
   }
 
   private onEditModel = (index: number) => {
-    this.setState({ editingModel: { index } })
+    this.openModelDialog(index)
+  }
+
+  private openModelDialog(index: number | null) {
+    const model = index !== null ? this.state.models[index] : null
+    const otherModelIds = this.state.models
+      .filter((_, i) => i !== index)
+      .map(m => m.id.trim())
+      .filter(id => id !== '')
+    this.props.dispatcher.showPopup({
+      type: PopupType.EditCopilotBYOKModel,
+      model,
+      otherModelIds,
+      onSave: saved => this.onModelSaved(index, saved),
+    })
+  }
+
+  private onModelSaved = (index: number | null, model: IBYOKModel) => {
+    this.setState(state => {
+      const models =
+        index !== null
+          ? state.models.map((m, i) => (i === index ? model : m))
+          : [...state.models, model]
+      return { models }
+    })
   }
 
   private onRemoveModel = (index: number) => {
     this.setState(state => ({
       models: state.models.filter((_, i) => i !== index),
     }))
-  }
-
-  private onModelDialogDismissed = () => {
-    this.setState({ editingModel: null })
-  }
-
-  private onModelDialogSaved = (model: IBYOKModel) => {
-    this.setState(state => {
-      const editing = state.editingModel
-      if (editing === null) {
-        return null
-      }
-      const models =
-        editing.index !== null
-          ? state.models.map((m, i) => (i === editing.index ? model : m))
-          : [...state.models, model]
-      return { models, editingModel: null }
-    })
   }
 
   private onSubmit = () => {

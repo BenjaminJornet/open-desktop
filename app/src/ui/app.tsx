@@ -72,6 +72,7 @@ import { AppMenuBar } from './app-menu'
 import { UpdateAvailable, renderBanner } from './banners'
 import { Preferences } from './preferences'
 import { EditCopilotBYOKProviderDialog } from './copilot/edit-byok-provider-dialog'
+import { EditCopilotBYOKModelDialog } from './copilot/edit-byok-model-dialog'
 import { ConfirmDeleteCopilotBYOKProviderDialog } from './copilot/confirm-delete-byok-provider-dialog'
 import type { IBYOKProvider } from '../lib/copilot/byok'
 import { OpenWithExternalEditor } from './open-with-external-editor/open-with-external-editor'
@@ -1723,8 +1724,19 @@ export class App extends React.Component<IAppProps, IAppState> {
         return (
           <EditCopilotBYOKProviderDialog
             key="edit-copilot-byok-provider"
+            dispatcher={this.props.dispatcher}
             provider={popup.provider}
             onSave={this.onSaveCopilotBYOKProvider}
+            onDismissed={onPopupDismissedFn}
+          />
+        )
+      case PopupType.EditCopilotBYOKModel:
+        return (
+          <EditCopilotBYOKModelDialog
+            key="edit-copilot-byok-model"
+            model={popup.model}
+            otherModelIds={popup.otherModelIds}
+            onSave={popup.onSave}
             onDismissed={onPopupDismissedFn}
           />
         )

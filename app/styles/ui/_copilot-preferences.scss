@@ -189,7 +189,7 @@
   }
 
   .copilot-byok-field-hint {
-    margin: calc(var(--spacing-half) * -1) 0 var(--spacing-half);
+    margin: 0;
     color: var(--text-secondary-color);
     font-size: var(--font-size-sm);
 
@@ -208,8 +208,20 @@
 }
 
 #edit-copilot-byok-model {
+  // Stack the field, hint, etc. vertically inside each Row instead of
+  // laying them out side-by-side.
+  .copilot-byok-field {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--spacing-half);
+
+    > *:not(:last-child) {
+      margin-right: 0;
+    }
+  }
+
   .copilot-byok-field-hint {
-    margin: calc(var(--spacing-half) * -1) 0 var(--spacing);
+    margin: 0;
     color: var(--text-secondary-color);
     font-size: var(--font-size-sm);
 

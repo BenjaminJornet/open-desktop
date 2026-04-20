@@ -26,7 +26,7 @@ import { IAPIComment } from '../lib/api'
 import { ISecretScanResult } from '../ui/secret-scanning/push-protection-error-dialog'
 import { BypassReasonType } from '../ui/secret-scanning/bypass-push-protection-dialog'
 import { TerminalOutput, TerminalOutputListener } from '../lib/git'
-import type { IBYOKProvider } from '../lib/copilot/byok'
+import type { IBYOKModel, IBYOKProvider } from '../lib/copilot/byok'
 
 export enum PopupType {
   RenameBranch = 'RenameBranch',
@@ -109,6 +109,7 @@ export enum PopupType {
   HookFailed = 'HookFailed',
   CommitProgress = 'CommitProgress',
   EditCopilotBYOKProvider = 'EditCopilotBYOKProvider',
+  EditCopilotBYOKModel = 'EditCopilotBYOKModel',
   ConfirmDeleteCopilotBYOKProvider = 'ConfirmDeleteCopilotBYOKProvider',
 }
 
@@ -150,6 +151,12 @@ export type PopupDetail =
   | {
       type: PopupType.EditCopilotBYOKProvider
       provider: IBYOKProvider | null
+    }
+  | {
+      type: PopupType.EditCopilotBYOKModel
+      model: IBYOKModel | null
+      otherModelIds: ReadonlyArray<string>
+      onSave: (model: IBYOKModel) => void
     }
   | {
       type: PopupType.ConfirmDeleteCopilotBYOKProvider
