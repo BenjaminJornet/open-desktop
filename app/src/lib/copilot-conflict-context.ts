@@ -1,7 +1,6 @@
 import { readFile } from 'fs/promises'
 import { join, extname } from 'path'
 
-import { MergeConflictState } from './app-state'
 import { Repository } from '../models/repository'
 import { PullRequest } from '../models/pull-request'
 import { getMergeBase } from './git/merge'
@@ -27,8 +26,6 @@ export interface IFileConflictContext {
   readonly path: string
   /** All conflict hunks in the file */
   readonly hunks: ReadonlyArray<IConflictHunk>
-  /** File extension (e.g., 'ts', 'tsx', 'js') for language hinting */
-  readonly extension: string
 }
 
 /** Commit context relevant to the merge conflict */
@@ -45,22 +42,17 @@ export interface IConflictCommitContext {
   }>
 }
 
-/** PR context when the merge involves a pull request */
-export interface IConflictPullRequestContext {
-  /** PR number */
-  readonly number: number
-  /** PR title */
-  readonly title: string
-  /** PR body/description (markdown) */
-  readonly body: string
-}
-
-/** Full conflict context for a merge operation */
+/**
+ * Full conflict context for a merge, rebase, or cherry-pick operation.
+ *
+ * Labels are used instead of branch names because for rebase and cherry-pick
+ * the "theirs" side is a specific commit, not a branch.
+ */
 export interface ICopilotConflictContext {
-  /** Name of the current branch (ours) */
-  readonly ourBranch: string
-  /** Name of the incoming branch (theirs) */
-  readonly theirBranch: string
+  /** Label for the current side (e.g., branch name or "main (rebase target)") */
+  readonly ourLabel: string
+  /** Label for the incoming side (e.g., branch name or "abc1234: Add UUID support") */
+  readonly theirLabel: string
   /** All conflicted files with their conflict data */
   readonly files: ReadonlyArray<IFileConflictContext>
 }
@@ -189,8 +181,12 @@ export async function gatherCommitContext(
     }
 
     const [ourRawCommits, theirRawCommits] = await Promise.all([
-      getCommits(repository, `${mergeBase}..${ourBranch}`, limit),
-      getCommits(repository, `${mergeBase}..${theirBranch}`, limit),
+      getCommits(repository, `${mergeBase}..${ourBranch}`, limit, undefined, [
+        '--first-parent',
+      ]),
+      getCommits(repository, `${mergeBase}..${theirBranch}`, limit, undefined, [
+        '--first-parent',
+      ]),
     ])
 
     return {
@@ -209,82 +205,25 @@ export async function gatherCommitContext(
 }
 
 /**
- * Extract PR context when the merge involves a pull request.
- *
- * Takes the current pull request from Desktop's branch state (already
- * cached locally in Dexie DB — no API call needed).
- *
- * @returns PR context or null if no associated PR
- */
-export function gatherPullRequestContext(
-  currentPullRequest: PullRequest | null
-): IConflictPullRequestContext | null {
-  if (currentPullRequest === null) {
-    return null
-  }
-
-  return {
-    number: currentPullRequest.pullRequestNumber,
-    title: currentPullRequest.title,
-    body: currentPullRequest.body,
-  }
-}
-
-/**
- * Extract the incoming branch name from the `.git/MERGE_MSG` file.
- *
- * The MERGE_MSG file is created by git during a merge and typically
- * contains a message like "Merge branch 'feature' into main".
- *
- * @returns The extracted branch name, or `null` if the file cannot be
- *          read or the branch name cannot be determined
- */
-async function readTheirBranchFromMergeMsg(
-  workingDirectory: string
-): Promise<string | null> {
-  try {
-    const mergeMsgPath = join(workingDirectory, '.git', 'MERGE_MSG')
-    const content = await readFile(mergeMsgPath, 'utf8')
-
-    // Match patterns like "Merge branch 'feature'" or
-    // "Merge branch 'feature' into main"
-    const match = content.match(/^Merge branch '([^']+)'/)
-    if (match) {
-      return match[1]
-    }
-
-    // Match patterns like "Merge remote-tracking branch 'origin/feature'"
-    const remoteMatch = content.match(/^Merge remote-tracking branch '([^']+)'/)
-    if (remoteMatch) {
-      return remoteMatch[1]
-    }
-
-    return null
-  } catch {
-    return null
-  }
-}
-
-/**
- * Build the full conflict context for a merge operation.
+ * Build the full conflict context for a merge, rebase, or cherry-pick.
  *
  * Reads each conflicted file from disk, extracts conflict hunks, and
  * assembles the context into a structured format suitable for sending
  * to the Copilot SDK.
  *
- * @param conflictState - The current merge conflict state from the app store
+ * @param ourLabel - Label for the current side (e.g., branch name)
+ * @param theirLabel - Label for the incoming side (e.g., branch name
+ *                     or commit summary for rebase/cherry-pick)
  * @param workingDirectory - Absolute path to the repository working directory
  * @param files - List of conflicted file paths (repository-relative)
  * @returns The assembled conflict context
  */
 export async function buildConflictContext(
-  conflictState: MergeConflictState,
+  ourLabel: string,
+  theirLabel: string,
   workingDirectory: string,
   files: ReadonlyArray<{ readonly path: string }>
 ): Promise<ICopilotConflictContext> {
-  const theirBranch =
-    (await readTheirBranchFromMergeMsg(workingDirectory)) ?? 'incoming branch'
-
   const fileContexts: Array<IFileConflictContext> = []
 
   for (const file of files) {
@@ -306,17 +245,15 @@ export async function buildConflictContext(
       continue
     }
 
-    const ext = extname(file.path)
     fileContexts.push({
       path: file.path,
       hunks,
-      extension: ext.startsWith('.') ? ext.slice(1) : ext,
     })
   }
 
   return {
-    ourBranch: conflictState.currentBranch,
-    theirBranch,
+    ourLabel,
+    theirLabel,
     files: fileContexts,
   }
 }
@@ -326,27 +263,29 @@ export async function buildConflictContext(
  * string suitable for sending to the Copilot SDK as a user message.
  *
  * @param context - The structured conflict context to format
+ * @param commitContext - Optional commit history from both sides
+ * @param pullRequest - Optional pull request associated with the merge
  * @returns A formatted string describing the merge conflicts
  */
 export function formatConflictContextForPrompt(
   context: ICopilotConflictContext,
   commitContext?: IConflictCommitContext | null,
-  pullRequestContext?: IConflictPullRequestContext | null
+  pullRequest?: PullRequest | null
 ): string {
   const parts: Array<string> = []
 
   parts.push(
-    `Merge conflict between branch "${context.ourBranch}" (ours) and "${context.theirBranch}" (theirs).`
+    `Merge conflict between "${context.ourLabel}" (ours) and "${context.theirLabel}" (theirs).`
   )
   parts.push('')
 
-  if (pullRequestContext) {
+  if (pullRequest) {
     parts.push('## Pull Request Context')
-    parts.push(`PR #${pullRequestContext.number}: ${pullRequestContext.title}`)
+    parts.push(`PR #${pullRequest.pullRequestNumber}: ${pullRequest.title}`)
     parts.push('')
-    if (pullRequestContext.body) {
+    if (pullRequest.body) {
       parts.push('Description:')
-      parts.push(pullRequestContext.body)
+      parts.push(pullRequest.body)
       parts.push('')
     }
   }
@@ -356,7 +295,7 @@ export function formatConflictContextForPrompt(
     parts.push('')
 
     if (commitContext.ourCommits.length > 0) {
-      parts.push(`### Our branch (${context.ourBranch}) commits:`)
+      parts.push(`### Ours (${context.ourLabel}) commits:`)
       for (const commit of commitContext.ourCommits) {
         parts.push(`- ${commit.sha}: ${commit.summary}`)
       }
@@ -364,7 +303,7 @@ export function formatConflictContextForPrompt(
     }
 
     if (commitContext.theirCommits.length > 0) {
-      parts.push(`### Their branch (${context.theirBranch}) commits:`)
+      parts.push(`### Theirs (${context.theirLabel}) commits:`)
       for (const commit of commitContext.theirCommits) {
         parts.push(`- ${commit.sha}: ${commit.summary}`)
       }
@@ -373,10 +312,8 @@ export function formatConflictContextForPrompt(
   }
 
   for (const file of context.files) {
+    const lang = getLangFromPath(file.path)
     parts.push(`## File: ${file.path}`)
-    if (file.extension) {
-      parts.push(`Language hint: ${file.extension}`)
-    }
     parts.push('')
 
     for (let i = 0; i < file.hunks.length; i++) {
@@ -386,35 +323,35 @@ export function formatConflictContextForPrompt(
 
       if (hunk.contextBefore) {
         parts.push('Context before:')
-        parts.push('```')
+        parts.push(`\`\`\`${lang}`)
         parts.push(hunk.contextBefore)
         parts.push('```')
         parts.push('')
       }
 
       parts.push('Ours (current branch):')
-      parts.push('```')
+      parts.push(`\`\`\`${lang}`)
       parts.push(hunk.oursContent)
       parts.push('```')
       parts.push('')
 
       if (hunk.baseContent !== null) {
         parts.push('Base (common ancestor):')
-        parts.push('```')
+        parts.push(`\`\`\`${lang}`)
         parts.push(hunk.baseContent)
         parts.push('```')
         parts.push('')
       }
 
       parts.push('Theirs (incoming branch):')
-      parts.push('```')
+      parts.push(`\`\`\`${lang}`)
       parts.push(hunk.theirsContent)
       parts.push('```')
       parts.push('')
 
       if (hunk.contextAfter) {
         parts.push('Context after:')
-        parts.push('```')
+        parts.push(`\`\`\`${lang}`)
         parts.push(hunk.contextAfter)
         parts.push('```')
         parts.push('')
@@ -423,4 +360,10 @@ export function formatConflictContextForPrompt(
   }
 
   return parts.join('\n')
+}
+
+/** Extract a language identifier from a file path for use in code fences. */
+function getLangFromPath(filePath: string): string {
+  const ext = extname(filePath)
+  return ext.startsWith('.') ? ext.slice(1) : ''
 }

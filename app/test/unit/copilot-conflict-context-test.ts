@@ -4,10 +4,8 @@ import assert from 'node:assert'
 import {
   extractConflictHunks,
   formatConflictContextForPrompt,
-  gatherPullRequestContext,
   ICopilotConflictContext,
   IConflictCommitContext,
-  IConflictPullRequestContext,
 } from '../../src/lib/copilot-conflict-context'
 import { PullRequest, PullRequestRef } from '../../src/models/pull-request'
 import { gitHubRepoFixture } from '../helpers/github-repo-builder'
@@ -296,12 +294,11 @@ describe('copilot-conflict-context', () => {
   describe('formatConflictContextForPrompt', () => {
     it('formats a single file with one conflict', () => {
       const context: ICopilotConflictContext = {
-        ourBranch: 'main',
-        theirBranch: 'feature',
+        ourLabel: 'main',
+        theirLabel: 'feature',
         files: [
           {
             path: 'src/app.ts',
-            extension: 'ts',
             hunks: [
               {
                 oursContent: 'const x = 1',
@@ -317,10 +314,9 @@ describe('copilot-conflict-context', () => {
 
       const result = formatConflictContextForPrompt(context)
 
-      assert.ok(result.includes('branch "main" (ours)'))
+      assert.ok(result.includes('"main" (ours)'))
       assert.ok(result.includes('"feature" (theirs)'))
       assert.ok(result.includes('## File: src/app.ts'))
-      assert.ok(result.includes('Language hint: ts'))
       assert.ok(result.includes('Conflict 1 of 1'))
       assert.ok(result.includes('const x = 1'))
       assert.ok(result.includes('const x = 2'))
@@ -330,14 +326,39 @@ describe('copilot-conflict-context', () => {
       assert.ok(!result.includes('Base (common ancestor)'))
     })
 
+    it('uses language from file extension in code fences', () => {
+      const context: ICopilotConflictContext = {
+        ourLabel: 'main',
+        theirLabel: 'feature',
+        files: [
+          {
+            path: 'src/app.ts',
+            hunks: [
+              {
+                oursContent: 'ours',
+                theirsContent: 'theirs',
+                baseContent: null,
+                contextBefore: '',
+                contextAfter: '',
+              },
+            ],
+          },
+        ],
+      }
+
+      const result = formatConflictContextForPrompt(context)
+
+      assert.ok(result.includes('```ts'))
+      assert.ok(!result.includes('Language hint'))
+    })
+
     it('formats multiple files with multiple conflicts', () => {
       const context: ICopilotConflictContext = {
-        ourBranch: 'main',
-        theirBranch: 'feature',
+        ourLabel: 'main',
+        theirLabel: 'feature',
         files: [
           {
             path: 'src/a.ts',
-            extension: 'ts',
             hunks: [
               {
                 oursContent: 'a-ours-1',
@@ -357,7 +378,6 @@ describe('copilot-conflict-context', () => {
           },
           {
             path: 'src/b.tsx',
-            extension: 'tsx',
             hunks: [
               {
                 oursContent: 'b-ours',
@@ -382,10 +402,10 @@ describe('copilot-conflict-context', () => {
       assert.ok(result.includes('b-ours'))
     })
 
-    it('includes branch names in the header', () => {
+    it('includes labels in the header', () => {
       const context: ICopilotConflictContext = {
-        ourBranch: 'release/v2.0',
-        theirBranch: 'hotfix/crash-fix',
+        ourLabel: 'release/v2.0',
+        theirLabel: 'hotfix/crash-fix',
         files: [],
       }
 
@@ -397,12 +417,11 @@ describe('copilot-conflict-context', () => {
 
     it('includes base content for diff3 conflicts', () => {
       const context: ICopilotConflictContext = {
-        ourBranch: 'main',
-        theirBranch: 'feature',
+        ourLabel: 'main',
+        theirLabel: 'feature',
         files: [
           {
             path: 'file.ts',
-            extension: 'ts',
             hunks: [
               {
                 oursContent: 'ours',
@@ -422,14 +441,13 @@ describe('copilot-conflict-context', () => {
       assert.ok(result.includes('original'))
     })
 
-    it('omits language hint when extension is empty', () => {
+    it('uses empty language for extensionless files', () => {
       const context: ICopilotConflictContext = {
-        ourBranch: 'main',
-        theirBranch: 'feature',
+        ourLabel: 'main',
+        theirLabel: 'feature',
         files: [
           {
             path: 'Makefile',
-            extension: '',
             hunks: [
               {
                 oursContent: 'ours',
@@ -446,17 +464,17 @@ describe('copilot-conflict-context', () => {
       const result = formatConflictContextForPrompt(context)
 
       assert.ok(result.includes('## File: Makefile'))
-      assert.ok(!result.includes('Language hint'))
+      // Code fences should just be ``` with no language
+      assert.ok(result.includes('```\n'))
     })
 
     it('omits context before/after blocks when empty', () => {
       const context: ICopilotConflictContext = {
-        ourBranch: 'main',
-        theirBranch: 'feature',
+        ourLabel: 'main',
+        theirLabel: 'feature',
         files: [
           {
             path: 'file.ts',
-            extension: 'ts',
             hunks: [
               {
                 oursContent: 'ours',
@@ -477,45 +495,13 @@ describe('copilot-conflict-context', () => {
     })
   })
 
-  describe('gatherPullRequestContext', () => {
-    it('returns structured context from a PullRequest', () => {
-      const ghRepo = gitHubRepoFixture({ owner: 'owner', name: 'repo' })
-      const pr = new PullRequest(
-        new Date(),
-        'Add UUID support',
-        42,
-        new PullRequestRef('refs/heads/feature', 'aaa', ghRepo),
-        new PullRequestRef('refs/heads/main', 'bbb', ghRepo),
-        'author',
-        false,
-        'This PR adds UUID support for user identifiers.'
-      )
-
-      const result = gatherPullRequestContext(pr)
-
-      assert.notEqual(result, null)
-      assert.equal(result!.number, 42)
-      assert.equal(result!.title, 'Add UUID support')
-      assert.equal(
-        result!.body,
-        'This PR adds UUID support for user identifiers.'
-      )
-    })
-
-    it('returns null when no pull request is provided', () => {
-      const result = gatherPullRequestContext(null)
-      assert.equal(result, null)
-    })
-  })
-
   describe('formatConflictContextForPrompt with enrichment', () => {
     const baseContext: ICopilotConflictContext = {
-      ourBranch: 'main',
-      theirBranch: 'feature/uuids',
+      ourLabel: 'main',
+      theirLabel: 'feature/uuids',
       files: [
         {
           path: 'src/user.ts',
-          extension: 'ts',
           hunks: [
             {
               oursContent: 'id: number',
@@ -527,6 +513,24 @@ describe('copilot-conflict-context', () => {
           ],
         },
       ],
+    }
+
+    function makePullRequest(
+      prNumber: number,
+      title: string,
+      body: string
+    ): PullRequest {
+      const ghRepo = gitHubRepoFixture({ owner: 'owner', name: 'repo' })
+      return new PullRequest(
+        new Date(),
+        title,
+        prNumber,
+        new PullRequestRef('refs/heads/feature', 'aaa', ghRepo),
+        new PullRequestRef('refs/heads/main', 'bbb', ghRepo),
+        'author',
+        false,
+        body
+      )
     }
 
     it('includes commit context in output', () => {
@@ -545,23 +549,23 @@ describe('copilot-conflict-context', () => {
       )
 
       assert.ok(result.includes('## Recent Commits'))
-      assert.ok(result.includes('### Our branch (main) commits:'))
+      assert.ok(result.includes('### Ours (main) commits:'))
       assert.ok(result.includes('- abc1234: Add numeric IDs'))
       assert.ok(result.includes('- def5678: Update schema'))
-      assert.ok(result.includes('### Their branch (feature/uuids) commits:'))
+      assert.ok(result.includes('### Theirs (feature/uuids) commits:'))
       assert.ok(result.includes('- 111aaaa: Add UUID support'))
       // File content should still be present
       assert.ok(result.includes('## File: src/user.ts'))
     })
 
     it('includes PR context in output', () => {
-      const prCtx: IConflictPullRequestContext = {
-        number: 99,
-        title: 'Migrate to UUIDs',
-        body: 'This migrates all user IDs from integers to UUIDs.',
-      }
+      const pr = makePullRequest(
+        99,
+        'Migrate to UUIDs',
+        'This migrates all user IDs from integers to UUIDs.'
+      )
 
-      const result = formatConflictContextForPrompt(baseContext, null, prCtx)
+      const result = formatConflictContextForPrompt(baseContext, null, pr)
 
       assert.ok(result.includes('## Pull Request Context'))
       assert.ok(result.includes('PR #99: Migrate to UUIDs'))
@@ -580,17 +584,9 @@ describe('copilot-conflict-context', () => {
         ourCommits: [{ sha: 'aaa1111', summary: 'Fix type error' }],
         theirCommits: [{ sha: 'bbb2222', summary: 'Add UUIDs' }],
       }
-      const prCtx: IConflictPullRequestContext = {
-        number: 50,
-        title: 'UUID migration',
-        body: 'Migrate IDs to UUIDs.',
-      }
+      const pr = makePullRequest(50, 'UUID migration', 'Migrate IDs to UUIDs.')
 
-      const result = formatConflictContextForPrompt(
-        baseContext,
-        commitCtx,
-        prCtx
-      )
+      const result = formatConflictContextForPrompt(baseContext, commitCtx, pr)
 
       // PR section comes before commits
       const prIdx = result.indexOf('## Pull Request Context')
@@ -632,13 +628,9 @@ describe('copilot-conflict-context', () => {
     })
 
     it('omits PR description section when body is empty', () => {
-      const prCtx: IConflictPullRequestContext = {
-        number: 10,
-        title: 'Quick fix',
-        body: '',
-      }
+      const pr = makePullRequest(10, 'Quick fix', '')
 
-      const result = formatConflictContextForPrompt(baseContext, null, prCtx)
+      const result = formatConflictContextForPrompt(baseContext, null, pr)
 
       assert.ok(result.includes('PR #10: Quick fix'))
       assert.ok(!result.includes('Description:'))
@@ -657,8 +649,8 @@ describe('copilot-conflict-context', () => {
       )
 
       assert.ok(result.includes('## Recent Commits'))
-      assert.ok(!result.includes('### Our branch'))
-      assert.ok(!result.includes('### Their branch'))
+      assert.ok(!result.includes('### Ours'))
+      assert.ok(!result.includes('### Theirs'))
     })
   })
 })
