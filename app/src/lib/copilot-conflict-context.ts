@@ -1,10 +1,11 @@
 import { readFile } from 'fs/promises'
-import { extname, resolve } from 'path'
+import { extname } from 'path'
 
 import { Repository } from '../models/repository'
 import { PullRequest } from '../models/pull-request'
 import { getMergeBase } from './git/merge'
 import { getCommits } from './git/log'
+import { resolveWithin } from './path'
 
 /** A single conflict hunk extracted from a file with conflict markers */
 export interface IConflictHunk {
@@ -254,13 +255,11 @@ export async function buildConflictContext(
   files: ReadonlyArray<{ readonly path: string }>
 ): Promise<ICopilotConflictContext> {
   const fileContexts: Array<IFileConflictContext> = []
-  const resolvedDir = resolve(workingDirectory)
 
   for (const file of files) {
-    const absolutePath = resolve(resolvedDir, file.path)
-
-    // Guard against path traversal — resolved path must stay inside the repo
-    if (!absolutePath.startsWith(resolvedDir + '/')) {
+    // Guard against path traversal and symlink escapes (cross-platform)
+    const absolutePath = await resolveWithin(workingDirectory, file.path)
+    if (absolutePath === null) {
       continue
     }
 
