@@ -45,6 +45,12 @@ export interface ICopilotConflictContext {
   readonly files: ReadonlyArray<IFileConflictContext>
 }
 
+/** Commit context from both sides of a merge conflict */
+export interface IConflictCommitContext {
+  readonly ourCommits: ReadonlyArray<Commit>
+  readonly theirCommits: ReadonlyArray<Commit>
+}
+
 const oursMarker = /^<{7}(?:\s|$)/
 const baseMarker = /^\|{7}(?:\s|$)/
 const separatorMarker = /^={7}$/
@@ -176,12 +182,6 @@ export function extractConflictHunks(
   return hunks
 }
 
-/** Commit context from both sides of a merge conflict */
-export interface IConflictCommitContext {
-  readonly ourCommits: ReadonlyArray<Commit>
-  readonly theirCommits: ReadonlyArray<Commit>
-}
-
 /**
  * Gather commit messages from both sides of the merge to provide intent
  * context for conflict resolution.
@@ -238,57 +238,49 @@ export async function buildConflictContext(
   workingDirectory: string,
   files: ReadonlyArray<{ readonly path: string }>
 ): Promise<ICopilotConflictContext> {
-  const fileContexts: Array<IFileConflictContext> = []
-
-  for (const file of files) {
-    // Guard against path traversal and symlink escapes (cross-platform)
-    let absolutePath: string | null
-    try {
-      absolutePath = await resolveWithin(workingDirectory, file.path)
-    } catch {
-      continue
-    }
-    if (absolutePath === null) {
-      continue
-    }
-
-    // Check file size before reading to avoid loading huge files into memory
-    try {
-      const fileStat = await stat(absolutePath)
-      if (fileStat.size > MAX_CONFLICT_FILE_SIZE) {
-        continue
+  const results = await Promise.all(
+    files.map(async (file): Promise<IFileConflictContext | null> => {
+      // Guard against path traversal and symlink escapes (cross-platform)
+      let absolutePath: string | null
+      try {
+        absolutePath = await resolveWithin(workingDirectory, file.path)
+      } catch {
+        return null
       }
-    } catch {
-      continue
-    }
+      if (absolutePath === null) {
+        return null
+      }
 
-    let content: string
+      // Check file size before reading to avoid loading huge files into memory
+      try {
+        const fileStat = await stat(absolutePath)
+        if (fileStat.size > MAX_CONFLICT_FILE_SIZE) {
+          return null
+        }
+      } catch {
+        return null
+      }
 
-    try {
-      content = await readFile(absolutePath, 'utf8')
-    } catch {
-      // Skip files that can't be read as UTF-8 (e.g. binary files)
-      continue
-    }
+      let content: string
+      try {
+        content = await readFile(absolutePath, 'utf8')
+      } catch {
+        return null
+      }
 
-    const hunks = extractConflictHunks(content)
+      const hunks = extractConflictHunks(content)
+      if (hunks.length === 0) {
+        return null
+      }
 
-    // Skip files with no conflict markers (binary files reported as
-    // conflicted by git but without textual markers)
-    if (hunks.length === 0) {
-      continue
-    }
-
-    fileContexts.push({
-      path: file.path,
-      hunks,
+      return { path: file.path, hunks }
     })
-  }
+  )
 
   return {
     ourLabel,
     theirLabel,
-    files: fileContexts,
+    files: results.filter((f): f is IFileConflictContext => f !== null),
   }
 }
 
