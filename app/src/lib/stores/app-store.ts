@@ -5784,8 +5784,6 @@ export class AppStore extends TypedBaseStore<IAppState> {
 
       const currentPullRequest = state.branchesState.currentPullRequest ?? null
 
-      this.statsStore.recordCopilotConflictResolutionInvoked()
-
       const result = await this.copilotStore.resolveConflicts(
         context,
         commitContext,
@@ -5794,14 +5792,8 @@ export class AppStore extends TypedBaseStore<IAppState> {
         onProgress
       )
 
-      this.statsStore.recordCopilotConflictResolutionSucceeded()
-      this.statsStore.recordCopilotConflictResolutionFilesResolved(
-        result.resolutions.length
-      )
-
       return result
     } catch (e) {
-      this.statsStore.recordCopilotConflictResolutionFailed()
       log.warn('AppStore: Copilot conflict resolution failed', e)
       return null
     }
