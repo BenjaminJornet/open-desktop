@@ -28,15 +28,25 @@ function isRecord(value: unknown): value is Readonly<Record<string, unknown>> {
 export function parseCopilotConflictResolution(
   content: string
 ): ICopilotConflictResolutionResponse {
-  // Extract JSON from optional markdown code fences. Use a greedy match
-  // for the closing fence so that triple backticks inside the JSON
-  // (e.g., resolvedContent containing code blocks) don't truncate early.
-  const jsonMatch =
+  // Build a list of JSON candidates from the response, trying different
+  // extraction strategies. Non-greedy handles the common single-block and
+  // multi-block cases. Greedy handles triple backticks embedded inside JSON
+  // content. Raw content handles responses with no fences at all.
+  const nonGreedy =
+    content.match(/```json\s*([\s\S]*?)```/) ||
+    content.match(/```\s*([\s\S]*?)```/)
+  const greedy =
     content.match(/```json\s*([\s\S]*)```/) ||
     content.match(/```\s*([\s\S]*)```/)
-  const candidates = jsonMatch
-    ? [jsonMatch[1].trim(), content.trim()]
-    : [content.trim()]
+
+  const candidates: Array<string> = []
+  if (nonGreedy) {
+    candidates.push(nonGreedy[1].trim())
+  }
+  if (greedy && greedy[1].trim() !== nonGreedy?.[1]?.trim()) {
+    candidates.push(greedy[1].trim())
+  }
+  candidates.push(content.trim())
 
   let parsed: unknown
   let parseError: Error | undefined
@@ -100,11 +110,7 @@ export function parseCopilotConflictResolution(
       )
     }
 
-    if (
-      /^<{7}\s/m.test(resolvedContent) &&
-      /^={7}$/m.test(resolvedContent) &&
-      /^>{7}\s/m.test(resolvedContent)
-    ) {
+    if (/^<{7}\s/m.test(resolvedContent) && /^={7}$/m.test(resolvedContent)) {
       throw new Error(
         `Copilot returned an invalid conflict resolution payload: "resolvedContent" at index ${i} still contains conflict markers`
       )
@@ -116,7 +122,7 @@ export function parseCopilotConflictResolution(
       )
     }
 
-    validated.push({ path, resolvedContent, reasoning })
+    validated.push({ path: path.trim(), resolvedContent, reasoning })
   }
 
   return { resolutions: validated }

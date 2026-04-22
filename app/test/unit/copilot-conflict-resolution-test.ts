@@ -208,7 +208,7 @@ describe('parseCopilotConflictResolution', () => {
     )
   })
 
-  it('does not reject resolvedContent with partial marker-like text', () => {
+  it('does not reject resolvedContent with only opening marker in a comment', () => {
     const json = JSON.stringify({
       resolutions: [
         {
@@ -218,9 +218,53 @@ describe('parseCopilotConflictResolution', () => {
         },
       ],
     })
-    // Should NOT throw — only reject when all three markers are present
+    // Should NOT throw — only reject when both opening and separator markers present
     const result = parseCopilotConflictResolution(json)
     assert.equal(result.resolutions[0].path, 'a.ts')
+  })
+
+  it('throws on truncated conflict markers (opening + separator without closing)', () => {
+    const json = JSON.stringify({
+      resolutions: [
+        {
+          path: 'a.ts',
+          resolvedContent: '<<<<<<< HEAD\nours\n=======\ntheirs but truncated',
+          reasoning: 'truncated',
+        },
+      ],
+    })
+    assert.throws(
+      () => parseCopilotConflictResolution(json),
+      /still contains conflict markers/
+    )
+  })
+
+  it('parses JSON block followed by another code block', () => {
+    const json = JSON.stringify({
+      resolutions: [
+        { path: 'a.ts', resolvedContent: 'fixed', reasoning: 'merged' },
+      ],
+    })
+    const content =
+      '```json\n' +
+      json +
+      '\n```\n\nYou can verify with:\n```bash\nnpm test\n```'
+    const result = parseCopilotConflictResolution(content)
+    assert.equal(result.resolutions[0].path, 'a.ts')
+  })
+
+  it('trims whitespace from path values', () => {
+    const json = JSON.stringify({
+      resolutions: [
+        {
+          path: '  src/file.ts  ',
+          resolvedContent: 'content',
+          reasoning: 'reason',
+        },
+      ],
+    })
+    const result = parseCopilotConflictResolution(json)
+    assert.equal(result.resolutions[0].path, 'src/file.ts')
   })
 })
 
