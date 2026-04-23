@@ -1,3 +1,5 @@
+import isPlainObject from 'lodash/isPlainObject'
+
 /**
  * Error subclass for parse and validation failures from Copilot responses.
  * Used to distinguish retryable errors (bad LLM output) from transport
@@ -24,10 +26,6 @@ export interface IFileResolution {
 export interface ICopilotConflictResolutionResponse {
   /** Resolution suggestions, one per conflicted file. */
   readonly resolutions: ReadonlyArray<IFileResolution>
-}
-
-function isRecord(value: unknown): value is Readonly<Record<string, unknown>> {
-  return typeof value === 'object' && value !== null && !Array.isArray(value)
 }
 
 /**
@@ -77,7 +75,7 @@ export function parseCopilotConflictResolution(
     throw parseError
   }
 
-  if (!isRecord(parsed)) {
+  if (!isPlainObject(parsed)) {
     throw new CopilotValidationError(
       'Copilot returned an invalid conflict resolution payload: expected an object'
     )
@@ -102,7 +100,7 @@ export function parseCopilotConflictResolution(
   for (let i = 0; i < resolutions.length; i++) {
     const entry: unknown = resolutions[i]
 
-    if (!isRecord(entry)) {
+    if (!isPlainObject(entry)) {
       throw new CopilotValidationError(
         `Copilot returned an invalid conflict resolution payload: resolution at index ${i} must be an object`
       )
