@@ -22,8 +22,6 @@ export interface IBYOKModel {
   readonly id: string
   /** Human-readable name shown in the UI. */
   readonly name: string
-  /** Optional context window hint, mainly informational. */
-  readonly maxContextWindowTokens?: number
   /**
    * The reasoning effort to send when invoking this model. Set for reasoning
    * models that support an explicit thinking effort (`o1`, `o3`, GPT-5

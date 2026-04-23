@@ -403,9 +403,6 @@ export class EditCopilotBYOKProviderDialog extends React.Component<
       ...(m.reasoningEffort !== undefined
         ? { reasoningEffort: m.reasoningEffort }
         : {}),
-      ...(m.maxContextWindowTokens !== undefined
-        ? { maxContextWindowTokens: m.maxContextWindowTokens }
-        : {}),
     }))
 
     const provider: IBYOKProvider = {
