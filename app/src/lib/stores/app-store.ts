@@ -8675,6 +8675,12 @@ export class AppStore extends TypedBaseStore<IAppState> {
   /** This shouldn't be called directly. See 'Dispatcher'. */
   public _setSelectedCopilotModels(models: CopilotModelSelections) {
     this.selectedCopilotModels = { ...models }
+    // The Preferences dialog keeps its own copy of the selections in
+    // component state. If the user deletes/edits a BYOK provider through
+    // the popup stack while the dialog is open, that local copy can still
+    // reference a model that no longer exists; scrub on save so we never
+    // resurrect a stale selection.
+    this.scrubMissingCopilotModelSelections()
     this.saveCopilotModelSelections()
   }
 
