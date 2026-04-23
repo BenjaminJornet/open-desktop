@@ -196,6 +196,27 @@ export function parseModelKey(value: string): CopilotModelKey {
  * surface a "Local" badge in the provider list. Recognises both IPv4 (127/8
  * and 0.0.0.0) and IPv6 loopback in bracketed and bare forms.
  */
+/**
+ * Returns true if saving a BYOK provider with the given new auth kind
+ * requires the user to enter a fresh secret. We can rely on the previously
+ * stored secret only when editing an existing provider that already used
+ * the same auth kind; switching auth kinds (or adding a new provider)
+ * requires a new credential because the keychain entry is missing or
+ * shaped wrong for the new kind.
+ */
+export function requiresNewBYOKSecret(
+  newAuthKind: BYOKAuthKind,
+  existingProvider: IBYOKProvider | null
+): boolean {
+  if (newAuthKind === 'none') {
+    return false
+  }
+  if (existingProvider === null) {
+    return true
+  }
+  return existingProvider.authKind !== newAuthKind
+}
+
 export function isLocalBaseUrl(baseUrl: string): boolean {
   let hostname: string
   try {
