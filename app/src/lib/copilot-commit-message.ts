@@ -29,14 +29,15 @@ export function parseCopilotCommitMessage(
     )
   }
 
-  const title = parsed.title
+  const obj = parsed as Record<string, unknown>
+  const title = obj.title
   if (typeof title !== 'string' || title.trim().length === 0) {
     throw new Error(
       'Copilot returned an invalid commit message payload: "title" must be a non-empty string'
     )
   }
 
-  const description = parsed.description
+  const description = obj.description
   if (description === undefined) {
     return {
       title,

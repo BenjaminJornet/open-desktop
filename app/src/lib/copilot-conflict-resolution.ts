@@ -159,7 +159,8 @@ export function parseCopilotConflictResolution(
     )
   }
 
-  const { resolutions } = parsed
+  const obj = parsed as Record<string, unknown>
+  const { resolutions } = obj
 
   if (!Array.isArray(resolutions)) {
     throw new CopilotValidationError(
@@ -184,7 +185,8 @@ export function parseCopilotConflictResolution(
       )
     }
 
-    const { path, resolvedContent, reasoning } = entry
+    const obj = entry as Record<string, unknown>
+    const { path, resolvedContent, reasoning } = obj
 
     if (typeof path !== 'string' || path.trim().length === 0) {
       throw new CopilotValidationError(
