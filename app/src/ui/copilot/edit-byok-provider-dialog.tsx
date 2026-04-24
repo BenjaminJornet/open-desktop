@@ -40,7 +40,7 @@ interface IEditCopilotBYOKProviderDialogState {
   readonly authKind: BYOKAuthKind
   /**
    * The secret as entered by the user. Empty string while editing means "do
-   * not change the stored secret"; while adding it means "no secret".
+   * not change the stored secret".
    */
   readonly secret: string
   /**
