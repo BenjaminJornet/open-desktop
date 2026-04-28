@@ -145,6 +145,28 @@ function sanitizeRuleDescription(description: string): string {
 }
 
 /**
+ * Returns the cleaned, deduplicated, non-empty rule descriptions that should
+ * be embedded in the commit-message user prompt. Combines
+ * {@link getEnforcedRuleDescriptions} with sanitisation so callers (the
+ * user-prompt builder and the system-prompt `hasRules` decision) operate on
+ * the exact same set and can't drift apart.
+ *
+ * Exported for testing.
+ */
+export function getCleanedEnforcedRuleDescriptions(
+  rules: ReadonlyArray<IRepoRulesMetadataRule> | undefined
+): ReadonlyArray<string> {
+  if (!rules) {
+    return []
+  }
+
+  const descriptions = getEnforcedRuleDescriptions(rules)
+  return [...new Set(descriptions.map(sanitizeRuleDescription))].filter(
+    d => d.length > 0
+  )
+}
+
+/**
  * Per-request delimiter tags used to wrap untrusted user-prompt sections so
  * the model can distinguish data from instructions. Generated fresh for each
  * commit-message generation request so untrusted content can't predict (and
@@ -216,10 +238,12 @@ constraint.
  * The diff is always wrapped in a `<diff-…>` block so the model sees a
  * clean trust boundary even if the diff contains literal `</diff>`-style
  * text (for example, when a source file in the diff happens to contain
- * such a string). When `commitMessageRules` contains rules github.com will
- * evaluate on push, a separate `<repo-rules-…>` block is prepended; rule
- * descriptions are deduplicated and sanitized to a single line each to keep
- * them inside the block.
+ * such a string). When `cleanedRuleDescriptions` is non-empty, a separate
+ * `<repo-rules-…>` block listing those constraints is prepended; the
+ * caller is responsible for sanitising and deduplicating descriptions
+ * (see {@link getCleanedEnforcedRuleDescriptions}) so this function and
+ * {@link buildCommitMessageSystemPrompt} agree on whether a rules block
+ * is present.
  *
  * Both block names embed a per-request random token (see {@link tags}) so
  * untrusted content cannot guess and therefore cannot close the wrapping
@@ -230,23 +254,15 @@ constraint.
 export function buildCommitMessageUserPrompt(
   diff: string,
   tags: ICommitMessagePromptTags,
-  commitMessageRules?: ReadonlyArray<IRepoRulesMetadataRule>
+  cleanedRuleDescriptions: ReadonlyArray<string> = []
 ): string {
-  const descriptions = commitMessageRules
-    ? getEnforcedRuleDescriptions(commitMessageRules)
-    : []
-
-  const cleaned = [
-    ...new Set(descriptions.map(sanitizeRuleDescription)),
-  ].filter(d => d.length > 0)
-
   const diffBlock = `${tags.diffOpen}\n${diff}\n${tags.diffClose}`
 
-  if (cleaned.length === 0) {
+  if (cleanedRuleDescriptions.length === 0) {
     return diffBlock
   }
 
-  const bullets = cleaned.map(d => `- ${d}`).join('\n')
+  const bullets = cleanedRuleDescriptions.map(d => `- ${d}`).join('\n')
 
   return `${tags.repoRulesOpen}
 The combined commit message (the title followed by a blank line and then
@@ -471,10 +487,9 @@ export class CopilotStore extends BaseStore {
 
     try {
       const tags = generateCommitMessagePromptTags()
-      const enforcedRuleCount = commitMessageRules
-        ? getEnforcedRuleDescriptions(commitMessageRules).length
-        : 0
-      const hasRules = enforcedRuleCount > 0
+      const cleanedRuleDescriptions =
+        getCleanedEnforcedRuleDescriptions(commitMessageRules)
+      const hasRules = cleanedRuleDescriptions.length > 0
 
       // Create a session for commit message generation
       session = await client.createSession({
@@ -501,7 +516,7 @@ export class CopilotStore extends BaseStore {
       const userPrompt = buildCommitMessageUserPrompt(
         diff,
         tags,
-        commitMessageRules
+        cleanedRuleDescriptions
       )
       const response = await session.sendAndWait(
         { prompt: userPrompt },
