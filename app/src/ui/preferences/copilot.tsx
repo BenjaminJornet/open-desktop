@@ -143,7 +143,7 @@ export class CopilotPreferences extends React.Component<
       <>
         <Row className="copilot-customization-hints-intro">
           <p>
-            You can tailor how Copilot behaves in this app by using{' '}
+            Tailor how Copilot behaves by using{' '}
             <LinkButton uri="https://docs.github.com/en/copilot/how-tos/copilot-cli/customize-copilot/add-custom-instructions">
               custom instructions
             </LinkButton>
@@ -193,9 +193,8 @@ export class CopilotPreferences extends React.Component<
         <div className="copilot-customization-hints">
           <p>
             <LinkButton uri="https://docs.github.com/en/desktop/making-changes-in-a-branch/committing-and-reviewing-changes-to-your-project-in-github-desktop#write-a-commit-message-and-push-your-changes">
-              Customize commit messages
-            </LinkButton>{' '}
-            via repo rules, custom instructions, and more.
+              Learn more about generating commit messages.
+            </LinkButton>
           </p>
         </div>
       </>
