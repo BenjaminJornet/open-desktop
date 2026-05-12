@@ -76,8 +76,7 @@ export class Repository {
       this.missing,
       this.alias,
       this.workflowPreferences.forkContributionTarget,
-      this.isTutorialRepository,
-      this.gitDir
+      this.isTutorialRepository
     )
   }
 
