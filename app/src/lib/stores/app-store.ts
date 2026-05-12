@@ -6889,7 +6889,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
       if (repositoryType.kind === 'unsafe') {
         const repository = await this.repositoriesStore.addRepository(
           path,
-          Path.join(path, '.git'),
+          undefined,
           { missing: true }
         )
 

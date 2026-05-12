@@ -235,7 +235,7 @@ export class RepositoriesStore extends TypedBaseStore<
    */
   public async addRepository(
     path: string,
-    gitDir: string,
+    gitDir: string | undefined,
     opts?: AddRepositoryOptions
   ): Promise<Repository> {
     const repository = await this.db.transaction(
