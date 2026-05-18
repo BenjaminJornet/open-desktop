@@ -95,8 +95,11 @@ export class Repository {
   }
 
   /**
-   * Resolve a path relative to the .git directory, similar to
-   * `git rev-parse --git-path`.
+   * Resolve a path by joining it onto this repository's resolved `.git`
+   * directory.
+   *
+   * This is a plain path join against `resolvedGitDir`; it does not implement
+   * the full semantics of `git rev-parse --git-path` for linked worktrees.
    *
    * Example: `repository.gitPath('FETCH_HEAD')` returns the absolute
    * path to the FETCH_HEAD file for this repository.
