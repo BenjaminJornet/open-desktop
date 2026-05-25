@@ -1,0 +1,50 @@
+[tools]
+node = "24.15.0"
+python = "3.9.25"
+yarn = "1.21.1"
+
+[tasks.setup]
+description = "Install tool versions and project dependencies"
+run = [
+  "mise install",
+  "yarn install"
+]
+
+[tasks.dev]
+description = "Build the development bundle and start Open Desktop"
+run = [
+  "yarn build:dev",
+  "yarn start"
+]
+
+[tasks.build-dev]
+description = "Build the development bundle"
+run = "yarn build:dev"
+
+[tasks.start]
+description = "Start Open Desktop"
+run = "yarn start"
+
+[tasks.test]
+description = "Run unit tests"
+run = "yarn test:unit"
+
+[tasks.lint]
+description = "Run lint checks"
+run = "yarn test:eslint"
+
+[tasks.check]
+description = "Run lint, unit tests, and development build"
+run = [
+  "yarn test:eslint",
+  "yarn test:unit",
+  "yarn build:dev"
+]
+
+[tasks.sync-upstream]
+description = "Sync development with upstream/development and merge back into current branch"
+run = "./script/sync-upstream.sh"
+
+[tasks.byok-dev]
+description = "Start Open Desktop with BYOK environment variables from .env if present"
+run = "./script/byok-dev.sh"
