@@ -1112,6 +1112,13 @@ export class Dispatcher {
     return this.appStore._generateCommitMessage(repository, filesSelected)
   }
 
+  public generateCommitMessageWithBYOK(
+    repository: Repository,
+    filesSelected: ReadonlyArray<WorkingDirectoryFileChange>
+  ) {
+    return this.appStore._generateCommitMessageWithBYOK(repository, filesSelected)
+  }
+
   /**
    * Use Copilot to analyze and suggest resolutions for conflicts
    * from merge, rebase, or cherry-pick operations.

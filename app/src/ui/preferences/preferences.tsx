@@ -44,6 +44,7 @@ import { Notifications } from './notifications'
 import { Accessibility } from './accessibility'
 import type { ModelInfo } from '@github/copilot-sdk'
 import { CopilotPreferences } from './copilot'
+import { AIProviderPreferences } from './ai-provider'
 import type {
   CopilotFeature,
   CopilotModelSelections,
@@ -79,6 +80,10 @@ import {
   setNumberFormatPreference,
 } from '../../models/formatting-preferences'
 import { enableFormattingPreferences } from '../../lib/feature-flag'
+import {
+  StoredBYOKCommitGenerationConfig,
+  setStoredBYOKCommitGenerationConfig,
+} from '../../lib/byok/config'
 
 interface IPreferencesProps {
   readonly dispatcher: Dispatcher
@@ -179,6 +184,7 @@ interface IPreferencesState {
   readonly hooksPreferencesDirty: boolean
 
   readonly selectedCopilotModels: CopilotModelSelections
+  readonly byokCommitGenerationConfig?: StoredBYOKCommitGenerationConfig
   readonly selectedDateFormat?: DateFormat
   readonly selectedTimeFormat?: TimeFormat
   readonly selectedNumberFormat?: INumberFormat
@@ -360,6 +366,10 @@ export class Preferences extends React.Component<
               <Octicon className="icon" symbol={octicons.person} />
               Integrations
             </span>
+            <span id={this.getTabId(PreferencesTab.AIProvider)}>
+              <span className="icon">🤖</span>
+              AI Provider
+            </span>
             {this.isCopilotSdkEnabled && (
               <span id={this.getTabId(PreferencesTab.Copilot)}>
                 <Octicon className="icon" symbol={octicons.copilot} />
@@ -407,6 +417,9 @@ export class Preferences extends React.Component<
         break
       case PreferencesTab.Integrations:
         suffix = 'integrations'
+        break
+      case PreferencesTab.AIProvider:
+        suffix = 'ai-provider'
         break
       case PreferencesTab.Copilot:
         suffix = 'copilot'
@@ -513,6 +526,13 @@ export class Preferences extends React.Component<
         )
         break
       }
+      case PreferencesTab.AIProvider:
+        View = (
+          <AIProviderPreferences
+            onConfigChanged={this.onBYOKCommitGenerationConfigChanged}
+          />
+        )
+        break
       case PreferencesTab.Copilot:
         View = (
           <CopilotPreferences
@@ -1052,6 +1072,12 @@ export class Preferences extends React.Component<
 
     dispatcher.setSelectedCopilotModels(this.state.selectedCopilotModels)
 
+    if (this.state.byokCommitGenerationConfig !== undefined) {
+      setStoredBYOKCommitGenerationConfig(
+        this.state.byokCommitGenerationConfig
+      )
+    }
+
     if (enableFormattingPreferences()) {
       if (this.state.selectedDateFormat !== undefined) {
         setDateFormatPreference(this.state.selectedDateFormat)
@@ -1075,6 +1101,12 @@ export class Preferences extends React.Component<
 
   private onTabClicked = (visualIndex: number) => {
     this.setState({ selectedIndex: this.visualIndexToTab(visualIndex) })
+  }
+
+  private onBYOKCommitGenerationConfigChanged = (
+    byokCommitGenerationConfig: StoredBYOKCommitGenerationConfig
+  ) => {
+    this.setState({ byokCommitGenerationConfig })
   }
 
   private get isCopilotSdkEnabled(): boolean {

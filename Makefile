@@ -1,6 +1,6 @@
 SHELL := /bin/bash
 
-.PHONY: help setup dev build-dev start test lint check sync-upstream byok-dev clean-node
+.PHONY: help setup dev build-dev start test lint check sync-upstream byok-dev install-mac install-win clean-node
 
 help:
 	@echo "Open Desktop development commands"
@@ -14,6 +14,8 @@ help:
 	@echo "  make check          Run lint, tests, and dev build"
 	@echo "  make sync-upstream  Sync fork with upstream/development"
 	@echo "  make byok-dev       Start app with BYOK env vars from .env"
+	@echo "  make install-mac    Rebuild and offer to install Open Desktop in /Applications"
+	@echo "  make install-win    Rebuild and offer to install Open Desktop on Windows"
 	@echo "  make clean-node     Remove node_modules"
 
 setup:
@@ -42,6 +44,12 @@ sync-upstream:
 
 byok-dev:
 	mise run byok-dev
+
+install-mac:
+	mise run install-mac
+
+install-win:
+	mise run install-win
 
 clean-node:
 	rm -rf node_modules app/node_modules

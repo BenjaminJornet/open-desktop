@@ -168,6 +168,8 @@ import {
   getAccountForCommitMessageGeneration,
   getAccountForRepository,
 } from '../get-account-for-repository'
+import { getBYOKCommitGenerationConfig } from '../byok/config'
+import { generateCommitMessageWithOpenAICompatible } from '../byok/open-ai-compatible'
 import {
   abortMerge,
   addRemote,
@@ -5767,6 +5769,60 @@ export class AppStore extends TypedBaseStore<IAppState> {
         })
 
         this.statsStore.increment('generateCommitMessageCount')
+      } catch (e) {
+        this.emitError(
+          new ErrorWithMetadata(e, {
+            repository,
+          })
+        )
+        return false
+      }
+
+      return true
+    })
+  }
+
+  public async _generateCommitMessageWithBYOK(
+    repository: Repository,
+    filesSelected: ReadonlyArray<WorkingDirectoryFileChange>
+  ): Promise<boolean> {
+    const config = getBYOKCommitGenerationConfig()
+
+    if (config === null) {
+      throw new Error(
+        'BYOK commit generation is not configured. Set DESKTOP_BYOK_BASE_URL and DESKTOP_BYOK_MODEL.'
+      )
+    }
+
+    return this.withIsGeneratingCommitMessage(repository, async () => {
+      const state = this.repositoryStateCache.get(repository)
+      const commitToAmend = state?.commitToAmend?.sha ?? undefined
+      const diff = await getFilesDiffText(
+        repository,
+        filesSelected,
+        commitToAmend ? `${commitToAmend}^` : undefined
+      )
+
+      if (!diff) {
+        return false
+      }
+
+      try {
+        const tip = state.branchesState.tip
+        const response = await generateCommitMessageWithOpenAICompatible(
+          config,
+          {
+            diff,
+            repositoryName: nameOf(repository),
+            branchName: tip.kind === TipState.Valid ? tip.branch.name : undefined,
+          }
+        )
+
+        this._setCommitMessage(repository, {
+          summary: response.summary,
+          description: response.description,
+          timestamp: Date.now(),
+        })
       } catch (e) {
         this.emitError(
           new ErrorWithMetadata(e, {

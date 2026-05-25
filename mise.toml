@@ -48,3 +48,11 @@ run = "./script/sync-upstream.sh"
 [tasks.byok-dev]
 description = "Start Open Desktop with BYOK environment variables from .env if present"
 run = "./script/byok-dev.sh"
+
+[tasks.install-mac]
+description = "Rebuild and offer to install Open Desktop in /Applications"
+run = "./script/install-mac.sh"
+
+[tasks.install-win]
+description = "Rebuild and offer to install Open Desktop on Windows"
+run = "./script/install-win.sh"

@@ -69,6 +69,7 @@ import {
 import { AriaLiveContainer } from '../accessibility/aria-live-container'
 import { HookProgress } from '../../lib/git'
 import { assertNever } from '../../lib/fatal-error'
+import { getBYOKCommitGenerationConfig } from '../../lib/byok/config'
 
 const addAuthorIcon: OcticonSymbolVariant = {
   w: 18,
@@ -176,6 +177,10 @@ interface ICommitMessageProps {
     mustOverrideExistingMessage: boolean
   ) => void
 
+  readonly onGenerateBYOKCommitMessage?: (
+    filesSelected: ReadonlyArray<WorkingDirectoryFileChange>
+  ) => Promise<boolean>
+
   /**
    * Called when the component has given the commit message focus due to
    * `focusCommitMessage` being set. Used to reset the `focusCommitMessage`
@@ -260,6 +265,8 @@ interface ICommitMessageState {
   readonly repoRuleCommitMessageFailures: RepoRulesMetadataFailures
   readonly repoRuleCommitAuthorFailures: RepoRulesMetadataFailures
   readonly repoRuleBranchNameFailures: RepoRulesMetadataFailures
+
+  readonly byokError: string | null
 }
 
 function findCommitMessageAutoCompleteProvider(
@@ -317,6 +324,7 @@ export class CommitMessage extends React.Component<
       repoRuleCommitMessageFailures: new RepoRulesMetadataFailures(),
       repoRuleCommitAuthorFailures: new RepoRulesMetadataFailures(),
       repoRuleBranchNameFailures: new RepoRulesMetadataFailures(),
+      byokError: null,
     }
   }
 
@@ -564,6 +572,12 @@ export class CommitMessage extends React.Component<
         timestamp: Date.now(),
       },
     })
+  }
+
+  private clearBYOKError() {
+    if (this.state.byokError !== null) {
+      this.setState({ byokError: null })
+    }
   }
 
   private onSubmit = () => {
@@ -970,6 +984,27 @@ export class CommitMessage extends React.Component<
     )
   }
 
+  private onBYOKButtonClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault()
+
+    if (getBYOKCommitGenerationConfig() === null) {
+      this.setState({
+        byokError:
+          'BYOK commit generation is not configured. Set DESKTOP_BYOK_BASE_URL and DESKTOP_BYOK_MODEL.',
+      })
+      return
+    }
+
+    this.clearBYOKError()
+    const generated = await this.props.onGenerateBYOKCommitMessage?.(
+      this.props.filesSelected
+    )
+
+    if (generated === false) {
+      this.setState({ byokError: 'BYOK commit generation failed.' })
+    }
+  }
+
   private onCoAuthorToggleButtonClick = async (
     e: React.MouseEvent<HTMLButtonElement>
   ) => {
@@ -988,7 +1023,6 @@ export class CommitMessage extends React.Component<
       isCommitting,
       isGeneratingCommitMessage,
       commitToAmend,
-      shouldShowGenerateCommitMessageCallOut,
     } = this.props
 
     const noFilesSelected = filesSelected.length === 0
@@ -1021,11 +1055,46 @@ export class CommitMessage extends React.Component<
             }
           />
           <Octicon symbol={octicons.copilot} />
-          {shouldShowGenerateCommitMessageCallOut && (
-            <span className="call-to-action-bubble">New</span>
-          )}
         </Button>
       </>
+    )
+  }
+
+  private renderBYOKButton() {
+    if (this.props.onGenerateBYOKCommitMessage === undefined) {
+      return null
+    }
+
+    const {
+      filesSelected,
+      isCommitting,
+      isGeneratingCommitMessage,
+      commitToAmend,
+      shouldShowGenerateCommitMessageCallOut,
+    } = this.props
+    const noChangesAvailable = !commitToAmend && filesSelected.length === 0
+    const ariaLabel = isGeneratingCommitMessage
+      ? 'Generating commit details…'
+      : 'Generate commit message with BYOK' +
+        (noChangesAvailable
+          ? '. Files must be selected to generate a commit message.'
+          : '')
+
+    return (
+      <Button
+        className="byok-button"
+        onClick={this.onBYOKButtonClick}
+        ariaLabel={ariaLabel}
+        tooltip={ariaLabel}
+        disabled={
+          isCommitting === true || isGeneratingCommitMessage || noChangesAvailable
+        }
+      >
+        🤖
+        {shouldShowGenerateCommitMessageCallOut && (
+          <span className="call-to-action-bubble">New</span>
+        )}
+      </Button>
     )
   }
 
@@ -1034,7 +1103,9 @@ export class CommitMessage extends React.Component<
 
     return (
       <>
-        {(this.isCoAuthorInputEnabled || this.isCopilotButtonEnabled) && (
+        {(this.isCoAuthorInputEnabled ||
+          this.isCopilotButtonEnabled ||
+          this.props.onGenerateBYOKCommitMessage !== undefined) && (
           <div className="separator" />
         )}
         <Button
@@ -1202,9 +1273,18 @@ export class CommitMessage extends React.Component<
       <div className={className}>
         {this.renderCoAuthorToggleButton()}
         {this.renderCopilotButton()}
+        {this.renderBYOKButton()}
         {this.renderCommitOptionsButton()}
       </div>
     )
+  }
+
+  private renderBYOKError() {
+    if (this.state.byokError === null) {
+      return null
+    }
+
+    return <CommitWarning icon={CommitWarningIcon.Warning}>{this.state.byokError}</CommitWarning>
   }
 
   private renderAmendCommitNotice() {
@@ -1799,6 +1879,7 @@ export class CommitMessage extends React.Component<
 
         {this.renderCoAuthorInput()}
 
+        {this.renderBYOKError()}
         {this.renderAmendCommitNotice()}
         {this.renderBranchProtectionsRepoRulesCommitWarning()}
 

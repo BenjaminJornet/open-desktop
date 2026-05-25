@@ -1000,6 +1000,7 @@ export class FilterChangesList extends React.Component<
         }
         onPersistCommitMessage={this.onPersistCommitMessage}
         onGenerateCommitMessage={this.onGenerateCommitMessage}
+        onGenerateBYOKCommitMessage={this.onGenerateBYOKCommitMessage}
         onCommitMessageFocusSet={this.onCommitMessageFocusSet}
         onRefreshAuthor={this.onRefreshAuthor}
         onShowPopup={this.onShowPopup}
@@ -1066,6 +1067,15 @@ export class FilterChangesList extends React.Component<
           this.props.repository,
           filesSelected
         )
+  }
+
+  private onGenerateBYOKCommitMessage = (
+    filesSelected: ReadonlyArray<WorkingDirectoryFileChange>
+  ) => {
+    return this.props.dispatcher.generateCommitMessageWithBYOK(
+      this.props.repository,
+      filesSelected
+    )
   }
 
   private onShowPopup = (p: Popup) => this.props.dispatcher.showPopup(p)
