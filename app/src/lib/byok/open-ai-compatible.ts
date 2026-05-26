@@ -29,6 +29,7 @@ interface IOpenAICompatibleResponse {
 interface IOpenAICompatibleModelsResponse {
   readonly data?: ReadonlyArray<{
     readonly id?: unknown
+    readonly owned_by?: unknown
   }>
 }
 
@@ -281,9 +282,25 @@ export async function fetchOpenAICompatibleModels(
     throw new Error('Fetching models returned invalid JSON')
   }
 
-  const ids = (json.data ?? [])
-    .map(model => model.id)
-    .filter((id): id is string => typeof id === 'string' && id.trim() !== '')
+  // Keep only entries with a valid string id
+  const raw = (json.data ?? []).filter(
+    (m): m is { id: string; owned_by?: unknown } =>
+      typeof m.id === 'string' && (m.id as string).trim() !== ''
+  )
 
-  return Array.from(new Set(ids)).map(id => ({ id, name: id }))
+  // Deduplicate by id (first occurrence wins, preserving its owned_by)
+  const seen = new Set<string>()
+  const unique = raw.filter(m => !seen.has(m.id) && seen.add(m.id))
+
+  // Sort alphabetically and map to the stored type
+  return unique
+    .sort((a, b) => a.id.localeCompare(b.id))
+    .map(m => ({
+      id: m.id,
+      name: m.id,
+      group:
+        typeof m.owned_by === 'string' && (m.owned_by as string).trim() !== ''
+          ? (m.owned_by as string).trim()
+          : undefined,
+    }))
 }

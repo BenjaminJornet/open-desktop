@@ -58,6 +58,29 @@
     }
   }
 
+  .ai-provider-tab {
+    .advanced-section + .advanced-section {
+      margin-top: var(--spacing-double);
+      padding-top: var(--spacing-double);
+      border-top: var(--base-border);
+    }
+
+    // Gap + top margin for the Add/Remove provider button row
+    .button-group {
+      margin-top: var(--spacing);
+      gap: var(--spacing-half);
+    }
+
+    // Top margin for the provider editor fieldset and Fetch models button
+    fieldset.advanced-section {
+      margin-top: var(--spacing);
+
+      > .button-component {
+        margin-top: var(--spacing);
+      }
+    }
+  }
+
   .formatting-section {
     margin-top: var(--spacing);
 
