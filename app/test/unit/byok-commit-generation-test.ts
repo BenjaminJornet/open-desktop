@@ -3,10 +3,12 @@ import { afterEach, describe, it } from 'node:test'
 import { getBYOKCommitGenerationConfigFromEnv } from '../../src/lib/byok/config'
 import {
   buildBYOKCommitGenerationMessages,
+  chunkDiffForCommitGeneration,
   MAX_DIFF_CHARS,
   truncateDiffForPrompt,
 } from '../../src/lib/byok/prompt'
 import {
+  fetchOpenAICompatibleModels,
   generateCommitMessageWithOpenAICompatible,
   parseBYOKCommitGenerationContent,
 } from '../../src/lib/byok/open-ai-compatible'
@@ -142,12 +144,27 @@ describe('buildBYOKCommitGenerationMessages', () => {
     assert.doesNotMatch(messages[1].content, /Use conventional commit style/)
   })
 
-  it('truncates long diffs with a warning', () => {
+  it('does not truncate long diffs', () => {
     const diff = 'a'.repeat(MAX_DIFF_CHARS + 1)
     const truncated = truncateDiffForPrompt(diff)
 
-    assert.ok(truncated.length > MAX_DIFF_CHARS)
-    assert.match(truncated, /has been truncated/)
+    assert.equal(truncated, diff)
+    assert.doesNotMatch(truncated, /truncated/)
+  })
+
+  it('chunks large diffs on file boundaries', () => {
+    const diff = [
+      'diff --git a/a b/a\n+one',
+      'diff --git a/b b/b\n+two',
+      'diff --git a/c b/c\n+three',
+    ].join('\n')
+
+    const chunks = chunkDiffForCommitGeneration(diff, 40)
+
+    assert.equal(chunks.length, 3)
+    assert.match(chunks[0], /diff --git a\/a b\/a/)
+    assert.match(chunks[1], /diff --git a\/b b\/b/)
+    assert.match(chunks[2], /diff --git a\/c b\/c/)
   })
 })
 
@@ -260,5 +277,93 @@ describe('generateCommitMessageWithOpenAICompatible', () => {
       generateCommitMessageWithOpenAICompatible(config, { diff: 'diff' }),
       /HTTP 400: bad request/
     )
+  })
+
+  it('analyzes chunks and aggregates for large diffs', async () => {
+    const capturedBodies: Array<any> = []
+    global.fetch = (async (_url: string, init: RequestInit) => {
+      const body = JSON.parse(init.body as string)
+      capturedBodies.push(body)
+      const isAggregation = body.messages.some((message: any) =>
+        String(message.content).includes('Chunk analyses:')
+      )
+      return new Response(
+        JSON.stringify({
+          choices: [
+            {
+              message: {
+                content: JSON.stringify(
+                  isAggregation
+                    ? {
+                        summary: 'feat: aggregate chunks',
+                        description: 'Aggregates all changes.',
+                      }
+                    : {
+                        summary: 'chunk summary',
+                        description: 'chunk details',
+                        files: ['a.ts'],
+                        keyChanges: ['changed a.ts'],
+                        commitTypeHints: ['feat'],
+                      }
+                ),
+              },
+            },
+          ],
+        }),
+        { status: 200 }
+      )
+    }) as typeof fetch
+
+    const section = `diff --git a/a b/a\n${'a'.repeat(70000)}`
+    const result = await generateCommitMessageWithOpenAICompatible(config, {
+      diff: [section, section, section].join('\n'),
+    })
+
+    assert.deepStrictEqual(result, {
+      summary: 'feat: aggregate chunks',
+      description: 'Aggregates all changes.',
+    })
+    assert.ok(capturedBodies.length > 1)
+    assert.ok(
+      capturedBodies.every(
+        body => !JSON.stringify(body.messages).includes('truncated')
+      )
+    )
+  })
+})
+
+describe('fetchOpenAICompatibleModels', () => {
+  it('fetches models without authorization when API key is empty', async () => {
+    let capturedURL = ''
+    let capturedHeaders: Record<string, string> = {}
+    global.fetch = (async (url: string, init: RequestInit) => {
+      capturedURL = url
+      capturedHeaders = (init.headers ?? {}) as Record<string, string>
+      return new Response(
+        JSON.stringify({ data: [{ id: 'model-a' }, { id: 'model-b' }] }),
+        { status: 200 }
+      )
+    }) as typeof fetch
+
+    const models = await fetchOpenAICompatibleModels('http://localhost:8317/v1', '')
+
+    assert.equal(capturedURL, 'http://localhost:8317/v1/models')
+    assert.equal(capturedHeaders.Authorization, undefined)
+    assert.deepStrictEqual(models, [
+      { id: 'model-a', name: 'model-a' },
+      { id: 'model-b', name: 'model-b' },
+    ])
+  })
+
+  it('sends bearer authorization when API key is present', async () => {
+    let capturedHeaders: Record<string, string> = {}
+    global.fetch = (async (_url: string, init: RequestInit) => {
+      capturedHeaders = (init.headers ?? {}) as Record<string, string>
+      return new Response(JSON.stringify({ data: [] }), { status: 200 })
+    }) as typeof fetch
+
+    await fetchOpenAICompatibleModels('https://example.com/v1', 'secret')
+
+    assert.equal(capturedHeaders.Authorization, 'Bearer secret')
   })
 })

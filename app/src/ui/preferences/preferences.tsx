@@ -81,8 +81,8 @@ import {
 } from '../../models/formatting-preferences'
 import { enableFormattingPreferences } from '../../lib/feature-flag'
 import {
-  StoredBYOKCommitGenerationConfig,
-  setStoredBYOKCommitGenerationConfig,
+  setStoredBYOKCommitGenerationSettings,
+  StoredBYOKCommitGenerationSettings,
 } from '../../lib/byok/config'
 
 interface IPreferencesProps {
@@ -184,7 +184,7 @@ interface IPreferencesState {
   readonly hooksPreferencesDirty: boolean
 
   readonly selectedCopilotModels: CopilotModelSelections
-  readonly byokCommitGenerationConfig?: StoredBYOKCommitGenerationConfig
+  readonly byokCommitGenerationSettings?: StoredBYOKCommitGenerationSettings
   readonly selectedDateFormat?: DateFormat
   readonly selectedTimeFormat?: TimeFormat
   readonly selectedNumberFormat?: INumberFormat
@@ -529,7 +529,7 @@ export class Preferences extends React.Component<
       case PreferencesTab.AIProvider:
         View = (
           <AIProviderPreferences
-            onConfigChanged={this.onBYOKCommitGenerationConfigChanged}
+            onSettingsChanged={this.onBYOKCommitGenerationSettingsChanged}
           />
         )
         break
@@ -1072,9 +1072,9 @@ export class Preferences extends React.Component<
 
     dispatcher.setSelectedCopilotModels(this.state.selectedCopilotModels)
 
-    if (this.state.byokCommitGenerationConfig !== undefined) {
-      setStoredBYOKCommitGenerationConfig(
-        this.state.byokCommitGenerationConfig
+    if (this.state.byokCommitGenerationSettings !== undefined) {
+      setStoredBYOKCommitGenerationSettings(
+        this.state.byokCommitGenerationSettings
       )
     }
 
@@ -1103,10 +1103,10 @@ export class Preferences extends React.Component<
     this.setState({ selectedIndex: this.visualIndexToTab(visualIndex) })
   }
 
-  private onBYOKCommitGenerationConfigChanged = (
-    byokCommitGenerationConfig: StoredBYOKCommitGenerationConfig
+  private onBYOKCommitGenerationSettingsChanged = (
+    byokCommitGenerationSettings: StoredBYOKCommitGenerationSettings
   ) => {
-    this.setState({ byokCommitGenerationConfig })
+    this.setState({ byokCommitGenerationSettings })
   }
 
   private get isCopilotSdkEnabled(): boolean {

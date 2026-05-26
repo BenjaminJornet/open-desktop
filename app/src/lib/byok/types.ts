@@ -23,3 +23,34 @@ export interface BYOKCommitGenerationResult {
   readonly summary: string
   readonly description: string
 }
+
+export interface BYOKCommitChunkAnalysisResult {
+  readonly summary: string
+  readonly description: string
+  readonly files: ReadonlyArray<string>
+  readonly keyChanges: ReadonlyArray<string>
+  readonly commitTypeHints: ReadonlyArray<string>
+}
+
+export interface StoredBYOKCommitGenerationModel {
+  readonly id: string
+  readonly name: string
+}
+
+export interface StoredBYOKCommitGenerationProvider {
+  readonly id: string
+  readonly name: string
+  readonly baseURL: string
+  readonly apiKey: string
+  readonly models: ReadonlyArray<StoredBYOKCommitGenerationModel>
+}
+
+export interface StoredBYOKCommitGenerationSettings {
+  readonly selectedProviderId: string
+  readonly selectedModelId: string
+  readonly providers: ReadonlyArray<StoredBYOKCommitGenerationProvider>
+  readonly temperature: string
+  readonly style: BYOKCommitStyle
+  readonly language: string
+  readonly customInstructions: string
+}
