@@ -35,6 +35,8 @@ export interface BYOKCommitChunkAnalysisResult {
 export interface StoredBYOKCommitGenerationModel {
   readonly id: string
   readonly name: string
+  /** Provider group (owned_by field from the OpenAI-compatible models API). */
+  readonly group?: string
 }
 
 export interface StoredBYOKCommitGenerationProvider {

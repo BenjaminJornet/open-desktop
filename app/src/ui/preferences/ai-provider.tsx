@@ -49,7 +49,8 @@ function mergeModels(
       byId.set(model.id, model)
     }
   }
-  return Array.from(byId.values())
+  // Keep sorted alphabetically so the textarea always shows a consistent order
+  return Array.from(byId.values()).sort((a, b) => a.id.localeCompare(b.id))
 }
 
 export class AIProviderPreferences extends React.Component<
@@ -100,14 +101,6 @@ export class AIProviderPreferences extends React.Component<
       ),
     }))
     this.setState({ fetchError: null, fetchMessage: null })
-  }
-
-  private onEditingProviderChanged = (event: React.FormEvent<HTMLSelectElement>) => {
-    this.setState({
-      editingProviderId: event.currentTarget.value,
-      fetchError: null,
-      fetchMessage: null,
-    })
   }
 
   private onSelectedProviderChanged = (
@@ -187,9 +180,10 @@ export class AIProviderPreferences extends React.Component<
   private onModelsChanged = (value: string) => {
     const models = value
       .split(/\r?\n|,/)
-      .map(model => model.trim())
-      .filter(model => model !== '')
-      .map(model => ({ id: model, name: model }))
+      // Strip inline comments ("model-id  # group" → "model-id")
+      .map(line => line.replace(/#.*$/, '').trim())
+      .filter(id => id !== '')
+      .map(id => ({ id, name: id }))
     this.updateEditingProvider({ models })
   }
 
@@ -232,15 +226,15 @@ export class AIProviderPreferences extends React.Component<
 
     return (
       <DialogContent>
+        {/* Section 1: Providers */}
         <div className="advanced-section">
-          <h2>BYOK commit generation</h2>
+          <h2>Providers</h2>
           <p className="settings-description">
             Configure OpenAI-compatible providers used by Generate with BYOK.
             API keys are optional for local providers like Ollama.
           </p>
-          {settings.providers.length === 0 ? (
-            <p className="settings-description">No providers configured.</p>
-          ) : (
+
+          {settings.providers.length > 0 && (
             <>
               <Select
                 label="Active provider"
@@ -277,22 +271,12 @@ export class AIProviderPreferences extends React.Component<
             </Button>
           </div>
 
-          {settings.providers.length > 0 && (
-            <Select
-              label="Edit provider"
-              value={this.state.editingProviderId}
-              onChange={this.onEditingProviderChanged}
-            >
-              {settings.providers.map(provider => (
-                <option key={provider.id} value={provider.id}>
-                  {provider.name || provider.baseURL || 'Untitled provider'}
-                </option>
-              ))}
-            </Select>
-          )}
-
           {editingProvider !== null && this.renderProviderEditor(editingProvider)}
+        </div>
 
+        {/* Section 2: Generation settings */}
+        <div className="advanced-section">
+          <h2>Generation settings</h2>
           <TextBox
             label="Temperature"
             value={settings.temperature}
@@ -355,7 +339,9 @@ export class AIProviderPreferences extends React.Component<
         />
         <TextArea
           label="Models"
-          value={provider.models.map(model => model.id).join('\n')}
+          value={provider.models
+            .map(m => (m.group ? `${m.id}  # ${m.group}` : m.id))
+            .join('\n')}
           placeholder="One model ID per line"
           onChange={event => this.onModelsChanged(event.currentTarget.value)}
         />

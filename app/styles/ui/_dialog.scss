@@ -536,6 +536,18 @@ dialog {
           overflow: auto;
         }
       }
+
+      &.ai-provider-tab {
+        max-height: $default-tab-height;
+        overflow-y: auto;
+
+        @media (max-height: 650px) {
+          // When the Electron window is small, shrink with it so the content
+          // remains scrollable instead of being clipped by the dialog edge.
+          // 210px ≈ Electron title bar + app toolbar + dialog header + footer + margins.
+          max-height: calc(100vh - 210px);
+        }
+      }
     }
   }
 
