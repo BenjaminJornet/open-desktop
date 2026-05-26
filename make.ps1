@@ -297,6 +297,23 @@ function Invoke-InstallWin {
     $installDir = "$env:LOCALAPPDATA\Programs\Open Desktop"
     $tsnode     = if (Test-Path "node_modules\.bin\ts-node.cmd") { "node_modules\.bin\ts-node.cmd" } else { "node_modules\.bin\ts-node" }
 
+    # Check for running app BEFORE the build — a running exe locks files in dist/
+    # and causes Node.js rmSync to fail with EPERM on Windows.
+    $running = Get-Process -Name "OpenDesktop-dev" -ErrorAction SilentlyContinue
+    if ($running) {
+        Write-Err "Open Desktop is already running. Close it before building."
+        exit 1
+    }
+
+    # Pre-delete dist/ from PowerShell so that build.ts's rmSync never hits a
+    # locked-directory EPERM.  Windows Defender / Explorer can hold handles on a
+    # freshly-created dist tree; deleting it here (before Node touches it) avoids
+    # the race.  Errors are ignored — build.ts will recreate the directory anyway.
+    if (Test-Path "dist") {
+        Write-Inf "Clearing previous dist directory..."
+        Remove-Item -Recurse -Force "dist" -ErrorAction SilentlyContinue
+    }
+
     if (Test-Path ".env") { Import-DotEnv }
 
     # Mirror install-mac.sh step 1: "yarn compile:prod"
@@ -325,12 +342,6 @@ function Invoke-InstallWin {
     if ($ans -notmatch '^[yY]') {
         Write-Wrn "Installation cancelled."
         return
-    }
-
-    $running = Get-Process -Name "OpenDesktop-dev" -ErrorAction SilentlyContinue
-    if ($running) {
-        Write-Err "Open Desktop is running. Close it before installing."
-        exit 1
     }
 
     if (Test-Path $installDir) {
